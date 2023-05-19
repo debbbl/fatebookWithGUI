@@ -1,4 +1,4 @@
-package sample;
+package WIA1002;
 import java.sql.*;
 public class tempDatabase {
     public Connection databaseLink;

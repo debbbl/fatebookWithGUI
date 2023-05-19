@@ -5,5 +5,5 @@ module Facebook {
     requires java.sql;
     requires mysql.connector.j;
 
-    opens sample;
+    opens WIA1002;
 }

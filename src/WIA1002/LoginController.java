@@ -1,6 +1,5 @@
-package sample;
+package WIA1002;
 
-import Database.Database;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -18,7 +17,6 @@ import javafx.stage.StageStyle;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Collections;
 import java.util.ResourceBundle;
 import java.net.URL;
 import java.io.File;

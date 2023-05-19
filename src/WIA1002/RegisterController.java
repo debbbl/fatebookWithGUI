@@ -1,4 +1,4 @@
-package sample;
+package WIA1002;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -10,16 +10,11 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.*;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.PasswordField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
-import javafx.scene.*;
 
 import java.io.File;
 import java.net.URL;
