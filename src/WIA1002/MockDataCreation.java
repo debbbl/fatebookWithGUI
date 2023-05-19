@@ -4,9 +4,6 @@ import java.util.Random;
 
 public class MockDataCreation {
     private static final int NUM_USERS = 30;
-    private static final String[] NAMES = {"John", "Emma", "Michael", "Sophia", "William", "Olivia", "James", "Ava", "Benjamin", "Isabella"};
-    private static final String[] HOBBIES = {"Reading", "Sports", "Cooking", "Traveling", "Gaming", "Painting", "Photography"};
-
     public void createMockData() {
         tempDatabase connectNow = new tempDatabase();
         Connection connectDB = connectNow.getConnection();
