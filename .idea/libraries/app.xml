@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="app">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../../../../Public/Documents/SceneBuilder/app" />
+      <root url="file://$PROJECT_DIR$/../../../../Public/Documents/SceneBuilder/runtime/lib" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/../../../../Public/Documents/SceneBuilder/app" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/../../../../Public/Documents/SceneBuilder/runtime/lib" recursive="false" />
+  </library>
+</component>
