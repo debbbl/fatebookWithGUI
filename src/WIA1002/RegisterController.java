@@ -69,27 +69,35 @@ public class RegisterController implements Initializable {
 
     }
 
-    public void registerUser(){
-        tempDatabase connectNow = new tempDatabase();
-        Connection connectDB = connectNow.getConnection();
-
+    public void registerUser() {
         String username = usernameTextField.getText();
         String email = emailTextField.getText();
         String phone = phoneNumberTextField.getText();
         String password = passwordTextField.getText();
 
+        User.Builder userBuilder = new User.Builder()
+                .username(username)
+                .email(email)
+                .contactNumber(phone)
+                .password(password);
+
+        User newUser = userBuilder.build();
+
+        tempDatabase connectNow = new tempDatabase();
+        Connection connectDB = connectNow.getConnection();
+
         String insertFields = "INSERT INTO userdata( username, email_address, contact_number, password) VALUES(";
-        String insertValues = "'" + username + "','" + email + "','" + phone + "','" + password + "')";
+        String insertValues = "'" + newUser.getUsername() + "','" + newUser.getEmail() + "','" + newUser.getContactNumber() + "','" + newUser.getPassword() + "')";
         String insertToRegister = insertFields + insertValues;
 
-        try{
+        try {
             Statement statement = connectDB.createStatement();
             statement.executeUpdate(insertToRegister);
 
             registrationMessageLabel.setText("Registered successfully!");
             navigateToLoginPage();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             e.getCause();
         }

@@ -1,4 +1,4 @@
-package Database;
+package WIA1002;
 
 import java.io.IOException;
 import java.util.*;

@@ -1,5 +1,7 @@
 package Database;
 
+import WIA1002.User;
+
 import java.sql.*;
 
 public class Database {
