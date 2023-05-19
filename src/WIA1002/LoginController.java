@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import javafx.stage.StageStyle;
+import javafx.scene.layout.*;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -51,6 +52,7 @@ public class LoginController implements Initializable {
     public void loginButtonOnAction(ActionEvent event){
         if(usernameTextField.getText().isBlank() == false && passwordTextField.getText().isBlank() == false){
             validateLogin();
+            openHomePage();
         }else{
             loginMessageLabel.setText("Please enter your username and password");
         }
@@ -104,5 +106,20 @@ public class LoginController implements Initializable {
             e.getCause();
         }
 
+    }
+
+    private void openHomePage(){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("sideNavigation.fxml"));
+            Parent root = loader.load();
+            Stage homePage = new Stage();
+            homePage.initStyle(StageStyle.UNDECORATED);
+            homePage.setScene(new Scene(root, 520, 400));
+            homePage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            e.getCause();
+        }
     }
 }
