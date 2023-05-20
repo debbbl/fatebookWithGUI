@@ -18,6 +18,10 @@ import javafx.scene.layout.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.net.URL;
 import java.io.File;
@@ -49,12 +53,16 @@ public class LoginController implements Initializable {
         Image lockImage = new Image(lockFile.toURI().toString());
         lockImageView.setImage(lockImage);
     }
-    public void loginButtonOnAction(ActionEvent event){
-        if(usernameTextField.getText().isBlank() == false && passwordTextField.getText().isBlank() == false){
-            validateLogin();
-            openHomePage();
-        }else{
-            loginMessageLabel.setText("Please enter your username and password");
+    public void loginButtonOnAction(ActionEvent event) {
+        if (!usernameTextField.getText().isBlank() && !passwordTextField.getText().isBlank()) {
+            User user = validateLogin();
+            if (user != null) {
+                openHomePage(user);
+            } else {
+                loginMessageLabel.setText("Invalid login. Please try again.");
+            }
+        } else {
+            loginMessageLabel.setText("Please enter your username and password.");
         }
     }
 
@@ -67,31 +75,68 @@ public class LoginController implements Initializable {
         createAccountForm();
     }
 
-    public void validateLogin(){
+    public User validateLogin() {
         tempDatabase connectNow = new tempDatabase();
         Connection connectDB = connectNow.getConnection();
 
-        String verifyLogin = "SELECT count(1) FROM userdata WHERE " +
+        String verifyLogin = "SELECT * FROM userdata WHERE " +
                 "username = '" + usernameTextField.getText() + "' AND " +
                 "password = '" + passwordTextField.getText() + "'";
 
-        try{
+        try {
             Statement statement = connectDB.createStatement();
             ResultSet queryResult = statement.executeQuery(verifyLogin);
 
-            while(queryResult.next()){
-                if(queryResult.getInt(1) == 1){
-                    loginMessageLabel.setText("Logged in successfully!");
-                }else{
-                    loginMessageLabel.setText("Invalid login. Please try again");
-                }
+            if (queryResult.next()) {
+                User.Builder userBuilder = new User.Builder()
+                        .username(queryResult.getString("username"))
+                        .password(queryResult.getString("password"))
+                        .email(queryResult.getString("email_address"))
+                        .contactNumber(queryResult.getString("contact_number"));
+
+                // Check and set other properties
+                String name = queryResult.getString("name");
+                userBuilder.name(name != null ? name : "N/A");
+
+                String birthday = queryResult.getString("birthday");
+                LocalDate birthdate = (birthday != null) ? LocalDate.parse(birthday) : null;
+                userBuilder.birthday(birthdate);
+
+                String gender = queryResult.getString("gender");
+                userBuilder.gender((gender != null && gender.length() > 0) ? gender.charAt(0) : ' ');
+
+                // Similarly, handle other properties
+                String job = queryResult.getString("job");
+                userBuilder.job(job != null ? job : "N/A");
+
+                // Handle hobbies (assuming it's a comma-separated string)
+                String hobbiesString = queryResult.getString("hobbies");
+                List<String> hobbies = (hobbiesString != null && hobbiesString.length() > 0)
+                        ? Arrays.asList(hobbiesString.split(","))
+                        : Collections.emptyList();
+                userBuilder.hobbies(hobbies);
+
+                String address = queryResult.getString("address");
+                userBuilder.address(address != null ? address : "N/A");
+
+                // Handle profile picture
+                byte[] profilePicData = queryResult.getBytes("profile_pic");
+                userBuilder.profilePic(profilePicData);
+                User user = userBuilder.build();
+                loginMessageLabel.setText("Logged in successfully!");
+
+                return user;
+            } else {
+                loginMessageLabel.setText("Invalid login. Please try again");
             }
 
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             e.getCause();
         }
+        return null;
     }
+
 
     public void createAccountForm(){
         try{
@@ -108,18 +153,28 @@ public class LoginController implements Initializable {
 
     }
 
-    private void openHomePage(){
+    private void openHomePage(User user) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("sideNavigation.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Home.fxml"));
             Parent root = loader.load();
-            Stage homePage = new Stage();
-            homePage.initStyle(StageStyle.UNDECORATED);
-            homePage.setScene(new Scene(root, 520, 400));
-            homePage.show();
 
+            HomeController homeController = loader.getController();
+            homeController.setUser(user);
+
+            Stage homeStage = new Stage();
+            homeStage.setScene(new Scene(root));
+            homeStage.initStyle(StageStyle.UNDECORATED);
+            homeStage.show();
+
+            // Close the current login stage
+            Stage currentStage = (Stage) cancelButton.getScene().getWindow();
+            currentStage.close();
         } catch (Exception e) {
             e.printStackTrace();
             e.getCause();
         }
     }
+
+
+
 }

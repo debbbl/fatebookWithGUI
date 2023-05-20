@@ -3,13 +3,14 @@ package WIA1002;
 import java.io.IOException;
 import java.util.*;
 import java.nio.file.*;
+import java.time.*;
 public class User {
     private String email;
     private String password;
     private String name;
     private String username;
     private String contactNumber;
-    private String birthday;
+    private LocalDate birthday;
     private char gender;
     private int numOfFriend;
     private String job;
@@ -72,13 +73,14 @@ public class User {
         this.contactNumber = contactNumber;
     }
 
-    public String getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
+
 
     public char getGender() {
         return gender;
@@ -132,18 +134,11 @@ public class User {
         return profilePic;
     }
 
-    public void setProfilePic(String fileName) {
-        try {
-            Path filePath = Paths.get(fileName);
-            byte[] profilePicData = Files.readAllBytes(filePath);
-
-            if (profilePicData.length <= 16 * 1024 * 1024) {
-                this.profilePic = profilePicData;
-            } else {
-                throw new IllegalArgumentException("Profile picture size exceeds the limit of 16MB.");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void setProfilePic(byte[] profilePicData) {
+        if (profilePicData.length <= 16 * 1024 * 1024) {
+            this.profilePic = profilePicData;
+        } else {
+            throw new IllegalArgumentException("Profile picture size exceeds the limit of 16MB.");
         }
     }
 
@@ -153,7 +148,7 @@ public class User {
         private String name;
         private String username;
         private String contactNumber;
-        private String birthday;
+        private LocalDate birthday;
         private char gender;
         private int numOfFriend;
         private String job;
@@ -187,7 +182,7 @@ public class User {
             return this;
         }
 
-        public Builder birthday(String birthday) {
+        public Builder birthday(LocalDate birthday) {
             this.birthday = birthday;
             return this;
         }
