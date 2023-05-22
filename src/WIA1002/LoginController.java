@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.net.URL;
 import java.io.File;
+import java.security.NoSuchAlgorithmException;
 
 public class LoginController implements Initializable {
 
