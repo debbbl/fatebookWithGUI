@@ -61,6 +61,7 @@ public class RegisterController implements Initializable {
         Platform.exit();
     }
 
+    @FXML
     public void registerButtonOnAction(ActionEvent event) throws NoSuchAlgorithmException {
         if (passwordTextField.getText().equals(confirmPasswordTextField.getText())) {
             passwordMessageLabel.setText("Password matched");
@@ -68,6 +69,7 @@ public class RegisterController implements Initializable {
             registerUser();
         }else{
             passwordMessageLabel.setText("Password does not match");
+            registrationMessageLabel.setText("");
         }
     }
 

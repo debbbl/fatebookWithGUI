@@ -1,5 +1,8 @@
 package WIA1002;
-import java.sql.*;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Random;
 import java.security.NoSuchAlgorithmException;
 
