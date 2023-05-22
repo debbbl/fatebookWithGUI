@@ -21,6 +21,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.ResourceBundle;
+import java.security.NoSuchAlgorithmException;
 
 public class RegisterController implements Initializable {
 
