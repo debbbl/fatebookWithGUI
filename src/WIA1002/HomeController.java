@@ -55,11 +55,11 @@ public class HomeController {
     @FXML
     private ImageView profilePicImageView;
 
-    private User user;
+    private regularUser user;
     @FXML
     private Button logOutButton;
 
-    public void setUser(User user) {
+    public void setUser(regularUser user) {
         this.user = user;
         updateUserInfo();
     }
@@ -72,14 +72,29 @@ public class HomeController {
         LocalDate birthday = user.getBirthday();
         birthdayLabel.setText(birthday != null ? birthday.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "N/A");
         ageLabel.setText(birthday != null ? Integer.toString(calculateAge(birthday)) : "N/A");
-        genderLabel.setText(Character.toString(user.getGender()));
-        jobLabel.setText(user.getJob() != null ? user.getJob() : "N/A");
+        genderLabel.setText(user.getGender());
+        String jobExperiences = user.getCurrentJobExperience();
+        String latestJobExperience = "";
+        if (jobExperiences != null && !jobExperiences.isEmpty()) {
+            String[] experiences = jobExperiences.split(",");
+            if (experiences.length > 0) {
+                latestJobExperience = experiences[experiences.length - 1].trim();
+            }
+        }
+        jobLabel.setText(!latestJobExperience.isEmpty() ? latestJobExperience : "N/A");
+
         hobbiesLabel.setText(user.getHobbies() != null ? String.join(", ", user.getHobbies()) : "N/A");
         addressLabel.setText(user.getAddress() != null ? user.getAddress() : "N/A");
         if (user.getProfilePic() != null) {
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(user.getProfilePic());
-            Image profileImage = new Image(inputStream);
-            profilePicImageView.setImage(profileImage);
+            profilePicImageView.setImage(new Image(new ByteArrayInputStream(user.getProfilePic())));
+        } else {
+            // Retrieve profile picture from the database
+            tempDatabase db = new tempDatabase();
+            byte[] profilePicData = db.getProfilePicture(user.getUsername());
+            if (profilePicData != null) {
+                user.setProfilePic(profilePicData);
+                profilePicImageView.setImage(new Image(new ByteArrayInputStream(profilePicData)));
+            }
         }
     }
 
@@ -103,7 +118,7 @@ public class HomeController {
 
             // Create a new Stage for the Edit Account screen
             Stage editAccountStage = new Stage();
-            editAccountStage.setTitle("Edit Account");
+            editAccountStage.initStyle(StageStyle.UNDECORATED);
             editAccountStage.setScene(new Scene(root));
 
             // Show the Edit Account screen
@@ -133,6 +148,9 @@ public class HomeController {
                 Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
 
                 byte[] profilePicData = Files.readAllBytes(targetPath);
+                tempDatabase db = new tempDatabase();
+                db.updateProfilePicture(user.getUsername(), profilePicData);
+
                 user.setProfilePic(profilePicData);
                 updateUserInfo();
             } catch (Exception e) {
@@ -140,8 +158,6 @@ public class HomeController {
                 // Handle profile picture upload error
             }
         }
-
-
     }
 
     @FXML

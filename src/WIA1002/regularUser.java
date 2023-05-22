@@ -1,52 +1,30 @@
 package WIA1002;
 
-import java.io.IOException;
 import java.util.*;
-import java.nio.file.*;
 import java.time.*;
-public class User {
-    private String email;
-    private String password;
+import java.util.Stack;
+public class regularUser extends user {
     private String name;
-    private String username;
-    private String contactNumber;
     private LocalDate birthday;
-    private char gender;
+    private String gender;
     private int numOfFriend;
-    private String job;
+    private Stack<String> jobs;
     private List<String> hobbies;
     private String address;
     private String relationshipStatus;
     private byte[] profilePic;
 
-    private User(Builder builder) {
+    public regularUser(Builder builder) {
+        super(builder);
+        super.setRole("Regular User");
         this.name = builder.name;
-        this.username = builder.username;
-        this.password = builder.password;
-        this.email = builder.email;
-        this.contactNumber = builder.contactNumber;
         this.birthday = builder.birthday;
         this.address = builder.address;
         this.gender = builder.gender;
         this.hobbies = builder.hobbies;
-        this.job = builder.job;
+        this.jobs = builder.jobs;
         this.profilePic = builder.profilePic;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+        this.relationshipStatus = builder.relationshipStatus;
     }
 
     public String getName() {
@@ -57,36 +35,19 @@ public class User {
         this.name = name;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getContactNumber() {
-        return contactNumber;
-    }
-
-    public void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
     }
 
     public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(LocalDate birthday) {
-        this.birthday = birthday;
-    }
-
-
-    public char getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(char gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
@@ -98,12 +59,16 @@ public class User {
         this.numOfFriend = numOfFriend;
     }
 
-    public String getJob() {
-        return job;
+    public void addJobExperience(String job) {
+        jobs.push(job);
     }
 
-    public void setJob(String job) {
-        this.job = job;
+    public String getCurrentJobExperience() {
+        return jobs.isEmpty() ? "" : jobs.peek();
+    }
+
+    public Stack<String> getJobExperience() {
+        return jobs;
     }
 
     public List<String> getHobbies() {
@@ -142,43 +107,24 @@ public class User {
         }
     }
 
-     public static class Builder{
-        private String email;
-        private String password;
+     public static class Builder extends user.Builder{
         private String name;
-        private String username;
-        private String contactNumber;
         private LocalDate birthday;
-        private char gender;
+        private String gender;
         private int numOfFriend;
-        private String job;
+        private Stack<String> jobs;
         private List<String> hobbies;
         private String address;
         private String relationshipStatus;
         private byte[] profilePic;
 
-        public Builder email(String email){
-            this.email=email;
-            return this;
-        }
-
-        public Builder password(String password){
-            this.password=password;
-            return this;
-        }
+         public Builder() {
+             super();
+             this.jobs = new Stack<>();
+         }
 
         public Builder name(String name) {
             this.name = name;
-            return this;
-        }
-
-        public Builder username(String username) {
-            this.username = username;
-            return this;
-        }
-
-        public Builder contactNumber(String contactNumber) {
-            this.contactNumber = contactNumber;
             return this;
         }
 
@@ -187,22 +133,20 @@ public class User {
             return this;
         }
 
-        public Builder gender(char gender){
+        public Builder gender(String gender){
             this.gender = gender;
             return this;
         }
 
-        public Builder job(String job) {
-            this.job = job;
-            return this;
-        }
+         public Builder jobs(Stack<String> jobExperience) {
+             this.jobs = jobExperience;
+             return this;
+         }
 
         public Builder hobbies(List<String> hobbies) {
             this.hobbies = hobbies;
             return this;
         }
-
-
 
         public Builder address(String address) {
             this.address = address;
@@ -214,8 +158,13 @@ public class User {
             return this;
         }
 
-        public User build() {
-            return new User(this);
+        public Builder relationshipStatus(String relationshipStatus){
+            this.relationshipStatus = relationshipStatus;
+            return this;
+        }
+
+        public regularUser build() {
+            return new regularUser(this);
         }
 
 

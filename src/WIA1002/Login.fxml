@@ -45,7 +45,7 @@
                   <Font name="Arial Black" size="14.0" />
                </font>
             </Label>
-            <TextField fx:id="usernameTextField" layoutX="141.0" layoutY="156.0" promptText=" Email / Phone Number" />
+            <TextField fx:id="usernameTextField" layoutX="141.0" layoutY="156.0" promptText="username" />
             <Button fx:id="LoginButton" layoutX="66.0" layoutY="279.0" mnemonicParsing="false" onAction="#loginButtonOnAction" prefHeight="25.0" prefWidth="183.0" style="-fx-background-color: #ffffff;" text="Log In" textFill="LIGHTBLUE">
                <font>
                   <Font name="Arial Black" size="12.0" />
@@ -59,7 +59,7 @@
                   <Font name="Bookshelf Symbol 7" size="14.0" />
                </font>
             </Label>
-            <PasswordField fx:id="passwordTextField" layoutX="140.0" layoutY="200.0" prefHeight="25.0" prefWidth="151.0" />
+            <PasswordField fx:id="passwordTextField" layoutX="140.0" layoutY="200.0" prefHeight="25.0" prefWidth="151.0" promptText="password" />
          </children>
       </AnchorPane>
    </right>

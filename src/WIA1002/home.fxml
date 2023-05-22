@@ -15,7 +15,7 @@
             <VBox spacing="5.0" style="-fx-padding: 10px;" />
         </VBox>
 
-        <VBox layoutX="404.0" layoutY="127.0" prefHeight="171.0" prefWidth="124.0" spacing="10.0">
+        <VBox layoutX="404.0" layoutY="127.0" prefHeight="171.0" prefWidth="175.0" spacing="10.0">
 
             <HBox spacing="20.0">
                 <Label text="Birthday:" />
@@ -28,23 +28,23 @@
             </HBox>
 
             <HBox spacing="20.0">
-                <Label text="Gender:" />
-                <Label fx:id="genderLabel" />
+                <Label prefHeight="17.0" prefWidth="50.0" text="Gender:" />
+                <Label fx:id="genderLabel" prefHeight="17.0" prefWidth="63.0" />
             </HBox>
 
-            <HBox spacing="20.0">
-                <Label text="Job:" />
-                <Label fx:id="jobLabel" />
+            <HBox prefHeight="17.0" prefWidth="135.0" spacing="20.0">
+                <Label prefHeight="17.0" prefWidth="29.0" text="Job:" />
+                <Label fx:id="jobLabel" prefHeight="17.0" prefWidth="120.0" />
             </HBox>
 
             <HBox spacing="20.0">
                 <Label text="Hobbies:" />
-                <Label fx:id="hobbiesLabel" />
+                <Label fx:id="hobbiesLabel" prefHeight="17.0" prefWidth="109.0" />
             </HBox>
 
             <HBox spacing="20.0">
                 <Label text="Address:" />
-                <Label fx:id="addressLabel" />
+                <Label fx:id="addressLabel" prefHeight="17.0" prefWidth="103.0" />
             </HBox>
 
             <HBox spacing="20.0" />
@@ -52,7 +52,7 @@
 
         <ImageView fx:id="profilePicImageView" fitHeight="100" fitWidth="100" layoutX="211.0" layoutY="74.0" />
 
-        <Button layoutX="183.0" layoutY="186.0" onAction="#uploadProfilePictureClicked" style="-fx-background-color: #ADD8E6;" text="Upload Profile Picture" textFill="WHITE">
+        <Button fx:id="uploadProfilePicButton" layoutX="183.0" layoutY="186.0" onAction="#uploadProfilePictureClicked" style="-fx-background-color: #ADD8E6;" text="Upload Profile Picture" textFill="WHITE">
          <font>
             <Font name="Bauhaus 93" size="14.0" />
          </font></Button>

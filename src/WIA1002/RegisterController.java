@@ -15,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import WIA1002.regularUser.Builder;
 
 import java.io.File;
 import java.net.URL;
@@ -75,13 +76,13 @@ public class RegisterController implements Initializable {
         String phone = phoneNumberTextField.getText();
         String password = passwordTextField.getText();
 
-        User.Builder userBuilder = new User.Builder()
+        regularUser.Builder userBuilder = (Builder) new Builder()
                 .username(username)
                 .email(email)
                 .contactNumber(phone)
                 .password(password);
 
-        User newUser = userBuilder.build();
+        regularUser newUser = userBuilder.build();
 
         tempDatabase connectNow = new tempDatabase();
         Connection connectDB = connectNow.getConnection();

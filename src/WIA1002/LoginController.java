@@ -19,10 +19,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.net.URL;
 import java.io.File;
 
@@ -55,7 +52,7 @@ public class LoginController implements Initializable {
     }
     public void loginButtonOnAction(ActionEvent event) {
         if (!usernameTextField.getText().isBlank() && !passwordTextField.getText().isBlank()) {
-            User user = validateLogin();
+            regularUser user = validateLogin();
             if (user != null) {
                 openHomePage(user);
             } else {
@@ -75,7 +72,7 @@ public class LoginController implements Initializable {
         createAccountForm();
     }
 
-    public User validateLogin() {
+    public regularUser validateLogin() {
         tempDatabase connectNow = new tempDatabase();
         Connection connectDB = connectNow.getConnection();
 
@@ -88,7 +85,7 @@ public class LoginController implements Initializable {
             ResultSet queryResult = statement.executeQuery(verifyLogin);
 
             if (queryResult.next()) {
-                User.Builder userBuilder = new User.Builder()
+                regularUser.Builder userBuilder = (regularUser.Builder) new regularUser.Builder()
                         .username(queryResult.getString("username"))
                         .password(queryResult.getString("password"))
                         .email(queryResult.getString("email_address"))
@@ -103,11 +100,14 @@ public class LoginController implements Initializable {
                 userBuilder.birthday(birthdate);
 
                 String gender = queryResult.getString("gender");
-                userBuilder.gender((gender != null && gender.length() > 0) ? gender.charAt(0) : ' ');
+                userBuilder.gender(gender != null ? gender : "");
 
                 // Similarly, handle other properties
                 String job = queryResult.getString("job");
-                userBuilder.job(job != null ? job : "N/A");
+                Stack<String> jobs = new Stack<>();
+                jobs.push(job != null ? job : "N/A");
+                userBuilder.jobs(jobs);
+
 
                 // Handle hobbies (assuming it's a comma-separated string)
                 String hobbiesString = queryResult.getString("hobbies");
@@ -122,7 +122,7 @@ public class LoginController implements Initializable {
                 // Handle profile picture
                 byte[] profilePicData = queryResult.getBytes("profile_pic");
                 userBuilder.profilePic(profilePicData);
-                User user = userBuilder.build();
+                regularUser user = userBuilder.build();
                 loginMessageLabel.setText("Logged in successfully!");
 
                 return user;
@@ -153,7 +153,7 @@ public class LoginController implements Initializable {
 
     }
 
-    private void openHomePage(User user) {
+    private void openHomePage(regularUser user) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Home.fxml"));
             Parent root = loader.load();

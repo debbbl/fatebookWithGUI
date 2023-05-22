@@ -2,12 +2,20 @@ package WIA1002;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 public class EditAccountController {
     @FXML
@@ -39,14 +47,20 @@ public class EditAccountController {
 
     @FXML
     private Button saveButton;
+    @FXML
+    private Button cancelButton;
 
-    private User user;
+    private regularUser user;
 
-    public void setUser(User user) {
+    private List<String> hobbiesList;
+    @FXML
+    private ImageView editAccountImageView;
+
+    public void setUser(regularUser user) {
         this.user = user;
         populateFields();
     }
-
+    @FXML
     private void populateFields() {
         emailTextField.setText(user.getEmail());
         nameTextField.setText(user.getName());
@@ -59,10 +73,59 @@ public class EditAccountController {
         } else {
             birthdayTextField.setText("");
         }
-        genderTextField.setText(Character.toString(user.getGender()));
-        jobTextField.setText(user.getJob());
+        genderTextField.setText(user.getGender());
+        jobTextField.setText(user.getCurrentJobExperience());
         hobbiesTextField.setText(String.join(", ", user.getHobbies()));
         addressTextField.setText(user.getAddress());
+    }
+    @FXML
+    private void initialize() {
+        // Initialize the hobbies list
+        hobbiesList = new ArrayList<>();
+        hobbiesList.add("Reading");
+        hobbiesList.add("Sports");
+        hobbiesList.add("Cooking");
+
+        hobbiesTextField.setOnMouseClicked(event -> showHobbiesDialog());
+
+        File brandingFile = new File("images/vertical.png"); //file for the meta logo
+        Image brandingImage = new Image(brandingFile.toURI().toString());
+        editAccountImageView.setImage(brandingImage);
+    }
+
+    @FXML
+    private void showHobbiesDialog() {
+        List<String> dialogChoices = new ArrayList<>(hobbiesList);
+        dialogChoices.add("Create a new hobby");
+
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(hobbiesList.get(0), dialogChoices);
+        dialog.setTitle("Select Hobbies");
+        dialog.setHeaderText(null);
+        dialog.setContentText("Select or create a new hobby:");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(hobby -> {
+            if (hobby.equals("Create a new hobby")) {
+                showNewHobbyDialog();
+            } else {
+                hobbiesTextField.setText(hobby);
+            }
+        });
+    }
+
+    private void showNewHobbyDialog() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("New Hobby");
+        dialog.setHeaderText("Create a new hobby");
+        dialog.setContentText("Hobby:");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(hobby -> {
+            if (!hobbiesList.contains(hobby)) {
+                hobbiesList.add(hobby);
+            }
+            hobbiesTextField.setText(hobby);
+        });
     }
 
     @FXML
@@ -75,8 +138,8 @@ public class EditAccountController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDate birthday = LocalDate.parse(birthdayTextField.getText(), formatter);
         user.setBirthday(birthday);
-        user.setGender(genderTextField.getText().charAt(0));
-        user.setJob(jobTextField.getText());
+        user.setGender(genderTextField.getText());
+        user.addJobExperience(jobTextField.getText());
         user.setHobbies(Arrays.asList(hobbiesTextField.getText().split(", ")));
         user.setAddress(addressTextField.getText());
 
@@ -84,10 +147,16 @@ public class EditAccountController {
         // Update the user details in the database
         tempDatabase database = new tempDatabase();
         database.getConnection();
-        database.updateUser(user);
+        database.updateRegularUser(user);
 
         // Close the Edit Account screen
         Stage stage = (Stage) saveButton.getScene().getWindow();
+        stage.close();
+    }
+    @FXML
+    private void cancelButtonOnAction() {
+        // Close the Edit Account screen
+        Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
     }
 }
