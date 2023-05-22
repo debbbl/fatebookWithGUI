@@ -14,7 +14,6 @@ import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import javafx.stage.StageStyle;
 import javafx.scene.layout.*;
-import WIA1002.regularUser.Builder;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -82,7 +81,7 @@ public class LoginController implements Initializable {
             ResultSet queryResult = statement.executeQuery(verifyLogin);
 
             if (queryResult.next()) {
-                regularUser.RegularUserBuilder userBuilder = new regularUser.RegularUserBuilder()
+                regularUser.RegularUserBuilder userBuilder = (regularUser.RegularUserBuilder) new regularUser.RegularUserBuilder()
                         .username(queryResult.getString("username"))
                         .password(queryResult.getString("password"))
                         .email(queryResult.getString("email_address"))
