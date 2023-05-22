@@ -24,6 +24,8 @@ import java.io.File;
 
 public class LoginController implements Initializable {
 
+    Encryptor encryptor = new Encryptor();
+    
     @FXML
     private Button cancelButton;
     @FXML
@@ -49,7 +51,7 @@ public class LoginController implements Initializable {
         Image lockImage = new Image(lockFile.toURI().toString());
         lockImageView.setImage(lockImage);
     }
-    public void loginButtonOnAction(ActionEvent event) {
+    public void loginButtonOnAction(ActionEvent event) throws NoSuchAlgorithmException {
         if (!usernameTextField.getText().isBlank() && !passwordTextField.getText().isBlank()) {
             regularUser user = validateLogin();
             if (user != null) {
@@ -68,13 +70,13 @@ public class LoginController implements Initializable {
     public void createAccountButtonOnAction(ActionEvent event){
         createAccountForm();
     }
-    public regularUser validateLogin() {
+    public regularUser validateLogin() throws NoSuchAlgorithmException  {
         tempDatabase connectNow = new tempDatabase();
         Connection connectDB = connectNow.getConnection();
 
         String verifyLogin = "SELECT * FROM userdata WHERE " +
                 "username = '" + usernameTextField.getText() + "' AND " +
-                "password = '" + passwordTextField.getText() + "'";
+                "password = '" + encryptor.encryptString(passwordTextField.getText()) + "'";
 
         try {
             Statement statement = connectDB.createStatement();
