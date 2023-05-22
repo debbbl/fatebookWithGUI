@@ -14,17 +14,17 @@ public class regularUser extends user {
     private String relationshipStatus;
     private byte[] profilePic;
 
-    public regularUser(Builder builder) {
-        super(builder);
+    public regularUser(RegularUserBuilder regularUserBuilder) {
+        super(regularUserBuilder);
         super.setRole("Regular User");
-        this.name = builder.name;
-        this.birthday = builder.birthday;
-        this.address = builder.address;
-        this.gender = builder.gender;
-        this.hobbies = builder.hobbies;
-        this.jobs = builder.jobs;
-        this.profilePic = builder.profilePic;
-        this.relationshipStatus = builder.relationshipStatus;
+        this.name = regularUserBuilder.name;
+        this.birthday = regularUserBuilder.birthday;
+        this.address = regularUserBuilder.address;
+        this.gender = regularUserBuilder.gender;
+        this.hobbies = regularUserBuilder.hobbies;
+        this.jobs = regularUserBuilder.jobs;
+        this.profilePic = regularUserBuilder.profilePic;
+        this.relationshipStatus = regularUserBuilder.relationshipStatus;
     }
 
     public String getName() {
@@ -107,7 +107,7 @@ public class regularUser extends user {
         }
     }
 
-     public static class Builder extends user.Builder{
+     public static class RegularUserBuilder extends user.Builder{
         private String name;
         private LocalDate birthday;
         private String gender;
@@ -118,47 +118,47 @@ public class regularUser extends user {
         private String relationshipStatus;
         private byte[] profilePic;
 
-         public Builder() {
+         public RegularUserBuilder() {
              super();
              this.jobs = new Stack<>();
          }
 
-        public Builder name(String name) {
+        public RegularUserBuilder name(String name) {
             this.name = name;
             return this;
         }
 
-        public Builder birthday(LocalDate birthday) {
+        public RegularUserBuilder birthday(LocalDate birthday) {
             this.birthday = birthday;
             return this;
         }
 
-        public Builder gender(String gender){
+        public RegularUserBuilder gender(String gender){
             this.gender = gender;
             return this;
         }
 
-         public Builder jobs(Stack<String> jobExperience) {
+         public RegularUserBuilder jobs(Stack<String> jobExperience) {
              this.jobs = jobExperience;
              return this;
          }
 
-        public Builder hobbies(List<String> hobbies) {
+        public RegularUserBuilder hobbies(List<String> hobbies) {
             this.hobbies = hobbies;
             return this;
         }
 
-        public Builder address(String address) {
+        public RegularUserBuilder address(String address) {
             this.address = address;
             return this;
         }
 
-        public Builder profilePic(byte[] profilePic) {
+        public RegularUserBuilder profilePic(byte[] profilePic) {
             this.profilePic = profilePic;
             return this;
         }
 
-        public Builder relationshipStatus(String relationshipStatus){
+        public RegularUserBuilder relationshipStatus(String relationshipStatus){
             this.relationshipStatus = relationshipStatus;
             return this;
         }

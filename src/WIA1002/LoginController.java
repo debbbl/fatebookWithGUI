@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import javafx.stage.StageStyle;
 import javafx.scene.layout.*;
-
+import WIA1002.regularUser.Builder;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -62,16 +62,13 @@ public class LoginController implements Initializable {
             loginMessageLabel.setText("Please enter your username and password.");
         }
     }
-
     public void cancelButtonOnAction(ActionEvent event){
         Stage stage = (Stage)cancelButton.getScene().getWindow();
         stage.close();
     }
-
     public void createAccountButtonOnAction(ActionEvent event){
         createAccountForm();
     }
-
     public regularUser validateLogin() {
         tempDatabase connectNow = new tempDatabase();
         Connection connectDB = connectNow.getConnection();
@@ -85,7 +82,7 @@ public class LoginController implements Initializable {
             ResultSet queryResult = statement.executeQuery(verifyLogin);
 
             if (queryResult.next()) {
-                regularUser.Builder userBuilder = (regularUser.Builder) new regularUser.Builder()
+                regularUser.RegularUserBuilder userBuilder = new regularUser.RegularUserBuilder()
                         .username(queryResult.getString("username"))
                         .password(queryResult.getString("password"))
                         .email(queryResult.getString("email_address"))
@@ -108,7 +105,6 @@ public class LoginController implements Initializable {
                 jobs.push(job != null ? job : "N/A");
                 userBuilder.jobs(jobs);
 
-
                 // Handle hobbies (assuming it's a comma-separated string)
                 String hobbiesString = queryResult.getString("hobbies");
                 List<String> hobbies = (hobbiesString != null && hobbiesString.length() > 0)
@@ -122,20 +118,26 @@ public class LoginController implements Initializable {
                 // Handle profile picture
                 byte[] profilePicData = queryResult.getBytes("profile_pic");
                 userBuilder.profilePic(profilePicData);
+
                 regularUser user = userBuilder.build();
                 loginMessageLabel.setText("Logged in successfully!");
 
                 return user;
             } else {
-                loginMessageLabel.setText("Invalid login. Please try again");
+                loginMessageLabel.setText("Invalid login. Please try again.");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
-            e.getCause();
+        } finally {
+            try {
+                connectDB.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }
+
 
 
     public void createAccountForm(){
