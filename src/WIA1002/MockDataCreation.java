@@ -1,6 +1,7 @@
 package WIA1002;
 import java.sql.*;
 import java.util.Random;
+import java.security.NoSuchAlgorithmException;
 
 public class MockDataCreation {
     
