@@ -55,10 +55,11 @@ public class RegisterController implements Initializable {
         fateImageView.setImage(fateImage);
     }
 
+    @FXML
     public void closeButtonOnAction(ActionEvent event){
         Stage stage = (Stage)closeButton.getScene().getWindow();
         stage.close();
-        Platform.exit();
+        //Platform.exit();
     }
 
     @FXML

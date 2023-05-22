@@ -26,7 +26,7 @@ import java.security.NoSuchAlgorithmException;
 public class LoginController implements Initializable {
 
     Encryptor encryptor = new Encryptor();
-    
+
     @FXML
     private Button cancelButton;
     @FXML
@@ -139,8 +139,6 @@ public class LoginController implements Initializable {
         }
         return null;
     }
-
-
 
     public void createAccountForm(){
         try{

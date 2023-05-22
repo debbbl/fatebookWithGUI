@@ -41,7 +41,7 @@ public class EditAccountController {
     @FXML
     private Button cancelButton;
     private regularUser user;
-    private List<String> hobbiesList;
+    private List<String> hobbiesList = new ArrayList<>();;
     @FXML
     private ImageView editAccountImageView;
     public void setUser(regularUser user) {
@@ -112,6 +112,7 @@ public class EditAccountController {
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(hobby -> {
             HomeController.getInstance().addHobby(hobby); // Update hobbiesList in HomeController
+            hobbiesList.add(hobby); // Add the new hobby to hobbiesList
             hobbiesTextField.setText(hobby);
         });
     }
@@ -135,6 +136,7 @@ public class EditAccountController {
         tempDatabase database = new tempDatabase();
         database.getConnection();
         database.updateRegularUser(user);
+        database.updateJob(user.getUsername(), jobTextField.getText()); // Update the job in the database
 
         // Close the Edit Account screen
         Stage stage = (Stage) saveButton.getScene().getWindow();

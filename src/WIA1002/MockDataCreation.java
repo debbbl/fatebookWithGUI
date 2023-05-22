@@ -26,6 +26,21 @@ public class MockDataCreation {
             insertUserData(connectDB, username, email, contactNumber, password);
         }
 
+        // Create and insert admin accounts
+        String adminUsername1 = "admin1";
+        String adminPassword1 = encryptor.encryptString("admin1pass");
+        String adminEmail1 = "admin1@example.com";
+        String adminContactNumber1 = generateContactNumber();
+        insertUserData(connectDB, adminUsername1, adminEmail1, adminContactNumber1, adminPassword1);
+
+        String adminUsername2 = "admin2";
+        String adminPassword2 = encryptor.encryptString("admin2pass");
+        String adminEmail2 = "admin2@example.com";
+        String adminContactNumber2 = generateContactNumber();
+        insertUserData(connectDB, adminUsername2, adminEmail2, adminContactNumber2, adminPassword2);
+
+        System.out.println("Mock data created successfully.");
+
         System.out.println("Mock data created successfully.");
     }
 

@@ -1,6 +1,10 @@
 package WIA1002;
 import java.io.ByteArrayInputStream;
 import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 public class tempDatabase {
     public Connection databaseLink;
     String databaseName = "facebook";
@@ -21,7 +25,7 @@ public class tempDatabase {
     }
 
     public void updateRegularUser(regularUser user) {
-        String updateQuery = "UPDATE userdata SET email_address=?, name=?, username=?, " +
+        String updateQuery = "UPDATE userdata SET email_address=?, name=?, " +
                 "contact_number=?, birthday=?, gender=?, job=?, hobbies=?, address=? WHERE username=?";
 
         try (Connection connection = getConnection();
@@ -29,14 +33,13 @@ public class tempDatabase {
 
             statement.setString(1, user.getEmail());
             statement.setString(2, user.getName());
-            statement.setString(3, user.getUsername());
-            statement.setString(4, user.getContactNumber());
-            statement.setDate(5, Date.valueOf(user.getBirthday()));
-            statement.setString(6, String.valueOf(user.getGender()));
-            statement.setString(7, String.join(", ", user.getJobExperience()));
-            statement.setString(8, String.join(", ", user.getHobbies()));
-            statement.setString(9, user.getAddress());
-            statement.setString(10, user.getUsername());
+            statement.setString(3, user.getContactNumber());
+            statement.setDate(4, Date.valueOf(user.getBirthday()));
+            statement.setString(5, String.valueOf(user.getGender()));
+            statement.setString(6, String.join(", ", user.getJobExperience()));
+            statement.setString(7, String.join(", ", user.getHobbies()));
+            statement.setString(8, user.getAddress());
+            statement.setString(9, user.getUsername());
 
             statement.executeUpdate();
 
@@ -45,6 +48,7 @@ public class tempDatabase {
             e.printStackTrace();
         }
     }
+
 
     public int getUserIdByUsername(String username) {
         int userId = -1;
@@ -123,6 +127,52 @@ public class tempDatabase {
         }
     }
 
+    public void deleteUserAccount(String username) {
+        String deleteQuery = "DELETE FROM userdata WHERE username = ?";
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
+
+            statement.setString(1, username);
+            statement.executeUpdate();
+
+            System.out.println("User account deleted successfully!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<regularUser> getNewlyCreatedAccounts(LocalDate startDate, LocalDate endDate) {
+        List<regularUser> newlyCreatedAccounts = new ArrayList<>();
+        String query = "SELECT * FROM userdata WHERE creation_date BETWEEN ? AND ?";
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setDate(1, Date.valueOf(startDate));
+            statement.setDate(2, Date.valueOf(endDate));
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                regularUser.RegularUserBuilder userBuilder = (regularUser.RegularUserBuilder) new regularUser.RegularUserBuilder()
+                        .username(resultSet.getString("username"))
+                        .password(resultSet.getString("password"))
+                        .email(resultSet.getString("email_address"))
+                        .contactNumber(resultSet.getString("contact_number"));
+
+                // Set other properties...
+                // (Same as the code in validateLogin() method)
+
+                regularUser user = userBuilder.build();
+                newlyCreatedAccounts.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return newlyCreatedAccounts;
+    }
 
 
 

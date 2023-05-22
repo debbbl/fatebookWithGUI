@@ -110,15 +110,16 @@ public class HomeController {
             }
         }
         jobLabel.setText(!latestJobExperience.isEmpty() ? latestJobExperience : "N/A");
-
         hobbiesLabel.setText(user.getHobbies() != null ? String.join(", ", user.getHobbies()) : "N/A");
         addressLabel.setText(user.getAddress() != null ? user.getAddress() : "N/A");
+
+        tempDatabase db = new tempDatabase();
+        //db.updateJob(user.getUsername(), latestJobExperience);
+
         if (user.getProfilePic() != null) {
             profilePicImageView.setImage(new Image(new ByteArrayInputStream(user.getProfilePic())));
         } else {
             // Retrieve profile picture from the database
-            tempDatabase db = new tempDatabase();
-            db.updateJob(user.getUsername(), latestJobExperience);
             byte[] profilePicData = db.getProfilePicture(user.getUsername());
             if (profilePicData != null) {
                 user.setProfilePic(profilePicData);
