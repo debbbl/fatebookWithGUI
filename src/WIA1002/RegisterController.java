@@ -64,11 +64,10 @@ public class RegisterController implements Initializable {
         if (passwordTextField.getText().equals(confirmPasswordTextField.getText())) {
             passwordMessageLabel.setText("Password matched");
             registrationMessageLabel.setText("Registered successfully!");
+            registerUser();
         }else{
             passwordMessageLabel.setText("Password does not match");
         }
-        registerUser();
-
     }
 
     public void registerUser() throws NoSuchAlgorithmException {
