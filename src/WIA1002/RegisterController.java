@@ -24,6 +24,8 @@ import java.util.ResourceBundle;
 
 public class RegisterController implements Initializable {
 
+    Encryptor encryptor = new Encryptor();
+    
     @FXML
     private ImageView fateImageView;
     @FXML
@@ -58,7 +60,7 @@ public class RegisterController implements Initializable {
         Platform.exit();
     }
 
-    public void registerButtonOnAction(ActionEvent event){
+    public void registerButtonOnAction(ActionEvent event) throws NoSuchAlgorithmException {
         if (passwordTextField.getText().equals(confirmPasswordTextField.getText())) {
             passwordMessageLabel.setText("Password matched");
             registrationMessageLabel.setText("Registered successfully!");
@@ -69,11 +71,11 @@ public class RegisterController implements Initializable {
 
     }
 
-    public void registerUser() {
+    public void registerUser() throws NoSuchAlgorithmException {
         String username = usernameTextField.getText();
         String email = emailTextField.getText();
         String phone = phoneNumberTextField.getText();
-        String password = passwordTextField.getText();
+        String password = encryptor.encryptString(passwordTextField.getText());
 
         regularUser.RegularUserBuilder userBuilder = (regularUser.RegularUserBuilder) new regularUser.RegularUserBuilder()
                 .username(username)
