@@ -3,8 +3,12 @@ import java.sql.*;
 import java.util.Random;
 
 public class MockDataCreation {
+    
+    Encryptor encryptor = new Encryptor();
+    
     private static final int NUM_USERS = 30;
-    public void createMockData() {
+    
+    public void createMockData() throws NoSuchAlgorithmException {
         tempDatabase connectNow = new tempDatabase();
         Connection connectDB = connectNow.getConnection();
 
@@ -13,7 +17,7 @@ public class MockDataCreation {
             String username = "user" + i;
             String email = "user" + i + "@example.com";
             String contactNumber = generateContactNumber();
-            String password = generateRandomString(8);
+            String password = encryptor.encryptString(generateRandomString(8));
 
             insertUserData(connectDB, username, email, contactNumber, password);
         }
