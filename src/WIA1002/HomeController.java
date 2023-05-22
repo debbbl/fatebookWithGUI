@@ -12,6 +12,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.IOException;
+import java.util.*;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.nio.file.Files;
@@ -51,17 +54,42 @@ public class HomeController {
 
     @FXML
     private Label addressLabel;
-
+    private static HomeController instance;
     @FXML
     private ImageView profilePicImageView;
-
     private regularUser user;
+    private List<String> hobbiesList;
     @FXML
     private Button logOutButton;
 
+    public HomeController(){
+        hobbiesList = new ArrayList<>();
+        hobbiesList.add("Reading");
+        hobbiesList.add("Cooking");
+        hobbiesList.add("Hiking");
+    }
     public void setUser(regularUser user) {
         this.user = user;
         updateUserInfo();
+    }
+
+    public static HomeController getInstance() {
+        if (instance == null) {
+            instance = new HomeController();
+        }
+        return instance;
+    }
+
+    public void setHobbiesList(List<String> hobbiesList) {
+        this.hobbiesList = hobbiesList;
+    }
+
+    public List<String> getHobbiesList() {
+        return hobbiesList;
+    }
+
+    public void addHobby(String hobby) {
+        hobbiesList.add(hobby);
     }
 
     private void updateUserInfo() {
@@ -90,11 +118,22 @@ public class HomeController {
         } else {
             // Retrieve profile picture from the database
             tempDatabase db = new tempDatabase();
+            db.updateJob(user.getUsername(), latestJobExperience);
             byte[] profilePicData = db.getProfilePicture(user.getUsername());
             if (profilePicData != null) {
                 user.setProfilePic(profilePicData);
                 profilePicImageView.setImage(new Image(new ByteArrayInputStream(profilePicData)));
             }
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EditAccount.fxml"));
+            Parent root = loader.load();
+            EditAccountController editAccountController = loader.getController();
+            editAccountController.setUser(user);
+            editAccountController.setHobbiesList(hobbiesList);
+        }catch(Exception e){
+            e.printStackTrace();
+            e.getCause();// Set the hobbiesList in EditAccountController
         }
     }
 

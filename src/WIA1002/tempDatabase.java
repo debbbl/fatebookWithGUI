@@ -3,13 +3,12 @@ import java.io.ByteArrayInputStream;
 import java.sql.*;
 public class tempDatabase {
     public Connection databaseLink;
+    String databaseName = "facebook";
+    String databaseUser = "root";
+    String databasePassword = "facebookds";
+    String url = "jdbc:mysql://localhost:3306/facebook";
 
     public Connection getConnection(){
-        String databaseName = "facebook";
-        String databaseUser = "root";
-        String databasePassword = "facebookds";
-        String url = "jdbc:mysql://localhost:3306/facebook";
-
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             databaseLink = DriverManager.getConnection(url, databaseUser, databasePassword);
@@ -105,6 +104,23 @@ public class tempDatabase {
         }
 
         return profilePicData;
+    }
+
+    public void updateJob(String username, String job) {
+        String updateQuery = "UPDATE userdata SET job = ? WHERE username = ?";
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(updateQuery)) {
+
+            statement.setString(1, job);
+            statement.setString(2, username);
+            statement.executeUpdate();
+
+            System.out.println("Job updated successfully!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the database update error
+        }
     }
 
 

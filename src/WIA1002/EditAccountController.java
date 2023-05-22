@@ -20,42 +20,30 @@ import java.util.Optional;
 public class EditAccountController {
     @FXML
     private TextField emailTextField;
-
     @FXML
     private TextField nameTextField;
-
     @FXML
     private TextField usernameTextField;
-
     @FXML
     private TextField contactNumberTextField;
-
     @FXML
     private TextField birthdayTextField;
-
     @FXML
     private TextField genderTextField;
-
     @FXML
     private TextField jobTextField;
-
     @FXML
     private TextField hobbiesTextField;
-
     @FXML
     private TextField addressTextField;
-
     @FXML
     private Button saveButton;
     @FXML
     private Button cancelButton;
-
     private regularUser user;
-
     private List<String> hobbiesList;
     @FXML
     private ImageView editAccountImageView;
-
     public void setUser(regularUser user) {
         this.user = user;
         populateFields();
@@ -92,7 +80,9 @@ public class EditAccountController {
         Image brandingImage = new Image(brandingFile.toURI().toString());
         editAccountImageView.setImage(brandingImage);
     }
-
+    public void setHobbiesList(List<String> hobbiesList) {
+        this.hobbiesList = hobbiesList;
+    }
     @FXML
     private void showHobbiesDialog() {
         List<String> dialogChoices = new ArrayList<>(hobbiesList);
@@ -106,13 +96,13 @@ public class EditAccountController {
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(hobby -> {
             if (hobby.equals("Create a new hobby")) {
-                showNewHobbyDialog();
+                showNewHobbyDialog();  // Modified this line
             } else {
                 hobbiesTextField.setText(hobby);
             }
         });
     }
-
+    @FXML
     private void showNewHobbyDialog() {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("New Hobby");
@@ -121,13 +111,10 @@ public class EditAccountController {
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(hobby -> {
-            if (!hobbiesList.contains(hobby)) {
-                hobbiesList.add(hobby);
-            }
+            HomeController.getInstance().addHobby(hobby); // Update hobbiesList in HomeController
             hobbiesTextField.setText(hobby);
         });
     }
-
     @FXML
     private void saveButtonOnAction() {
         // Update the user details
