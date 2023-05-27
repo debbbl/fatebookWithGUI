@@ -1,10 +1,7 @@
 package WIA1002;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -48,6 +45,13 @@ public class searchUserController {
     @FXML
     private Label addressLabel;
     @FXML
+    private Button addFriendButton;
+    private regularUser user;
+
+    public void setUser(regularUser user){
+        this.user = user;
+    }
+    @FXML
     private void searchButtonClicked() {
         String query = searchTextField.getText();
         List<String> searchResults = performSearch(query);
@@ -68,6 +72,88 @@ public class searchUserController {
             displayUserDetails(user);
         }
     }
+
+    @FXML
+    private void addFriendButtonClicked() {
+        String selectedUsername = searchResultsListView.getSelectionModel().getSelectedItem();
+        // Get the username of the profile being viewed
+        String loggedInUsername = this.user.getUsername(); // Replace with the actual username of the logged-in user
+
+        if (selectedUsername != null && loggedInUsername != null) {
+            boolean success = addFriend(loggedInUsername, selectedUsername);
+            if (success) {
+                displayAlert(Alert.AlertType.INFORMATION, "Friend Added", "You have successfully added " + selectedUsername + " as your friend.");
+            } else {
+                displayAlert(Alert.AlertType.ERROR, "Error", "Failed to add " + selectedUsername + " as your friend.");
+            }
+        }
+    }
+
+    private boolean addFriend(String loggedInUsername, String friendUsername) {
+        tempDatabase db = new tempDatabase();
+        Connection connection = db.getConnection();
+
+        try {
+            // Get the user_id of the logged-in user
+            String getUserIdQuery = "SELECT user_id FROM userdata WHERE username = ?";
+            PreparedStatement getUserIdStatement = connection.prepareStatement(getUserIdQuery);
+            getUserIdStatement.setString(1, loggedInUsername);
+            ResultSet getUserIdResult = getUserIdStatement.executeQuery();
+
+            if (getUserIdResult.next()) {
+                int loggedInUserId = getUserIdResult.getInt("user_id");
+
+                // Retrieve the current friend list of the logged-in user
+                String getFriendListQuery = "SELECT friend FROM userfriendlist WHERE user_id = ?";
+                PreparedStatement getFriendListStatement = connection.prepareStatement(getFriendListQuery);
+                getFriendListStatement.setInt(1, loggedInUserId);
+                ResultSet getFriendListResult = getFriendListStatement.executeQuery();
+
+                if (getFriendListResult.next()) {
+                    String existingFriends = getFriendListResult.getString("friend");
+                    // Check if the friend is already in the list
+                    if (existingFriends != null && existingFriends.contains(friendUsername)) {
+                        // The friend already exists in the list
+                        return false;
+                    } else {
+                        // Append the new friend to the existing list
+                        String updatedFriends = (existingFriends != null && !existingFriends.isEmpty()) ?
+                                existingFriends + "," + friendUsername : friendUsername;
+
+                        // Update the friend list in the userfriendlist table
+                        String updateQuery = "UPDATE userfriendlist SET friend = ? WHERE user_id = ?";
+                        PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+                        updateStatement.setString(1, updatedFriends);
+                        updateStatement.setInt(2, loggedInUserId);
+                        int rowsAffected = updateStatement.executeUpdate();
+
+                        return rowsAffected > 0;
+                    }
+                } else {
+                    // The user doesn't have any friends yet, insert the first friend
+                    String insertQuery = "INSERT INTO userfriendlist (user_id, friend) VALUES (?, ?)";
+                    PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
+                    insertStatement.setInt(1, loggedInUserId);
+                    insertStatement.setString(2, friendUsername);
+                    int rowsAffected = insertStatement.executeUpdate();
+
+                    return rowsAffected > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
+
 
     private List<String> performSearch(String query) {
         List<String> searchResults = new ArrayList<>();

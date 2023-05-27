@@ -80,6 +80,10 @@ public class regularUserDashboardController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("searchUser.fxml"));
             mainPane.setCenter(loader.load());
 
+            if (loader.getController() instanceof searchUserController) {
+                searchUserController searchUser = loader.getController();
+                searchUser.setUser(user);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
