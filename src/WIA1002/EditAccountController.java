@@ -1,10 +1,7 @@
 package WIA1002;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
@@ -27,7 +24,7 @@ public class EditAccountController {
     @FXML
     private TextField contactNumberTextField;
     @FXML
-    private TextField birthdayTextField;
+    private DatePicker birthdayTextField;
     @FXML
     private TextField genderTextField;
     @FXML
@@ -37,11 +34,18 @@ public class EditAccountController {
     @FXML
     private TextField addressTextField;
     @FXML
+    private TextField relationshipStatusTextField;
+    @FXML
     private Button saveButton;
     @FXML
     private Button cancelButton;
     private regularUser user;
     private List<String> hobbiesList = new ArrayList<>();;
+    private List<String> relationshipStatusOptions = new ArrayList<>(Arrays.asList(
+            "Single", "In a relationship", "Engaged", "Married", "In a civil union",
+            "In a domestic partnership", "In an open relationship", "It's complicated",
+            "Separated", "Divorced", "Widowed"
+    ));
     @FXML
     private ImageView editAccountImageView;
     public void setUser(regularUser user) {
@@ -55,17 +59,28 @@ public class EditAccountController {
         usernameTextField.setText(user.getUsername());
         contactNumberTextField.setText(user.getContactNumber());
         if (user.getBirthday() != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-            String birthday = user.getBirthday().format(formatter);
-            birthdayTextField.setText(birthday);
+            birthdayTextField.setValue(user.getBirthday());
         } else {
-            birthdayTextField.setText("");
+            birthdayTextField.setValue(null);
         }
         genderTextField.setText(user.getGender());
         jobTextField.setText(user.getCurrentJobExperience());
         hobbiesTextField.setText(String.join(", ", user.getHobbies()));
         addressTextField.setText(user.getAddress());
+        relationshipStatusTextField.setText(user.getRelationshipStatus());
+        relationshipStatusTextField.setOnMouseClicked(event -> showRelationshipStatusDialog());
     }
+
+    private void showRelationshipStatusDialog() {
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(user.getRelationshipStatus(), relationshipStatusOptions);
+        dialog.setTitle("Select Relationship Status");
+        dialog.setHeaderText(null);
+        dialog.setContentText("Select your relationship status:");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(status -> relationshipStatusTextField.setText(status));
+    }
+
     @FXML
     private void initialize() {
         // Initialize the hobbies list
@@ -111,36 +126,43 @@ public class EditAccountController {
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(hobby -> {
-            HomeController.getInstance().addHobby(hobby); // Update hobbiesList in HomeController
+            //tempHomeController.getInstance().addHobby(hobby); // Update hobbiesList in HomeController
             hobbiesList.add(hobby); // Add the new hobby to hobbiesList
             hobbiesTextField.setText(hobby);
         });
     }
     @FXML
     private void saveButtonOnAction() {
-        // Update the user details
-        user.setEmail(emailTextField.getText());
-        user.setName(nameTextField.getText());
-        user.setUsername(usernameTextField.getText());
-        user.setContactNumber(contactNumberTextField.getText());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate birthday = LocalDate.parse(birthdayTextField.getText(), formatter);
-        user.setBirthday(birthday);
-        user.setGender(genderTextField.getText());
-        user.addJobExperience(jobTextField.getText());
-        user.setHobbies(Arrays.asList(hobbiesTextField.getText().split(", ")));
-        user.setAddress(addressTextField.getText());
+        try{
+            // Update the user details
+            user.setEmail(emailTextField.getText());
+            user.setName(nameTextField.getText());
+            user.setUsername(usernameTextField.getText());
+            user.setContactNumber(contactNumberTextField.getText());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            LocalDate birthday = birthdayTextField.getValue();
+            user.setBirthday(birthday);
+            user.setGender(genderTextField.getText());
+            user.addJobExperience(jobTextField.getText());
+            user.setHobbies(Arrays.asList(hobbiesTextField.getText().split(", ")));
+            user.setAddress(addressTextField.getText());
+            user.setRelationshipStatus(relationshipStatusTextField.getText());
 
-        // Save the updated user details to the database
-        // Update the user details in the database
-        tempDatabase database = new tempDatabase();
-        database.getConnection();
-        database.updateRegularUser(user);
-        database.updateJob(user.getUsername(), jobTextField.getText()); // Update the job in the database
+            // Save the updated user details to the database
+            // Update the user details in the database
+            tempDatabase database = new tempDatabase();
+            database.getConnection();
+            database.updateRegularUser(user);
+            database.updateJob(user.getUsername(), jobTextField.getText()); // Update the job in the database
 
-        // Close the Edit Account screen
-        Stage stage = (Stage) saveButton.getScene().getWindow();
-        stage.close();
+            // Close the Edit Account screen
+            Stage stage = (Stage) saveButton.getScene().getWindow();
+            stage.close();
+        }catch(Exception e){
+            e.printStackTrace();
+            e.getCause();
+        }
+
     }
     @FXML
     private void cancelButtonOnAction() {

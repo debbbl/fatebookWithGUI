@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<BorderPane prefHeight="423.0" prefWidth="813.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.regularUserDashboardController">
+    <center>
+        <BorderPane fx:id="mainPane" prefHeight="385.0" prefWidth="562.0">
+         <left>
+            <AnchorPane prefHeight="400.0" prefWidth="143.0" style="-fx-background-color: #ADD8E6;" BorderPane.alignment="CENTER">
+               <children>
+                  <VBox prefHeight="239.0" prefWidth="144.0">
+                     <children>
+                           <Button fx:id="homeButton" onAction="#loadHomePage" prefHeight="37.0" prefWidth="144.0" style="-fx-background-color: transparent; -fx-border-color: #ffffff; -fx-border-width: 0 0 2 0;" text="Home" textFill="WHITE">
+                           <font>
+                              <Font name="Book Antiqua" size="18.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="searchUserButton" onAction="#loadSearchUserPage" prefHeight="37.0" prefWidth="144.0" style="-fx-background-color: transparent; -fx-border-color: #ffffff; -fx-border-width: 0 0 2 0;" text="Search User" textFill="WHITE">
+                           <font>
+                              <Font name="Book Antiqua" size="18.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="addFriendsButton" onAction="#loadAddFriendsPage" prefHeight="37.0" prefWidth="144.0" style="-fx-background-color: transparent; -fx-border-color: #ffffff; -fx-border-width: 0 0 2 0;" text="Add Friends" textFill="WHITE">
+                           <font>
+                              <Font name="Book Antiqua" size="18.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="createPostButton" onAction="#loadCreatePostPage" prefHeight="37.0" prefWidth="144.0" style="-fx-background-color: transparent; -fx-border-color: #ffffff; -fx-border-width: 0 0 2 0;" text="Create Post" textFill="WHITE">
+                           <font>
+                              <Font name="Book Antiqua" size="18.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="settingsButton" onAction="#loadSettingsPage" prefHeight="37.0" prefWidth="144.0" style="-fx-background-color: transparent; -fx-border-color: #ffffff; -fx-border-width: 0 0 2 0;" text="Settings" textFill="WHITE">
+                           <font>
+                              <Font name="Book Antiqua" size="18.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </VBox>
+                  <Button fx:id="logoutButton" layoutX="25.0" layoutY="363.0" mnemonicParsing="false" onAction="#logoutButtonOnAction" prefHeight="30.0" prefWidth="94.0" style="-fx-background-color: #ffffff;" text="Log Out" textFill="LIGHTBLUE">
+                     <font>
+                        <Font name="Bauhaus 93" size="16.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+         </left></BorderPane>
+    </center>
+</BorderPane>

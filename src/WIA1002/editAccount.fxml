@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.*?>
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #ADD8E6;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.EditAccountController">
+    <children>
+        <AnchorPane prefHeight="400.0" prefWidth="197.0">
+            <children>
+                <ImageView fx:id="editAccountImageView" fitHeight="400.0" fitWidth="212.0" layoutX="-13.0" pickOnBounds="true">
+                    <image>
+                        <Image url="@../../images/vertical.png" />
+                    </image>
+                </ImageView>
+            </children>
+        </AnchorPane>
+        <Label layoutX="222.0" layoutY="31.0" text="Email:" textFill="WHITE">
+            <font>
+                <Font name="Arial Black" size="12.0" />
+            </font>
+        </Label>
+        <TextField fx:id="emailTextField" layoutX="221.0" layoutY="52.0" prefHeight="25.0" prefWidth="140.0" />
+        <Label layoutX="222.0" layoutY="89.0" text="Name:" textFill="WHITE">
+            <font>
+                <Font name="Arial Black" size="12.0" />
+            </font>
+        </Label>
+        <TextField fx:id="nameTextField" layoutX="221.0" layoutY="106.0" prefHeight="25.0" prefWidth="140.0" />
+        <Label layoutX="221.0" layoutY="143.0" text="Username:" textFill="WHITE">
+            <font>
+                <Font name="Arial Black" size="12.0" />
+            </font>
+        </Label>
+        <TextField fx:id="usernameTextField" layoutX="220.0" layoutY="160.0" prefHeight="25.0" prefWidth="140.0" />
+        <Label layoutX="222.0" layoutY="200.0" text="Contact Number:" textFill="WHITE">
+            <font>
+                <Font name="Arial Black" size="12.0" />
+            </font>
+        </Label>
+        <TextField fx:id="contactNumberTextField" layoutX="220.0" layoutY="217.0" prefHeight="25.0" prefWidth="140.0" />
+        <Label layoutX="221.0" layoutY="254.0" text="Birthday:" textFill="WHITE">
+            <font>
+                <Font name="Arial Black" size="12.0" />
+            </font>
+        </Label>
+        <Label layoutX="407.0" layoutY="29.0" text="Gender:" textFill="WHITE">
+            <font>
+                <Font name="Arial Black" size="12.0" />
+            </font>
+        </Label>
+        <TextField fx:id="genderTextField" layoutX="407.0" layoutY="52.0" prefHeight="25.0" prefWidth="140.0" />
+        <Label layoutX="409.0" layoutY="89.0" text="Job:" textFill="WHITE">
+            <font>
+                <Font name="Arial Black" size="12.0" />
+            </font>
+        </Label>
+        <TextField fx:id="jobTextField" layoutX="407.0" layoutY="106.0" prefHeight="25.0" prefWidth="140.0" />
+        <Label layoutX="408.0" layoutY="143.0" text="Hobbies:" textFill="WHITE">
+            <font>
+                <Font name="Arial Black" size="12.0" />
+            </font>
+        </Label>
+        <TextField fx:id="hobbiesTextField" layoutX="407.0" layoutY="160.0" onAction="#showHobbiesDialog" prefHeight="25.0" prefWidth="140.0" />
+        <Label layoutX="408.0" layoutY="200.0" text="Address:" textFill="WHITE">
+            <font>
+                <Font name="Arial Black" size="12.0" />
+            </font>
+        </Label>
+        <TextField fx:id="addressTextField" layoutX="407.0" layoutY="217.0" prefHeight="25.0" prefWidth="140.0" />
+        <Button fx:id="saveButton" layoutX="433.0" layoutY="345.0" onAction="#saveButtonOnAction" style="-fx-background-color: #ffffff;" text="Save" textFill="LIGHTBLUE">
+            <font>
+                <Font name="Arial Black" size="13.0" />
+            </font>
+        </Button>
+        <Button fx:id="cancelButton" layoutX="495.0" layoutY="345.0" onAction="#cancelButtonOnAction" prefHeight="28.0" prefWidth="71.0" style="-fx-background-color: #ffffff;" text="Cancel" textFill="LIGHTBLUE">
+            <font>
+                <Font name="Arial Black" size="13.0" />
+            </font>
+        </Button>
+      <DatePicker fx:id="birthdayTextField" layoutX="220.0" layoutY="271.0" prefHeight="25.0" prefWidth="140.0" />
+      <Label layoutX="408.0" layoutY="250.0" text="Relationship Status:" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="12.0" />
+         </font>
+      </Label>
+      <TextField fx:id="relationshipStatusTextField" layoutX="407.0" layoutY="267.0" prefHeight="25.0" prefWidth="140.0" />
+    </children>
+</AnchorPane>

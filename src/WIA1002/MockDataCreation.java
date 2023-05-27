@@ -40,8 +40,6 @@ public class MockDataCreation {
         insertUserData(connectDB, adminUsername2, adminEmail2, adminContactNumber2, adminPassword2);
 
         System.out.println("Mock data created successfully.");
-
-        System.out.println("Mock data created successfully.");
     }
 
     private void insertUserData(Connection connectDB, String username, String email, String contactNumber, String password) {

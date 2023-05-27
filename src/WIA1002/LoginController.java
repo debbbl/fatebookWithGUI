@@ -1,5 +1,6 @@
 package WIA1002;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -11,22 +12,19 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-import javafx.event.ActionEvent;
 import javafx.stage.StageStyle;
-import javafx.scene.layout.*;
+
+import java.io.File;
+import java.net.URL;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.*;
-import java.net.URL;
-import java.io.File;
-import java.security.NoSuchAlgorithmException;
 
 public class LoginController implements Initializable {
-
     Encryptor encryptor = new Encryptor();
-
     @FXML
     private Button cancelButton;
     @FXML
@@ -43,7 +41,7 @@ public class LoginController implements Initializable {
     private TextField usernameTextField;
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle){
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         File brandingFile = new File("images/vertical.png"); //file for the meta logo
         Image brandingImage = new Image(brandingFile.toURI().toString());
         brandingImageView.setImage(brandingImage);
@@ -52,11 +50,13 @@ public class LoginController implements Initializable {
         Image lockImage = new Image(lockFile.toURI().toString());
         lockImageView.setImage(lockImage);
     }
+
+    @FXML
     public void loginButtonOnAction(ActionEvent event) throws NoSuchAlgorithmException {
         if (!usernameTextField.getText().isBlank() && !passwordTextField.getText().isBlank()) {
             regularUser user = validateLogin();
             if (user != null) {
-                openHomePage(user);
+                openRegularUserDashboard(user);
             } else {
                 loginMessageLabel.setText("Invalid login. Please try again.");
             }
@@ -64,14 +64,39 @@ public class LoginController implements Initializable {
             loginMessageLabel.setText("Please enter your username and password.");
         }
     }
-    public void cancelButtonOnAction(ActionEvent event){
-        Stage stage = (Stage)cancelButton.getScene().getWindow();
+
+    public void cancelButtonOnAction(ActionEvent event) {
+        Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
     }
-    public void createAccountButtonOnAction(ActionEvent event){
+
+    private void openRegularUserDashboard(regularUser user) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("regularUserDashboard.fxml"));
+            Parent root = loader.load();
+
+            regularUserDashboardController dashboardController = loader.getController();
+            dashboardController.setUser(user);
+            dashboardController.showDashboard(user);
+
+            Stage dashboardStage = new Stage();
+            dashboardStage.setScene(new Scene(root));
+            dashboardStage.initStyle(StageStyle.UNDECORATED);
+            dashboardStage.show();
+
+            // Close the current login stage
+            Stage currentStage = (Stage) cancelButton.getScene().getWindow();
+            currentStage.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createAccountButtonOnAction(ActionEvent event) {
         createAccountForm();
     }
-    public regularUser validateLogin() throws NoSuchAlgorithmException  {
+
+    public regularUser validateLogin() throws NoSuchAlgorithmException {
         tempDatabase connectNow = new tempDatabase();
         Connection connectDB = connectNow.getConnection();
 
@@ -99,7 +124,7 @@ public class LoginController implements Initializable {
                 userBuilder.birthday(birthdate);
 
                 String gender = queryResult.getString("gender");
-                userBuilder.gender(gender != null ? gender : "");
+                userBuilder.gender(gender != null ? gender : "N/A");
 
                 // Similarly, handle other properties
                 String job = queryResult.getString("job");
@@ -121,6 +146,9 @@ public class LoginController implements Initializable {
                 byte[] profilePicData = queryResult.getBytes("profile_pic");
                 userBuilder.profilePic(profilePicData);
 
+                String relationshipStatus = queryResult.getString("relationship_status");
+                userBuilder.relationshipStatus(relationshipStatus != null ? relationshipStatus : "N/A");
+
                 regularUser user = userBuilder.build();
                 loginMessageLabel.setText("Logged in successfully!");
 
@@ -140,43 +168,17 @@ public class LoginController implements Initializable {
         return null;
     }
 
-    public void createAccountForm(){
-        try{
+    // Redirect user to register page
+    public void createAccountForm() {
+        try {
             Parent root = FXMLLoader.load(getClass().getResource("Register.fxml"));
             Stage registerStage = new Stage();
             registerStage.initStyle(StageStyle.UNDECORATED);
-            registerStage.setScene(new Scene(root,520,400));
+            registerStage.setScene(new Scene(root, 520, 400));
             registerStage.show();
-
-        }catch(Exception e){
-            e.printStackTrace();
-            e.getCause();
-        }
-
-    }
-
-    private void openHomePage(regularUser user) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Home.fxml"));
-            Parent root = loader.load();
-
-            HomeController homeController = loader.getController();
-            homeController.setUser(user);
-
-            Stage homeStage = new Stage();
-            homeStage.setScene(new Scene(root));
-            homeStage.initStyle(StageStyle.UNDECORATED);
-            homeStage.show();
-
-            // Close the current login stage
-            Stage currentStage = (Stage) cancelButton.getScene().getWindow();
-            currentStage.close();
         } catch (Exception e) {
             e.printStackTrace();
-            e.getCause();
         }
     }
-
-
-
 }
+

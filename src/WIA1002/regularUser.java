@@ -4,6 +4,7 @@ import java.util.*;
 import java.time.*;
 import java.util.Stack;
 public class regularUser extends user {
+    private int userId;
     private String name;
     private LocalDate birthday;
     private String gender;
@@ -13,10 +14,12 @@ public class regularUser extends user {
     private String address;
     private String relationshipStatus;
     private byte[] profilePic;
+    private List<String> friendList;
 
     public regularUser(RegularUserBuilder regularUserBuilder) {
         super(regularUserBuilder);
         super.setRole("Regular User");
+        this.userId = regularUserBuilder.userId;
         this.name = regularUserBuilder.name;
         this.birthday = regularUserBuilder.birthday;
         this.address = regularUserBuilder.address;
@@ -25,20 +28,26 @@ public class regularUser extends user {
         this.jobs = regularUserBuilder.jobs;
         this.profilePic = regularUserBuilder.profilePic;
         this.relationshipStatus = regularUserBuilder.relationshipStatus;
+        this.friendList = regularUserBuilder.friendList;
     }
 
-    public String getName() {
-        return name;
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+    public int getUserId() {
+        return userId;
     }
 
     public void setName(String name) {
         this.name = name;
     }
+    public String getName() {
+        return name;
+    }
 
     public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
-
     public LocalDate getBirthday() {
         return birthday;
     }
@@ -108,6 +117,7 @@ public class regularUser extends user {
     }
 
      public static class RegularUserBuilder extends user.Builder{
+        private int userId;
         private String name;
         private LocalDate birthday;
         private String gender;
@@ -117,16 +127,37 @@ public class regularUser extends user {
         private String address;
         private String relationshipStatus;
         private byte[] profilePic;
+        private List<String> friendList;
 
          public RegularUserBuilder() {
              super();
              this.jobs = new Stack<>();
          }
 
-        public RegularUserBuilder name(String name) {
-            this.name = name;
-            return this;
-        }
+         public RegularUserBuilder userId(int userId){
+             this.userId = userId;
+             return this;
+         }
+
+         public RegularUserBuilder username(String username) {
+             super.username(username);
+             return this;
+         }
+
+         public RegularUserBuilder email(String email) {
+             super.email(email);
+             return this;
+         }
+
+         public RegularUserBuilder contactNumber(String contactNumber) {
+             super.contactNumber(contactNumber);
+             return this;
+         }
+
+         public RegularUserBuilder name(String name) {
+             this.name = name;
+             return this;
+         }
 
         public RegularUserBuilder birthday(LocalDate birthday) {
             this.birthday = birthday;
@@ -163,10 +194,21 @@ public class regularUser extends user {
             return this;
         }
 
+         public RegularUserBuilder numOfFriend(int numOfFriend) {
+             this.numOfFriend = numOfFriend;
+             return this;
+         }
+
+         public RegularUserBuilder friendList(List<String> friendList){
+             this.friendList = friendList;
+             return this;
+         }
+
         public regularUser build() {
             return new regularUser(this);
         }
 
 
-    }
+
+     }
 }

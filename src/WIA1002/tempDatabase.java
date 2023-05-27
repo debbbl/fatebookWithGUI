@@ -3,7 +3,9 @@ import java.io.ByteArrayInputStream;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Stack;
 
 public class tempDatabase {
     public Connection databaseLink;
@@ -12,11 +14,11 @@ public class tempDatabase {
     String databasePassword = "facebookds";
     String url = "jdbc:mysql://localhost:3306/facebook";
 
-    public Connection getConnection(){
-        try{
+    public Connection getConnection() {
+        try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             databaseLink = DriverManager.getConnection(url, databaseUser, databasePassword);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             e.getCause();
         }
@@ -48,7 +50,6 @@ public class tempDatabase {
             e.printStackTrace();
         }
     }
-
 
     public int getUserIdByUsername(String username) {
         int userId = -1;
@@ -126,54 +127,5 @@ public class tempDatabase {
             // Handle the database update error
         }
     }
-
-    public void deleteUserAccount(String username) {
-        String deleteQuery = "DELETE FROM userdata WHERE username = ?";
-
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
-
-            statement.setString(1, username);
-            statement.executeUpdate();
-
-            System.out.println("User account deleted successfully!");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public List<regularUser> getNewlyCreatedAccounts(LocalDate startDate, LocalDate endDate) {
-        List<regularUser> newlyCreatedAccounts = new ArrayList<>();
-        String query = "SELECT * FROM userdata WHERE creation_date BETWEEN ? AND ?";
-
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-
-            statement.setDate(1, Date.valueOf(startDate));
-            statement.setDate(2, Date.valueOf(endDate));
-
-            ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                regularUser.RegularUserBuilder userBuilder = (regularUser.RegularUserBuilder) new regularUser.RegularUserBuilder()
-                        .username(resultSet.getString("username"))
-                        .password(resultSet.getString("password"))
-                        .email(resultSet.getString("email_address"))
-                        .contactNumber(resultSet.getString("contact_number"));
-
-                // Set other properties...
-                // (Same as the code in validateLogin() method)
-
-                regularUser user = userBuilder.build();
-                newlyCreatedAccounts.add(user);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return newlyCreatedAccounts;
-    }
-
-
-
 }
+

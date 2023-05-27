@@ -1,127 +1,138 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.HomeController">
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<AnchorPane prefHeight="400.0" prefWidth="537.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.HomeController">
     <children>
-        <VBox layoutX="0.0" layoutY="0.0" spacing="10.0" style="-fx-background-color: #F4F4F4;">
-            <VBox spacing="5.0" style="-fx-padding: 10px;" />
-        </VBox>
-
-        <VBox layoutX="404.0" layoutY="127.0" prefHeight="171.0" prefWidth="175.0" spacing="10.0">
-
+      <VBox layoutX="269.0" layoutY="113.0" prefHeight="191.0" prefWidth="237.0" spacing="10.0">
+         <children>
             <HBox spacing="20.0">
-                <Label text="Birthday:" />
-                <Label fx:id="birthdayLabel" />
+               <children>
+                  <Label text="Birthday:">
+                     <font>
+                        <Font name="Berlin Sans FB" size="14.0" />
+                     </font></Label>
+                  <Label fx:id="birthdayLabel" prefHeight="17.0" prefWidth="133.0" />
+               </children>
             </HBox>
-
             <HBox spacing="20.0">
-                <Label text="Age:" />
-                <Label fx:id="ageLabel" />
+               <children>
+                  <Label text="Age:">
+                     <font>
+                        <Font name="Berlin Sans FB" size="14.0" />
+                     </font></Label>
+                  <Label fx:id="ageLabel" prefHeight="17.0" prefWidth="159.0" />
+               </children>
             </HBox>
-
             <HBox spacing="20.0">
-                <Label prefHeight="17.0" prefWidth="50.0" text="Gender:" />
-                <Label fx:id="genderLabel" prefHeight="17.0" prefWidth="63.0" />
+               <children>
+                  <Label prefHeight="17.0" prefWidth="50.0" text="Gender:">
+                     <font>
+                        <Font name="Berlin Sans FB" size="14.0" />
+                     </font></Label>
+                  <Label fx:id="genderLabel" prefHeight="17.0" prefWidth="63.0" />
+               </children>
             </HBox>
-
             <HBox prefHeight="17.0" prefWidth="135.0" spacing="20.0">
-                <Label prefHeight="17.0" prefWidth="29.0" text="Job:" />
-                <Label fx:id="jobLabel" prefHeight="17.0" prefWidth="120.0" />
+               <children>
+                  <Label prefHeight="17.0" prefWidth="29.0" text="Job:">
+                     <font>
+                        <Font name="Berlin Sans FB" size="14.0" />
+                     </font></Label>
+                  <Label fx:id="jobLabel" prefHeight="17.0" prefWidth="155.0" />
+               </children>
             </HBox>
-
             <HBox spacing="20.0">
-                <Label text="Hobbies:" />
-                <Label fx:id="hobbiesLabel" prefHeight="17.0" prefWidth="109.0" />
+               <children>
+                  <Label text="Hobbies:">
+                     <font>
+                        <Font name="Berlin Sans FB" size="14.0" />
+                     </font></Label>
+                  <Label fx:id="hobbiesLabel" prefHeight="17.0" prefWidth="154.0" />
+               </children>
             </HBox>
-
             <HBox spacing="20.0">
-                <Label text="Address:" />
-                <Label fx:id="addressLabel" prefHeight="17.0" prefWidth="103.0" />
+               <children>
+                  <Label text="Address:">
+                     <font>
+                        <Font name="Berlin Sans FB" size="14.0" />
+                     </font></Label>
+                  <Label fx:id="addressLabel" prefHeight="17.0" prefWidth="103.0" />
+               </children>
             </HBox>
-
+            <HBox spacing="20.0">
+               <children>
+                  <Label prefHeight="17.0" prefWidth="171.0" text="Relationship Status:">
+                     <font>
+                        <Font name="Berlin Sans FB" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="relationshipStatusLabel" prefHeight="17.0" prefWidth="156.0" />
+               </children>
+            </HBox>
             <HBox spacing="20.0" />
-        </VBox>
-
-        <ImageView fx:id="profilePicImageView" fitHeight="100" fitWidth="100" layoutX="211.0" layoutY="74.0" />
-
-        <Button fx:id="uploadProfilePicButton" layoutX="183.0" layoutY="186.0" onAction="#uploadProfilePictureClicked" style="-fx-background-color: #ADD8E6;" text="Upload Profile Picture" textFill="WHITE">
+         </children>
+      </VBox>
+      <ImageView fx:id="profilePictureImageView" fitHeight="104.0" fitWidth="126.0" layoutX="65.0" layoutY="96.0" preserveRatio="true" />
+      <Button fx:id="uploadProfilePicButton" layoutX="51.0" layoutY="209.0" onAction="#updateProfilePictureOnAction" style="-fx-background-color: #ADD8E6;" text="Update Profile Picture" textFill="WHITE">
          <font>
             <Font name="Bauhaus 93" size="14.0" />
-         </font></Button>
-      <AnchorPane prefHeight="400.0" prefWidth="149.0" style="-fx-background-color: #ADD8E6;">
+         </font>
+      </Button>
+      <VBox layoutX="57.0" layoutY="256.0" prefHeight="104.0" prefWidth="196.0">
          <children>
-                <Button alignment="TOP_CENTER" prefHeight="40.0" prefWidth="161.0" style="-fx-background-color: transparent; -fx-border-color: #ffffff;" text="Home" textFill="WHITE">
-               <font>
-                  <Font name="Arial Black" size="17.0" />
-               </font></Button>
-            <ImageView fitHeight="40.0" fitWidth="67.0" layoutX="84.0" layoutY="353.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../images/fateLogo2.png" />
-               </image>
-            </ImageView>
-            <Button fx:id="logOutButton" layoutX="17.0" layoutY="358.0" mnemonicParsing="false" onAction="#logOutButtonOnAction" style="-fx-background-color: #ffffff;" text="Log Out" textFill="LIGHTBLUE">
-               <font>
-                  <Font name="Bauhaus 93" size="13.0" />
-               </font>
-            </Button>
-            <Button alignment="TOP_CENTER" layoutY="40.0" prefHeight="40.0" prefWidth="161.0" style="-fx-background-color: transparent; -fx-border-color: #ffffff;" text="Search User" textFill="WHITE">
-               <font>
-                  <Font name="Arial Black" size="17.0" />
-               </font>
-            </Button>
-            <Button alignment="TOP_CENTER" layoutY="80.0" prefHeight="40.0" prefWidth="161.0" style="-fx-background-color: transparent; -fx-border-color: #ffffff;" text="Add Friends" textFill="WHITE">
-               <font>
-                  <Font name="Arial Black" size="17.0" />
-               </font>
-            </Button>
-         </children>
-      </AnchorPane>
-      <VBox layoutX="186.0" layoutY="228.0" prefHeight="139.0" prefWidth="196.0">
-         <children>
-            <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="User Details" textFill="LIGHTBLUE" />
             <HBox prefHeight="26.0" prefWidth="198.0" spacing="20.0">
                <children>
-                  <Label text="Name:" />
+                  <Label prefHeight="17.0" prefWidth="49.0" text="Name:">
+                     <font>
+                        <Font name="Berlin Sans FB" size="14.0" />
+                     </font></Label>
                   <Label fx:id="nameLabel" prefHeight="17.0" prefWidth="135.0" />
                </children>
             </HBox>
-            <HBox prefHeight="27.0" prefWidth="187.0" spacing="20.0">
+            <HBox prefHeight="24.0" prefWidth="196.0" spacing="20.0">
                <children>
-                  <Label text="Email:" />
-                  <Label fx:id="emailLabel" prefHeight="21.0" prefWidth="130.0" />
+                  <Label text="Email:">
+                     <font>
+                        <Font name="Berlin Sans FB" size="14.0" />
+                     </font></Label>
+                  <Label fx:id="emailLabel" prefHeight="29.0" prefWidth="130.0" />
                </children>
             </HBox>
-            <HBox prefHeight="27.0" prefWidth="124.0" spacing="20.0">
+            <HBox prefHeight="25.0" prefWidth="196.0" spacing="20.0">
                <children>
-                  <Label text="Username" />
+                  <Label prefHeight="17.0" prefWidth="73.0" text="Username:">
+                     <font>
+                        <Font name="Berlin Sans FB" size="14.0" />
+                     </font>
+                  </Label>
                   <Label fx:id="usernameLabel" prefHeight="21.0" prefWidth="114.0" />
                </children>
             </HBox>
             <HBox prefHeight="27.0" prefWidth="124.0" spacing="20.0">
                <children>
-                  <Label text="Contact Number: " />
+                  <Label prefHeight="17.0" prefWidth="123.0" text="Contact Number: ">
+                     <font>
+                        <Font name="Berlin Sans FB" size="14.0" />
+                     </font>
+                  </Label>
                   <Label fx:id="contactNumberLabel" prefHeight="21.0" prefWidth="81.0" />
                </children>
             </HBox>
          </children>
       </VBox>
-          <Button layoutX="403.0" layoutY="325.0" onAction="#editAccountButtonOnAction" prefHeight="32.0" prefWidth="126.0" style="-fx-background-color: #ADD8E6;" text="Edit Account" textFill="WHITE">
+      <Button fx:id="editAccountButton" layoutX="366.0" layoutY="328.0" onAction="#editAccountButtonOnAction" prefHeight="32.0" prefWidth="126.0" style="-fx-background-color: #ADD8E6;" text="Edit Account" textFill="WHITE">
          <font>
             <Font name="Bauhaus 93" size="17.0" />
          </font>
       </Button>
-      <Label layoutX="183.0" layoutY="24.0" text="Welcome To FATEBOOK" textFill="LIGHTBLUE">
+      <Label layoutX="38.0" layoutY="28.0" text="Welcome To FATEBOOK" textFill="LIGHTBLUE">
          <font>
             <Font name="Bauhaus 93" size="25.0" />
          </font>
       </Label>
+      <Label layoutX="40.0" layoutY="57.0" prefHeight="32.0" prefWidth="156.0" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="User Details" textFill="LIGHTBLUE" />
     </children>
 </AnchorPane>
