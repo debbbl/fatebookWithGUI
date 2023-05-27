@@ -19,6 +19,7 @@ import javafx.scene.image.ImageView;
 import java.io.File;
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ResourceBundle;
 import java.security.NoSuchAlgorithmException;
@@ -47,13 +48,44 @@ public class RegisterController implements Initializable {
     private Label registrationMessageLabel;
     @FXML
     private Label passwordMessageLabel;
+    @FXML
+    private Label usernameLabel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
         File fateFile = new File("images/fateLogo2.png"); //file for the fatelogo
         Image fateImage = new Image(fateFile.toURI().toString());
         fateImageView.setImage(fateImage);
+
+        usernameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.isEmpty()) {
+                boolean isUsernameAvailable = checkUsernameAvailability(newValue);
+                if (!isUsernameAvailable) {
+                    usernameLabel.setText("This username is not available");
+                } else {
+                    usernameLabel.setText("");
+                }
+            }
+        });
     }
+
+    public boolean checkUsernameAvailability(String username) {
+        tempDatabase connectNow = new tempDatabase();
+        Connection connectDB = connectNow.getConnection();
+
+        try {
+            Statement statement = connectDB.createStatement();
+            String query = "SELECT * FROM userdata WHERE username = '" + username + "'";
+            ResultSet resultSet = statement.executeQuery(query);
+
+            return !resultSet.next(); // Returns true if the resultSet is empty (username is available)
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     @FXML
     public void closeButtonOnAction(ActionEvent event){
