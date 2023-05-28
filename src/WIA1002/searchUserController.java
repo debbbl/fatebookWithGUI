@@ -191,7 +191,6 @@ public class searchUserController {
         return -1;
     }
 
-
     private List<String> performSearch(String query) {
         List<String> searchResults = new ArrayList<>();
         tempDatabase db = new tempDatabase();

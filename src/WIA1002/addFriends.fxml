@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="FacebookApp.AddFriends"
-            prefHeight="400.0" prefWidth="600.0">
 
+
+<AnchorPane prefHeight="423.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.addFriendsController">
+   <children>
+      <Button fx:id="suggestButton" layoutX="310.0" layoutY="385.0" mnemonicParsing="false" onAction="#suggestButtonOnAction" text="Suggest Friends to Add" />
+      <Button fx:id="showRequestButton" layoutX="160.0" layoutY="385.0" mnemonicParsing="false" onAction="#showRequestButtonOnAction" prefHeight="25.0" prefWidth="140.0" text="show friend request" />
+      <AnchorPane fx:id="contentPane" prefHeight="423.0" prefWidth="600.0" />
+   </children>
 </AnchorPane>
