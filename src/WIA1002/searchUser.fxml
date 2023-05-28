@@ -23,7 +23,7 @@
                 </font>
             </Label>
          <ImageView fx:id="profilePictureImageView" fitHeight="110.0" fitWidth="130.0" layoutX="230.0" layoutY="24.0" preserveRatio="true" />
-         <Button fx:id="addFriendButton" layoutX="185.0" layoutY="372.0" mnemonicParsing="false" onAction="#addFriendButtonClicked" style="-fx-background-color: #ADD8E6;" text="Add as friend" textFill="WHITE">
+         <Button fx:id="sendFriendRequestButton" layoutX="135.0" layoutY="372.0" mnemonicParsing="false" onAction="#sendFriendRequestButtonClicked" style="-fx-background-color: #ADD8E6;" text="Send Friend Request" textFill="WHITE">
             <font>
                <Font name="Berlin Sans FB" size="13.0" />
             </font>

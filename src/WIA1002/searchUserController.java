@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 
 import java.io.ByteArrayInputStream;
 import java.sql.Connection;
@@ -47,6 +48,8 @@ public class searchUserController {
     @FXML
     private Button addFriendButton;
     private regularUser user;
+    @FXML
+    private AnchorPane detailsPane;
 
     public void setUser(regularUser user){
         this.user = user;
@@ -74,72 +77,81 @@ public class searchUserController {
     }
 
     @FXML
-    private void addFriendButtonClicked() {
+    private void sendFriendRequestButtonClicked() {
         String selectedUsername = searchResultsListView.getSelectionModel().getSelectedItem();
-        // Get the username of the profile being viewed
-        String loggedInUsername = this.user.getUsername(); // Replace with the actual username of the logged-in user
 
-        if (selectedUsername != null && loggedInUsername != null) {
-            boolean success = addFriend(loggedInUsername, selectedUsername);
-            if (success) {
-                displayAlert(Alert.AlertType.INFORMATION, "Friend Added", "You have successfully added " + selectedUsername + " as your friend.");
+        if (selectedUsername != null) {
+            boolean requestSent = sendFriendRequest(user.getUserId(), user.getUsername(),selectedUsername);
+
+            if (requestSent) {
+                displayAlert(Alert.AlertType.INFORMATION, "Friend Request Sent", "Friend request sent to " + selectedUsername);
             } else {
-                displayAlert(Alert.AlertType.ERROR, "Error", "Failed to add " + selectedUsername + " as your friend.");
+                displayAlert(Alert.AlertType.INFORMATION, "Request Failed", "Friend request to " + selectedUsername + " already sent or the user is already your friend.");
             }
         }
     }
 
-    private boolean addFriend(String loggedInUsername, String friendUsername) {
+    private boolean sendFriendRequest(int user_id, String username, String sendRequestUsername) {
         tempDatabase db = new tempDatabase();
         Connection connection = db.getConnection();
 
         try {
-            // Get the user_id of the logged-in user
-            String getUserIdQuery = "SELECT user_id FROM userdata WHERE username = ?";
-            PreparedStatement getUserIdStatement = connection.prepareStatement(getUserIdQuery);
-            getUserIdStatement.setString(1, loggedInUsername);
-            ResultSet getUserIdResult = getUserIdStatement.executeQuery();
+            // Check if the friend request has already been sent or if the users are already friends
+            String checkRequestQuery = "SELECT * FROM friendrequest WHERE user_id = ? AND username = ? AND requestSent LIKE ?";
+            PreparedStatement checkRequestStatement = connection.prepareStatement(checkRequestQuery);
+            checkRequestStatement.setInt(1, user_id);
+            checkRequestStatement.setString(2, username);
+            checkRequestStatement.setString(3, "%" + sendRequestUsername + "%");
+            ResultSet checkRequestResult = checkRequestStatement.executeQuery();
 
-            if (getUserIdResult.next()) {
-                int loggedInUserId = getUserIdResult.getInt("user_id");
+            if (checkRequestResult.next()) {
+                String requestSent = checkRequestResult.getString("requestSent");
+                // Check if the friend request has already been sent
+                if (requestSent != null && requestSent.contains(sendRequestUsername)) {
+                    return false;
+                }
 
-                // Retrieve the current friend list of the logged-in user
-                String getFriendListQuery = "SELECT friend FROM userfriendlist WHERE user_id = ?";
-                PreparedStatement getFriendListStatement = connection.prepareStatement(getFriendListQuery);
-                getFriendListStatement.setInt(1, loggedInUserId);
-                ResultSet getFriendListResult = getFriendListStatement.executeQuery();
+                // Update the requestSent column for the sender user
+                String updateSenderQuery = "UPDATE friendrequest SET requestSent = CONCAT(requestSent, ?) WHERE user_id = ?";
+                PreparedStatement updateSenderStatement = connection.prepareStatement(updateSenderQuery);
+                String updatedRequestSent = requestSent != null ? requestSent + ";" + sendRequestUsername : sendRequestUsername;
+                updateSenderStatement.setString(1, updatedRequestSent);
+                updateSenderStatement.setInt(2, user_id);
+                updateSenderStatement.executeUpdate();
+            } else {
+                // Check if the sender user exists in the table
+                String checkSenderQuery = "SELECT * FROM friendrequest WHERE user_id = ?";
+                PreparedStatement checkSenderStatement = connection.prepareStatement(checkSenderQuery);
+                checkSenderStatement.setInt(1, getUserId(username));
+                ResultSet checkSenderResult = checkSenderStatement.executeQuery();
 
-                if (getFriendListResult.next()) {
-                    String existingFriends = getFriendListResult.getString("friend");
-                    // Check if the friend is already in the list
-                    if (existingFriends != null && existingFriends.contains(friendUsername)) {
-                        // The friend already exists in the list
-                        return false;
-                    } else {
-                        // Append the new friend to the existing list
-                        String updatedFriends = (existingFriends != null && !existingFriends.isEmpty()) ?
-                                existingFriends + "," + friendUsername : friendUsername;
-
-                        // Update the friend list in the userfriendlist table
-                        String updateQuery = "UPDATE userfriendlist SET friend = ? WHERE user_id = ?";
-                        PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
-                        updateStatement.setString(1, updatedFriends);
-                        updateStatement.setInt(2, loggedInUserId);
-                        int rowsAffected = updateStatement.executeUpdate();
-
-                        return rowsAffected > 0;
-                    }
+                if (checkSenderResult.next()) {
+                    // Update the existing row for the sender user with the friend request in the requestSent column
+                    String updateSenderQuery = "UPDATE friendrequest SET requestSent = CONCAT(requestSent, ?) WHERE user_id = ?";
+                    PreparedStatement updateSenderStatement = connection.prepareStatement(updateSenderQuery);
+                    updateSenderStatement.setString(1, ";" + sendRequestUsername);
+                    updateSenderStatement.setInt(2, getUserId(username));
+                    updateSenderStatement.executeUpdate();
                 } else {
-                    // The user doesn't have any friends yet, insert the first friend
-                    String insertQuery = "INSERT INTO userfriendlist (user_id, friend) VALUES (?, ?)";
-                    PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
-                    insertStatement.setInt(1, loggedInUserId);
-                    insertStatement.setString(2, friendUsername);
-                    int rowsAffected = insertStatement.executeUpdate();
-
-                    return rowsAffected > 0;
+                    // Insert a new row for the sender user with the friend request in the requestSent column
+                    String insertSenderQuery = "INSERT INTO friendrequest (user_id, username, requestSent) VALUES (?, ?, ?)";
+                    PreparedStatement insertSenderStatement = connection.prepareStatement(insertSenderQuery);
+                    insertSenderStatement.setInt(1, getUserId(username));
+                    insertSenderStatement.setString(2, username);
+                    insertSenderStatement.setString(3, sendRequestUsername + ";");
+                    insertSenderStatement.executeUpdate();
                 }
             }
+
+            // Insert a new row for the receiver user and store the friend request in the requestReceived column
+            String insertReceiverQuery = "INSERT INTO friendrequest (user_id, username, requestReceived) VALUES (?, ?, ?)";
+            PreparedStatement insertReceiverStatement = connection.prepareStatement(insertReceiverQuery);
+            insertReceiverStatement.setInt(1, getUserId(sendRequestUsername));
+            insertReceiverStatement.setString(2, sendRequestUsername);
+            insertReceiverStatement.setString(3, username + ";");
+            insertReceiverStatement.executeUpdate();
+
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -153,6 +165,31 @@ public class searchUserController {
         return false;
     }
 
+    private int getUserId(String username) {
+        tempDatabase db = new tempDatabase();
+        Connection connection = db.getConnection();
+
+        try {
+            String query = "SELECT user_id FROM userdata WHERE username = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, username);
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
+                return result.getInt("user_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return -1;
+    }
 
 
     private List<String> performSearch(String query) {
@@ -180,7 +217,6 @@ public class searchUserController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
     private regularUser getUserDetails(String username) {
         regularUser user = null;
         tempDatabase db = new tempDatabase();
@@ -229,12 +265,10 @@ public class searchUserController {
 
         return user;
     }
-
     private int calculateAge(LocalDate birthday) {
         LocalDate currentDate = LocalDate.now();
         return Period.between(birthday, currentDate).getYears();
     }
-
     private void displayUserDetails(regularUser user) {
         if (user != null) {
             nameLabel.setText(user.getName() != null ? user.getName() : "N/A");
