@@ -127,5 +127,17 @@ public class tempDatabase {
             // Handle the database update error
         }
     }
+
+    public void deleteUser(String username) {
+        String deleteQuery = "DELETE FROM userdata WHERE username = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
+            statement.setString(1, username);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="559.0" prefWidth="751.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.adminViewAccountController">
+   <children>
+      <HBox layoutX="22.0" layoutY="14.0" prefHeight="53.0" prefWidth="324.0">
+         <children>
+            <VBox prefHeight="100.0" prefWidth="153.0">
+               <children>
+                  <Label prefHeight="17.0" prefWidth="76.0" text="START DATE" textFill="LIGHTBLUE">
+                     <font>
+                        <Font name="Berlin Sans FB" size="13.0" />
+                     </font></Label>
+                  <DatePicker fx:id="startDatePicker" prefHeight="25.0" prefWidth="146.0" style="-fx-background-color: #ADD8E6;" />
+               </children>
+            </VBox>
+            <VBox prefHeight="49.0" prefWidth="175.0">
+               <children>
+                  <Label text="END DATE" textFill="LIGHTBLUE">
+                     <font>
+                        <Font name="Berlin Sans FB" size="13.0" />
+                     </font></Label>
+                  <DatePicker fx:id="endDatePicker" style="-fx-background-color: #ADD8E6;" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <TableView fx:id="tableView" layoutX="22.0" layoutY="67.0" prefHeight="437.0" prefWidth="703.0">
+        <columns>
+          <TableColumn fx:id="timeStampColumn" prefWidth="138.66665077209473" text="TIME STAMP" />
+          <TableColumn fx:id="userIdColumn" prefWidth="78.00003051757812" text="USER ID" />
+            <TableColumn fx:id="emailAddressColumn" prefWidth="129.33331298828125" text="EMAIL ADDRESS" />
+            <TableColumn fx:id="nameColumn" prefWidth="97.33331298828125" text="NAME" />
+            <TableColumn fx:id="usernameColumn" prefWidth="110.66668701171875" text="USERNAME" />
+            <TableColumn fx:id="contactNumberColumn" prefWidth="146.66664632161462" text="CONTACT NUMBER" />
+        </columns>
+      </TableView>
+      <Button fx:id="viewProfileButton" layoutX="22.0" layoutY="514.0" mnemonicParsing="false" onAction="#viewProfileButtonClicked" style="-fx-background-color: #ADD8E6;" text="VIEW THEIR PROFILE" textFill="WHITE">
+         <font>
+            <Font name="Berlin Sans FB" size="14.0" />
+         </font></Button>
+      <TextField fx:id="searchTextField" layoutX="375.0" layoutY="32.0" prefHeight="25.0" prefWidth="149.0" />
+      <Label layoutX="376.0" layoutY="14.0" text="SEARCH BY ID/USERNAME:" textFill="LIGHTBLUE">
+         <font>
+            <Font name="Berlin Sans FB" size="13.0" />
+         </font></Label>
+      <Button fx:id="searchButton" layoutX="538.0" layoutY="32.0" mnemonicParsing="false" onAction="#searchButtonClicked" style="-fx-background-color: #ADD8E6;" text="SEARCH" textFill="WHITE">
+         <font>
+            <Font name="Berlin Sans FB" size="13.0" />
+         </font>
+      </Button>
+      <Button fx:id="adminLogOutButton" layoutX="176.0" layoutY="514.0" mnemonicParsing="false" onAction="#adminlogoutButtonOnAction" style="-fx-background-color: #ADD8E6;" text="LOG OUT" textFill="WHITE">
+         <font>
+            <Font name="Berlin Sans FB" size="14.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

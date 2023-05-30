@@ -16,9 +16,10 @@ public class regularUser extends user {
     private byte[] profilePic;
     private List<String> friendList;
 
-    public regularUser(RegularUserBuilder regularUserBuilder) {
+    public regularUser(RegularUserBuilder regularUserBuilder,LocalDateTime timestamp) {
         super(regularUserBuilder);
-        super.setRole("Regular User");
+        super.setIsAdmin(0);
+        super.setTimeStamp(timeStamp);
         this.userId = regularUserBuilder.userId;
         this.name = regularUserBuilder.name;
         this.birthday = regularUserBuilder.birthday;
@@ -31,11 +32,19 @@ public class regularUser extends user {
         this.friendList = regularUserBuilder.friendList;
     }
 
+    public String getEmailAddress(){
+        return getEmail();
+    }
+
     public void setUserId(int userId) {
         this.userId = userId;
     }
     public int getUserId() {
         return userId;
+    }
+
+    public LocalDateTime getTimeStamp(){
+        return super.getTimeStamp();
     }
 
     public void setName(String name) {
@@ -139,6 +148,10 @@ public class regularUser extends user {
              return this;
          }
 
+         public RegularUserBuilder timeStamp(LocalDateTime timeStamp) {
+             this.timeStamp = timeStamp;
+             return this;
+         }
          public RegularUserBuilder username(String username) {
              super.username(username);
              return this;
@@ -205,7 +218,7 @@ public class regularUser extends user {
          }
 
         public regularUser build() {
-            return new regularUser(this);
+            return new regularUser(this, timeStamp);
         }
 
 

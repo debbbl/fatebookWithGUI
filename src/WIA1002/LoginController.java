@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -39,6 +40,9 @@ public class LoginController implements Initializable {
     private TextField passwordTextField;
     @FXML
     private TextField usernameTextField;
+    @FXML
+    private CheckBox isAdminCheckBox;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -54,9 +58,13 @@ public class LoginController implements Initializable {
     @FXML
     public void loginButtonOnAction(ActionEvent event) throws NoSuchAlgorithmException {
         if (!usernameTextField.getText().isBlank() && !passwordTextField.getText().isBlank()) {
-            regularUser user = validateLogin();
+            Object user = validateLogin();
             if (user != null) {
-                openRegularUserDashboard(user);
+                if (user instanceof Admin) {
+                    openAdminDashboard();
+                } else if (user instanceof regularUser) {
+                    openRegularUserDashboard((regularUser) user);
+                }
             } else {
                 loginMessageLabel.setText("Invalid login. Please try again.");
             }
@@ -64,6 +72,23 @@ public class LoginController implements Initializable {
             loginMessageLabel.setText("Please enter your username and password.");
         }
     }
+
+    private void openAdminDashboard() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("adminViewAccount.fxml"));
+            Stage dashboardStage = new Stage();
+            dashboardStage.setScene(new Scene(root));
+            dashboardStage.initStyle(StageStyle.UNDECORATED);
+            dashboardStage.show();
+
+            // Close the current login stage
+            Stage currentStage = (Stage) cancelButton.getScene().getWindow();
+            currentStage.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void cancelButtonOnAction(ActionEvent event) {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
@@ -96,7 +121,7 @@ public class LoginController implements Initializable {
         createAccountForm();
     }
 
-    public regularUser validateLogin() throws NoSuchAlgorithmException {
+    public Object validateLogin() throws NoSuchAlgorithmException {
         tempDatabase connectNow = new tempDatabase();
         Connection connectDB = connectNow.getConnection();
 
@@ -109,50 +134,71 @@ public class LoginController implements Initializable {
             ResultSet queryResult = statement.executeQuery(verifyLogin);
 
             if (queryResult.next()) {
-                regularUser.RegularUserBuilder userBuilder = (regularUser.RegularUserBuilder) new regularUser.RegularUserBuilder()
-                        .username(queryResult.getString("username"))
-                        .password(queryResult.getString("password"))
-                        .email(queryResult.getString("email_address"))
-                        .contactNumber(queryResult.getString("contact_number"));
+                String username = queryResult.getString("username");
+                String password = queryResult.getString("password");
+                String email = queryResult.getString("email_address");
+                String contactNumber = queryResult.getString("contact_number");
 
-                // Check and set other properties
-                String name = queryResult.getString("name");
-                userBuilder.name(name != null ? name : "N/A");
+                // Check if the user is an admin
+                if (queryResult.getInt("isAdmin") == 1) {
+                    Admin.AdminBuilder adminBuilder = (Admin.AdminBuilder) new Admin.AdminBuilder()
+                            .username(username)
+                            .password(password)
+                            .email(email)
+                            .contactNumber(contactNumber);
 
-                String birthday = queryResult.getString("birthday");
-                LocalDate birthdate = (birthday != null) ? LocalDate.parse(birthday) : null;
-                userBuilder.birthday(birthdate);
+                    // Set other properties specific to admin if needed
 
-                String gender = queryResult.getString("gender");
-                userBuilder.gender(gender != null ? gender : "N/A");
+                    Admin admin = adminBuilder.build();
+                    loginMessageLabel.setText("Logged in as admin!");
 
-                // Similarly, handle other properties
-                String job = queryResult.getString("job");
-                Stack<String> jobs = new Stack<>();
-                jobs.push(job != null ? job : "N/A");
-                userBuilder.jobs(jobs);
+                    return admin;
+                } else {
+                    regularUser.RegularUserBuilder userBuilder = (regularUser.RegularUserBuilder) new regularUser.RegularUserBuilder()
+                            .username(username)
+                            .password(password)
+                            .email(email)
+                            .contactNumber(contactNumber);
 
-                // Handle hobbies (assuming it's a comma-separated string)
-                String hobbiesString = queryResult.getString("hobbies");
-                List<String> hobbies = (hobbiesString != null && hobbiesString.length() > 0)
-                        ? Arrays.asList(hobbiesString.split(","))
-                        : Collections.emptyList();
-                userBuilder.hobbies(hobbies);
+                    // Check and set other properties
+                    String name = queryResult.getString("name");
+                    userBuilder.name(name != null ? name : "N/A");
 
-                String address = queryResult.getString("address");
-                userBuilder.address(address != null ? address : "N/A");
+                    String birthday = queryResult.getString("birthday");
+                    LocalDate birthdate = (birthday != null) ? LocalDate.parse(birthday) : null;
+                    userBuilder.birthday(birthdate);
 
-                // Handle profile picture
-                byte[] profilePicData = queryResult.getBytes("profile_pic");
-                userBuilder.profilePic(profilePicData);
+                    String gender = queryResult.getString("gender");
+                    userBuilder.gender(gender != null ? gender : "N/A");
 
-                String relationshipStatus = queryResult.getString("relationship_status");
-                userBuilder.relationshipStatus(relationshipStatus != null ? relationshipStatus : "N/A");
+                    // Similarly, handle other properties
+                    String job = queryResult.getString("job");
+                    Stack<String> jobs = new Stack<>();
+                    jobs.push(job != null ? job : "N/A");
+                    userBuilder.jobs(jobs);
 
-                regularUser user = userBuilder.build();
-                loginMessageLabel.setText("Logged in successfully!");
+                    // Handle hobbies (assuming it's a comma-separated string)
+                    String hobbiesString = queryResult.getString("hobbies");
+                    List<String> hobbies = (hobbiesString != null && hobbiesString.length() > 0)
+                            ? Arrays.asList(hobbiesString.split(","))
+                            : Collections.emptyList();
+                    userBuilder.hobbies(hobbies);
 
-                return user;
+                    String address = queryResult.getString("address");
+                    userBuilder.address(address != null ? address : "N/A");
+
+                    // Handle profile picture
+                    byte[] profilePicData = queryResult.getBytes("profile_pic");
+                    userBuilder.profilePic(profilePicData);
+
+                    String relationshipStatus = queryResult.getString("relationship_status");
+                    userBuilder.relationshipStatus(relationshipStatus != null ? relationshipStatus : "N/A");
+
+                    regularUser user = userBuilder.build();
+                    loginMessageLabel.setText("Logged in successfully!");
+
+                    return user;
+                }
             } else {
                 loginMessageLabel.setText("Invalid login. Please try again.");
             }
@@ -167,6 +213,7 @@ public class LoginController implements Initializable {
         }
         return null;
     }
+
 
     // Redirect user to register page
     public void createAccountForm() {

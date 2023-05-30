@@ -3,6 +3,9 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Random;
 import java.security.NoSuchAlgorithmException;
 
@@ -15,7 +18,7 @@ public class MockDataCreation {
     public void createMockData() throws NoSuchAlgorithmException {
         tempDatabase connectNow = new tempDatabase();
         Connection connectDB = connectNow.getConnection();
-
+        LocalDateTime localDateTime = LocalDateTime.now();
         // Create and insert normal users
         for (int i = 1; i <= NUM_USERS; i++) {
             String username = "user" + i;
@@ -23,7 +26,7 @@ public class MockDataCreation {
             String contactNumber = generateContactNumber();
             String password = encryptor.encryptString(generateRandomString(8));
 
-            insertUserData(connectDB, username, email, contactNumber, password);
+            insertUserData(connectDB, username, email, contactNumber, password,0,localDateTime);
         }
 
         // Create and insert admin accounts
@@ -31,19 +34,19 @@ public class MockDataCreation {
         String adminPassword1 = encryptor.encryptString("admin1pass");
         String adminEmail1 = "admin1@example.com";
         String adminContactNumber1 = generateContactNumber();
-        insertUserData(connectDB, adminUsername1, adminEmail1, adminContactNumber1, adminPassword1);
+        insertUserData(connectDB, adminUsername1, adminEmail1, adminContactNumber1, adminPassword1,1,localDateTime);
 
         String adminUsername2 = "admin2";
         String adminPassword2 = encryptor.encryptString("admin2pass");
         String adminEmail2 = "admin2@example.com";
         String adminContactNumber2 = generateContactNumber();
-        insertUserData(connectDB, adminUsername2, adminEmail2, adminContactNumber2, adminPassword2);
+        insertUserData(connectDB, adminUsername2, adminEmail2, adminContactNumber2, adminPassword2,1,localDateTime);
 
         System.out.println("Mock data created successfully.");
     }
 
-    private void insertUserData(Connection connectDB, String username, String email, String contactNumber, String password) {
-        String insertQuery = "INSERT INTO userdata (username, email_address, contact_number, password) VALUES (?, ?, ?, ?)";
+    private void insertUserData(Connection connectDB, String username, String email, String contactNumber, String password, int isAdmin, LocalDateTime localdatetime) {
+        String insertQuery = "INSERT INTO userdata (username, email_address, contact_number, password,isAdmin,time_stamp) VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
             PreparedStatement preparedStatement = connectDB.prepareStatement(insertQuery);
@@ -51,6 +54,8 @@ public class MockDataCreation {
             preparedStatement.setString(2, email);
             preparedStatement.setString(3, contactNumber);
             preparedStatement.setString(4, password);
+            preparedStatement.setInt(5, isAdmin);
+            preparedStatement.setTimestamp(6, Timestamp.valueOf(localdatetime));
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
