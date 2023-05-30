@@ -104,7 +104,7 @@ public class searchUserController {
             checkRequestStatement.setString(3, "%" + sendRequestUsername + "%");
             ResultSet checkRequestResult = checkRequestStatement.executeQuery();
 
-            if (checkRequestResult.next()) {
+            if (checkRequestResult.next()) { //this check all column that has same id and name to determine whether there has a row that request sent has that  user or that user has be friends
                 String requestSent = checkRequestResult.getString("requestSent");
                 // Check if the friend request has already been sent
                 if (requestSent != null && requestSent.contains(sendRequestUsername)) {
@@ -114,10 +114,11 @@ public class searchUserController {
                 // Update the requestSent column for the sender user
                 String updateSenderQuery = "UPDATE friendrequest SET requestSent = CONCAT(requestSent, ?) WHERE user_id = ?";
                 PreparedStatement updateSenderStatement = connection.prepareStatement(updateSenderQuery);
-                String updatedRequestSent = requestSent != null ? requestSent + ";" + sendRequestUsername : sendRequestUsername;
+                String updatedRequestSent = requestSent != null && !requestSent.contains(sendRequestUsername) ? ";" + sendRequestUsername : "";
                 updateSenderStatement.setString(1, updatedRequestSent);
                 updateSenderStatement.setInt(2, user_id);
                 updateSenderStatement.executeUpdate();
+
             } else {
                 // Check if the sender user exists in the table
                 String checkSenderQuery = "SELECT * FROM friendrequest WHERE user_id = ?";
@@ -125,11 +126,13 @@ public class searchUserController {
                 checkSenderStatement.setInt(1, getUserId(username));
                 ResultSet checkSenderResult = checkSenderStatement.executeQuery();
 
-                if (checkSenderResult.next()) {
+                if (checkSenderResult.next()) { //this check is it the user that send request already exist
+                    String requestSent = checkSenderResult.getString("requestSent");
                     // Update the existing row for the sender user with the friend request in the requestSent column
                     String updateSenderQuery = "UPDATE friendrequest SET requestSent = CONCAT(requestSent, ?) WHERE user_id = ?";
                     PreparedStatement updateSenderStatement = connection.prepareStatement(updateSenderQuery);
-                    updateSenderStatement.setString(1, ";" + sendRequestUsername);
+                    String updatedRequestSent = requestSent != null && !requestSent.contains(sendRequestUsername) ? ";" + sendRequestUsername : "";
+                    updateSenderStatement.setString(1, updatedRequestSent);
                     updateSenderStatement.setInt(2, getUserId(username));
                     updateSenderStatement.executeUpdate();
                 } else {
@@ -152,6 +155,7 @@ public class searchUserController {
             insertReceiverStatement.executeUpdate();
 
             return true;
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -307,4 +311,3 @@ public class searchUserController {
         }
     }
 }
-
