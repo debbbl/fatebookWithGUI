@@ -89,9 +89,15 @@ public class adminViewAccountController implements Initializable {
 
         try (Connection connection = database.getConnection();
              Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT time_stamp, user_id, email_address, name, username, contact_number FROM userdata")) {
+             ResultSet resultSet = statement.executeQuery("SELECT time_stamp, user_id, email_address, name, username, contact_number, isAdmin FROM userdata")) {
 
             while (resultSet.next()) {
+                int isAdmin = resultSet.getInt("isAdmin");
+
+                // Check if isAdmin is equal to 1, and skip the row if true
+                if (isAdmin == 1) {
+                    continue;
+                }
                 LocalDateTime timeStamp = resultSet.getObject("time_stamp", LocalDateTime.class);
                 int userId = resultSet.getInt("user_id");
                 String emailAddress = resultSet.getString("email_address");
