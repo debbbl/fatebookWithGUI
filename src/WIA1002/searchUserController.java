@@ -171,7 +171,7 @@ public class searchUserController {
 
     private int getUserId(String username) {
         tempDatabase db = new tempDatabase();
-        Connection connection = db.getConnection();
+        Connection connection = db.getConnection(); 
 
         try {
             String query = "SELECT user_id FROM userdata WHERE username = ?";
