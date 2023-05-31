@@ -95,9 +95,9 @@ public class regularUserDashboardController implements Initializable {
             mainPane.setCenter(loader.load());
 
             // Pass the controller instance if needed
-            if (loader.getController() instanceof SettingsController) {
-                SettingsController settingsController = loader.getController();
-                settingsController.setDashboardController(this);
+            if (loader.getController() instanceof addFriendsController) {
+                addFriendsController addfriendcontroller = loader.getController();
+                addfriendcontroller.setUser(user);
             }
         } catch (IOException e) {
             e.printStackTrace();
