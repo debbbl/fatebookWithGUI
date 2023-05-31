@@ -40,7 +40,8 @@ public class EditAccountController {
     @FXML
     private Button cancelButton;
     private regularUser user;
-    private List<String> hobbiesList = new ArrayList<>();;
+    private List<String> hobbiesList = new ArrayList<>();
+    private tempDatabase database;;
     private List<String> relationshipStatusOptions = new ArrayList<>(Arrays.asList(
             "Single", "In a relationship", "Engaged", "Married", "In a civil union",
             "In a domestic partnership", "In an open relationship", "It's complicated",
@@ -84,17 +85,18 @@ public class EditAccountController {
     @FXML
     private void initialize() {
         // Initialize the hobbies list
-        hobbiesList = new ArrayList<>();
+        database = new tempDatabase();  // Instantiate the tempDatabase object
+        hobbiesList = database.getHobbiesFromDatabase();
         hobbiesList.add("Reading");
-        hobbiesList.add("Sports");
-        hobbiesList.add("Cooking");
 
-        hobbiesTextField.setOnMouseClicked(event -> showHobbiesDialog());
+        hobbiesTextField.setOnMouseClicked(event -> showHobbiesDialog());;
 
-        File brandingFile = new File("images/vertical.png"); //file for the meta logo
+        File brandingFile = new File("images/vertical.png");
         Image brandingImage = new Image(brandingFile.toURI().toString());
         editAccountImageView.setImage(brandingImage);
     }
+
+
     public void setHobbiesList(List<String> hobbiesList) {
         this.hobbiesList = hobbiesList;
     }
@@ -111,12 +113,13 @@ public class EditAccountController {
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(hobby -> {
             if (hobby.equals("Create a new hobby")) {
-                showNewHobbyDialog();  // Modified this line
+                showNewHobbyDialog();
             } else {
                 hobbiesTextField.setText(hobby);
             }
         });
     }
+
     @FXML
     private void showNewHobbyDialog() {
         TextInputDialog dialog = new TextInputDialog();
@@ -126,11 +129,21 @@ public class EditAccountController {
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(hobby -> {
-            //tempHomeController.getInstance().addHobby(hobby); // Update hobbiesList in HomeController
+            database.insertHobby(hobby); // Use the instance variable to call the method
             hobbiesList.add(hobby); // Add the new hobby to hobbiesList
             hobbiesTextField.setText(hobby);
         });
     }
+
+
+    private void addHobbyToDatabase(String hobby) {
+        // Store the new hobby in the "hobbies" table in the database
+        // Perform the necessary database operations to insert the hobby
+        tempDatabase database = new tempDatabase();
+        database.getConnection();
+        database.insertHobby(hobby);
+    }
+
     @FXML
     private void saveButtonOnAction() {
         try{

@@ -86,7 +86,7 @@ public class searchUserController {
             if (requestSent) {
                 displayAlert(Alert.AlertType.INFORMATION, "Friend Request Sent", "Friend request sent to " + selectedUsername);
             } else {
-                displayAlert(Alert.AlertType.INFORMATION, "Request Failed", "Friend request to " + selectedUsername + " already sent or the user is already your friend.");
+                displayAlert(Alert.AlertType.WARNING, "Request Failed", "Friend request to " + selectedUsername + " already sent or the user is already your friend.");
             }
         }
     }

@@ -139,5 +139,36 @@ public class tempDatabase {
         }
     }
 
-}
+    public void insertHobby(String hobby) {
+        String insertQuery = "INSERT INTO hobbies (hobby_name) VALUES (?)";
 
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(insertQuery)) {
+            statement.setString(1, hobby);
+            statement.executeUpdate();
+
+            System.out.println("Hobby inserted successfully!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<String> getHobbiesFromDatabase() {
+        List<String> hobbies = new ArrayList<>();
+        String query = "SELECT hobby_name FROM hobbies";
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                String hobby = resultSet.getString("hobby_name");
+                hobbies.add(hobby);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return hobbies;
+    }
+}
