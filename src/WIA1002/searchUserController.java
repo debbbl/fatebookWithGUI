@@ -97,15 +97,15 @@ public class searchUserController {
 
         try {
             // Check if the friend request has already been sent or if the users are already friends
-            String checkRequestQuery = "SELECT * FROM friendrequest WHERE user_id = ? AND username = ? AND requestSent LIKE ?";
-            PreparedStatement checkRequestStatement = connection.prepareStatement(checkRequestQuery);
-            checkRequestStatement.setInt(1, user_id);
-            checkRequestStatement.setString(2, username);
-            checkRequestStatement.setString(3, "%" + sendRequestUsername + "%");
-            ResultSet checkRequestResult = checkRequestStatement.executeQuery();
+            String checkSentQuery = "SELECT * FROM friendrequest WHERE user_id = ? AND username = ? AND requestSent LIKE ?";
+            PreparedStatement checkSentStatement = connection.prepareStatement(checkSentQuery);
+            checkSentStatement.setInt(1, user_id);
+            checkSentStatement.setString(2, username);
+            checkSentStatement.setString(3, "%" + sendRequestUsername + "%");
+            ResultSet checkSentResult = checkSentStatement.executeQuery();
 
-            if (checkRequestResult.next()) { //this check all column that has same id and name to determine whether there has a row that request sent has that  user or that user has be friends
-                String requestSent = checkRequestResult.getString("requestSent");
+            if (checkSentResult.next()) { //this check all column that has same id and name to determine whether there has a row that request sent has that  user or that user has be friends
+                String requestSent = checkSentResult.getString("requestSent");
                 // Check if the friend request has already been sent
                 if (requestSent != null && requestSent.contains(sendRequestUsername)) {
                     return false;
@@ -119,7 +119,39 @@ public class searchUserController {
                 updateSenderStatement.setInt(2, user_id);
                 updateSenderStatement.executeUpdate();
 
-            } else {
+                // Check if the sender user exists in the table
+                String checkRequestQuery = "SELECT * FROM friendrequest WHERE user_id = ?";
+                PreparedStatement checkRequestStatement = connection.prepareStatement(checkRequestQuery);
+                checkRequestStatement.setInt(1, getUserId(sendRequestUsername));
+                ResultSet checkRequestResult = checkRequestStatement.executeQuery();
+
+                if(checkRequestResult.next()) {
+                    String requestReceived = checkRequestResult.getString("requestReceived");
+                    // Check if the friend request has already been received
+                    if (requestReceived != null && requestReceived.contains(username)) {
+                        return false;
+                    }
+                    // Update the requestReceived column for the receiver user
+                    String updateReceivedQuery = "UPDATE friendrequest SET requestReceived = CONCAT(requestReceived, ?) WHERE user_id = ?";
+                    PreparedStatement updateReceivedStatement = connection.prepareStatement(updateReceivedQuery);
+                    String updatedRequestReceived = requestReceived != null && !requestReceived.contains(sendRequestUsername) ? ";" + username : "";
+                    updateReceivedStatement.setString(1, updatedRequestReceived);
+                    updateReceivedStatement.setInt(2, getUserId(sendRequestUsername));
+                    updateReceivedStatement.executeUpdate();
+                }
+
+                else {
+
+                    // Insert a new row for the receiver user and store the friend request in the requestReceived column
+                    String insertReceiverQuery = "INSERT INTO friendrequest (user_id, username, requestReceived) VALUES (?, ?, ?)";
+                    PreparedStatement insertReceiverStatement = connection.prepareStatement(insertReceiverQuery);
+                    insertReceiverStatement.setInt(1, getUserId(sendRequestUsername));
+                    insertReceiverStatement.setString(2, sendRequestUsername);
+                    insertReceiverStatement.setString(3, username + ";");
+                    insertReceiverStatement.executeUpdate();
+                }
+            }
+            else {
                 // Check if the sender user exists in the table
                 String checkSenderQuery = "SELECT * FROM friendrequest WHERE user_id = ?";
                 PreparedStatement checkSenderStatement = connection.prepareStatement(checkSenderQuery);
@@ -135,7 +167,9 @@ public class searchUserController {
                     updateSenderStatement.setString(1, updatedRequestSent);
                     updateSenderStatement.setInt(2, getUserId(username));
                     updateSenderStatement.executeUpdate();
-                } else {
+                }
+
+                else{
                     // Insert a new row for the sender user with the friend request in the requestSent column
                     String insertSenderQuery = "INSERT INTO friendrequest (user_id, username, requestSent) VALUES (?, ?, ?)";
                     PreparedStatement insertSenderStatement = connection.prepareStatement(insertSenderQuery);
@@ -144,17 +178,39 @@ public class searchUserController {
                     insertSenderStatement.setString(3, sendRequestUsername + ";");
                     insertSenderStatement.executeUpdate();
                 }
+                // Check if the sender user exists in the table
+                String checkRequestQuery = "SELECT * FROM friendrequest WHERE user_id = ?";
+                PreparedStatement checkRequestStatement = connection.prepareStatement(checkRequestQuery);
+                checkRequestStatement.setInt(1, getUserId(sendRequestUsername));
+                ResultSet checkRequestResult = checkRequestStatement.executeQuery();
+
+                if (checkRequestResult.next()) {
+                    String requestReceived = checkRequestResult.getString("requestReceived");
+                    // Check if the friend request has already been received
+                    if (requestReceived != null && requestReceived.contains(username)) {
+                        return false;
+                    }
+                    // Update the requestReceived column for the receiver user
+                    String updateReceivedQuery = "UPDATE friendrequest SET requestReceived = CONCAT(requestReceived, ?) WHERE user_id = ?";
+                    PreparedStatement updateReceivedStatement = connection.prepareStatement(updateReceivedQuery);
+                    String updatedRequestReceived = requestReceived != null && !requestReceived.contains(sendRequestUsername) ? ";" + username : "";
+                    updateReceivedStatement.setString(1, updatedRequestReceived);
+                    updateReceivedStatement.setInt(2, getUserId(sendRequestUsername));
+                    updateReceivedStatement.executeUpdate();
+                } else {
+
+                    // Insert a new row for the receiver user and store the friend request in the requestReceived column
+                    String insertReceiverQuery = "INSERT INTO friendrequest (user_id, username, requestReceived) VALUES (?, ?, ?)";
+                    PreparedStatement insertReceiverStatement = connection.prepareStatement(insertReceiverQuery);
+                    insertReceiverStatement.setInt(1, getUserId(sendRequestUsername));
+                    insertReceiverStatement.setString(2, sendRequestUsername);
+                    insertReceiverStatement.setString(3, username); //+";"
+                    insertReceiverStatement.executeUpdate();
+                }
             }
 
-            // Insert a new row for the receiver user and store the friend request in the requestReceived column
-            String insertReceiverQuery = "INSERT INTO friendrequest (user_id, username, requestReceived) VALUES (?, ?, ?)";
-            PreparedStatement insertReceiverStatement = connection.prepareStatement(insertReceiverQuery);
-            insertReceiverStatement.setInt(1, getUserId(sendRequestUsername));
-            insertReceiverStatement.setString(2, sendRequestUsername);
-            insertReceiverStatement.setString(3, username + ";");
-            insertReceiverStatement.executeUpdate();
-
             return true;
+
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -171,7 +227,7 @@ public class searchUserController {
 
     private int getUserId(String username) {
         tempDatabase db = new tempDatabase();
-        Connection connection = db.getConnection(); 
+        Connection connection = db.getConnection();
 
         try {
             String query = "SELECT user_id FROM userdata WHERE username = ?";
