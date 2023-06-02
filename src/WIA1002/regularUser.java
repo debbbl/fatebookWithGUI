@@ -15,6 +15,7 @@ public class regularUser extends user {
     private String relationshipStatus;
     private byte[] profilePic;
     private List<String> friendList;
+    private LinkedList<String> actionHistory;
 
     public regularUser(RegularUserBuilder regularUserBuilder,LocalDateTime timestamp) {
         super(regularUserBuilder);
@@ -30,8 +31,17 @@ public class regularUser extends user {
         this.profilePic = regularUserBuilder.profilePic;
         this.relationshipStatus = regularUserBuilder.relationshipStatus;
         this.friendList = regularUserBuilder.friendList;
+        this.actionHistory = new LinkedList<>();
     }
 
+    public void addActionToHistory(String action, LocalDateTime timestamp) {
+        String actionWithTimestamp = action + " at " + timestamp;
+        actionHistory.add(actionWithTimestamp);
+    }
+
+    public LinkedList<String> getActivityHistory() {
+        return actionHistory;
+    }
     public String getEmailAddress(){
         return getEmail();
     }
@@ -125,7 +135,7 @@ public class regularUser extends user {
         }
     }
 
-     public static class RegularUserBuilder extends user.Builder{
+    public static class RegularUserBuilder extends user.Builder{
         private int userId;
         private String name;
         private LocalDate birthday;

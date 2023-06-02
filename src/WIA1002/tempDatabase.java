@@ -28,7 +28,7 @@ public class tempDatabase {
 
     public void updateRegularUser(regularUser user) {
         String updateQuery = "UPDATE userdata SET email_address=?, name=?, " +
-                "contact_number=?, birthday=?, gender=?, job=?, hobbies=?, address=? WHERE username=?";
+                "contact_number=?, birthday=?, gender=?, job=?, hobbies=?, address=?,relationship_status = ? WHERE username=?";
 
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(updateQuery)) {
@@ -41,7 +41,8 @@ public class tempDatabase {
             statement.setString(6, String.join(", ", user.getJobExperience()));
             statement.setString(7, String.join(", ", user.getHobbies()));
             statement.setString(8, user.getAddress());
-            statement.setString(9, user.getUsername());
+            statement.setString(9,user.getRelationshipStatus());
+            statement.setString(10, user.getUsername());
 
             statement.executeUpdate();
 

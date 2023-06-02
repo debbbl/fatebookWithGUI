@@ -128,6 +128,7 @@ public class regularUserDashboardController implements Initializable {
             if (loader.getController() instanceof SettingsController) {
                 SettingsController settingsController = loader.getController();
                 settingsController.setDashboardController(this);
+                settingsController.setUser(user);
             }
         } catch (IOException e) {
             e.printStackTrace();

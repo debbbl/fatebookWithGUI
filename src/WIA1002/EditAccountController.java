@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -95,8 +96,6 @@ public class EditAccountController {
         Image brandingImage = new Image(brandingFile.toURI().toString());
         editAccountImageView.setImage(brandingImage);
     }
-
-
     public void setHobbiesList(List<String> hobbiesList) {
         this.hobbiesList = hobbiesList;
     }
@@ -119,7 +118,6 @@ public class EditAccountController {
             }
         });
     }
-
     @FXML
     private void showNewHobbyDialog() {
         TextInputDialog dialog = new TextInputDialog();
@@ -134,8 +132,6 @@ public class EditAccountController {
             hobbiesTextField.setText(hobby);
         });
     }
-
-
     private void addHobbyToDatabase(String hobby) {
         // Store the new hobby in the "hobbies" table in the database
         // Perform the necessary database operations to insert the hobby
@@ -143,7 +139,6 @@ public class EditAccountController {
         database.getConnection();
         database.insertHobby(hobby);
     }
-
     @FXML
     private void saveButtonOnAction() {
         try{
@@ -167,7 +162,8 @@ public class EditAccountController {
             database.getConnection();
             database.updateRegularUser(user);
             database.updateJob(user.getUsername(), jobTextField.getText()); // Update the job in the database
-
+            LocalDateTime timestamp = LocalDateTime.now();
+            user.addActionToHistory("Edit own account",timestamp);
             // Close the Edit Account screen
             Stage stage = (Stage) saveButton.getScene().getWindow();
             stage.close();

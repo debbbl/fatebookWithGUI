@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 public class friendRequestController implements Initializable {
@@ -114,6 +115,7 @@ public class friendRequestController implements Initializable {
             friendRequests.remove(selectedFriendRequest);
 
             showAlert(Alert.AlertType.INFORMATION, "Friend Request Accepted", "You have accepted the friend request.");
+            user.addActionToHistory(selectedFriendRequest+" has been accepted", LocalDateTime.now());
         }
     }
 
@@ -126,6 +128,7 @@ public class friendRequestController implements Initializable {
             friendRequests.remove(selectedFriendRequest);
 
             showAlert(Alert.AlertType.INFORMATION, "Friend Request Rejected", "You have rejected the friend request.");
+            user.addActionToHistory(selectedFriendRequest+" has been rejected", LocalDateTime.now());
         }
     }
 

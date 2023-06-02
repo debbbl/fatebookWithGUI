@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -64,6 +65,7 @@ public class searchUserController {
         } else {
             searchResultsListView.getItems().clear();
             searchResultsListView.getItems().addAll(searchResults);
+            user.addActionToHistory("searched "+query, LocalDateTime.now());
         }
     }
     @FXML
@@ -73,6 +75,7 @@ public class searchUserController {
         if (selectedUsername != null) {
             regularUser user = getUserDetails(selectedUsername);
             displayUserDetails(user);
+            user.addActionToHistory("viewed "+selectedUsername+"'s profile",LocalDateTime.now());
         }
     }
 
@@ -85,6 +88,7 @@ public class searchUserController {
 
             if (requestSent) {
                 displayAlert(Alert.AlertType.INFORMATION, "Friend Request Sent", "Friend request sent to " + selectedUsername);
+                user.addActionToHistory("sent friend requets to "+selectedUsername,LocalDateTime.now());
             } else {
                 displayAlert(Alert.AlertType.WARNING, "Request Failed", "Friend request to " + selectedUsername + " already sent or the user is already your friend.");
             }
