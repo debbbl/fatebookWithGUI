@@ -172,4 +172,81 @@ public class tempDatabase {
 
         return hobbies;
     }
+
+    public List<String> getFriendRequestsReceived(int userId) {
+        List<String> friendRequests = new ArrayList<>();
+        String query = "SELECT sender_id FROM friendrequest WHERE receiver_id = ? AND status = 'pending'";
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int senderId = resultSet.getInt("sender_id");
+                String senderUsername = getUsernameByUserId(senderId);
+                friendRequests.add(senderUsername);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return friendRequests;
+    }
+
+    private String getUsernameByUserId(int userId) {
+        String query = "SELECT username FROM userdata WHERE user_id = ?";
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getString("username");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public void acceptFriendRequest(int userId, String friendUsername) {
+        try (Connection connection = getConnection()) {
+            // Update the status of the friend request to "accepted"
+            String updateQuery = "UPDATE friendrequest SET status = 'accepted' WHERE sender_id = ? AND receiver_id = ?";
+            try (PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
+                updateStatement.setInt(1, getUserIdByUsername(friendUsername));
+                updateStatement.setInt(2, userId);
+                updateStatement.executeUpdate();
+            }
+
+            /* Add the friends to the friends table
+            //String insertQuery = "INSERT INTO friends (user_id, friend_id) VALUES (?, ?), (?, ?)";
+            try (PreparedStatement insertStatement = connection.prepareStatement(insertQuery)) {
+                insertStatement.setInt(1, userId);
+                insertStatement.setInt(2, getUserIdByUsername(friendUsername));
+                insertStatement.setInt(3, getUserIdByUsername(friendUsername));
+                insertStatement.setInt(4, userId);
+                insertStatement.executeUpdate();
+            }*/
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void rejectFriendRequest(int userId, String friendUsername) {
+        try (Connection connection = getConnection()) {
+            // Update the status of the friend request to "rejected"
+            String updateQuery = "UPDATE friendrequest SET status = 'rejected' WHERE sender_id = ? AND receiver_id = ?";
+            try (PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
+                updateStatement.setInt(1, getUserIdByUsername(friendUsername));
+                updateStatement.setInt(2, userId);
+                updateStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

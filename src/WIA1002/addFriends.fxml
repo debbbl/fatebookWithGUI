@@ -7,6 +7,6 @@
     <children>
         <Button fx:id="suggestButton" layoutX="310.0" layoutY="385.0" mnemonicParsing="false" onAction="#suggestButtonOnAction" text="Suggest Friends to Add" />
         <Button fx:id="showRequestButton" layoutX="160.0" layoutY="385.0" mnemonicParsing="false" onAction="#showRequestButtonOnAction" prefHeight="25.0" prefWidth="140.0" text="show friend request" />
-<!--        <AnchorPane fx:id="contentPane" prefHeight="423.0" prefWidth="600.0" />-->
+        <AnchorPane fx:id="contentPane" layoutX="6.0" prefHeight="376.0" prefWidth="594.0" />
     </children>
 </AnchorPane>

@@ -30,25 +30,17 @@ public class addFriendsController {
     @FXML
     private void showRequestButtonOnAction() {
         try {
-            // Load the friend request FXML file
             FXMLLoader loader = new FXMLLoader(getClass().getResource("friendRequest.fxml"));
-//            Pane friendRequestPane = loader.load();
-            Parent friendRequest = loader.load();
+            Pane friendRequestPane = loader.load();
 
-            friendRequestController friendRequestController = loader.getController();
+            tempFriendRequestController friendRequestController = loader.getController();
             friendRequestController.setUser(user);
 
-            Stage friendRequestStage = new Stage();
-            friendRequestStage.initStyle(StageStyle.UNDECORATED);
-            friendRequestStage.setScene(new Scene(friendRequest));
-
-            // Show the friend request screen
-            friendRequestStage.showAndWait();
-
-//            // Set the friend request pane as the content of the contentPane
-//            contentPane.getChildren().setAll(friendRequestPane);
+            // Set the friendRequestPane as the content of the contentPane
+            contentPane.getChildren().setAll(friendRequestPane);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 }
