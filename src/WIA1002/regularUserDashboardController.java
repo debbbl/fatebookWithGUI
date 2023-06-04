@@ -51,7 +51,6 @@ public class regularUserDashboardController implements Initializable {
         addFriendsButton.setOnAction((event -> loadAddFriendsPage()));
         createPostButton.setOnAction(event -> loadCreatePostPage());
         settingsButton.setOnAction(event -> loadSettingsPage());
-        findMutualFriendsButton.setOnAction(event -> loadFindMutualFriendsPage());
     }
 
     public void showDashboard(regularUser user) {
@@ -122,21 +121,6 @@ public class regularUserDashboardController implements Initializable {
         }
     }
 
-    @FXML
-    public void loadFindMutualFriendsPage(){
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("mutualFriends.fxml"));
-            mainPane.setCenter(loader.load());
-
-            // Pass the controller instance if needed
-            if (loader.getController() instanceof mutualFriendsController) {
-                mutualFriendsController mutualfriendscontroller = loader.getController();
-                mutualfriendscontroller.setUser(user);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
     @FXML
     public void loadSettingsPage() {
         try {
