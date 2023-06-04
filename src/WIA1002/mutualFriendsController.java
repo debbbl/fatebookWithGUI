@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class mutualFriendsController {
-    @FXML
-    private TextField userTextField;
 
     @FXML
     private Button findMutualFriendsButton;
@@ -26,7 +25,12 @@ public class mutualFriendsController {
     @FXML
     private Label resultLabel;
 
+    @FXML
+    private Button cancelButton;
+
     private regularUser user;
+
+    private String selectedUserName;
 
     private MutualFriendsGraph mutualFriendsGraph;
 
@@ -34,18 +38,18 @@ public class mutualFriendsController {
         mutualFriendsGraph = new MutualFriendsGraph();
     }
 
-    public void setUser(regularUser user) {
+    public void setUser(regularUser user,String selectedUserName) {
         this.user = user;
+        this.selectedUserName = selectedUserName;
+        findMutualFriendsOnAction();
     }
 
     @FXML
     private void initialize() {
-        // Set up any initialization tasks here
     }
 
     @FXML
     private void findMutualFriendsOnAction() {
-        String user1_username = userTextField.getText();
         tempDatabase db = new tempDatabase();
         String sql = "SELECT sender_id, receiver_id FROM friendrequest WHERE status= 'accepted' ";
 
@@ -75,7 +79,7 @@ public class mutualFriendsController {
             graph.printEdges();
 
 
-            ArrayList<String> mutualFriends = mutualFriendsGraph.findMutualFriends(user.getUsername(), user1_username);
+            ArrayList<String> mutualFriends = mutualFriendsGraph.findMutualFriends(user.getUsername(), selectedUserName);
             // Update UI components
             mutualFriendsListView.getItems().clear();
             mutualFriendsListView.getItems().addAll(mutualFriends);
@@ -87,7 +91,10 @@ public class mutualFriendsController {
         }
     }
 
-    public void setMutualFriendsGraph(MutualFriendsGraph mutualFriendsGraph) {
-        this.mutualFriendsGraph = mutualFriendsGraph;
+    @FXML
+    private void cancelButtonOnAction() {
+        // Close the show mutual friend screen
+        Stage stage = (Stage) cancelButton.getScene().getWindow();
+        stage.close();
     }
 }
