@@ -70,6 +70,25 @@ public class tempDatabase {
 
         return userId;
     }
+    
+    public String getUsernameByUserID(int userID) {
+        String username = null;
+        String query = "SELECT username FROM userdata WHERE user_id = ?";
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, userID);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                username = resultSet.getString("username");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return username;
+    }
 
     public void updateProfilePicture(String username, byte[] profilePicData) {
         int userId = getUserIdByUsername(username);
