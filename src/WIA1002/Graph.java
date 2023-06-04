@@ -1,5 +1,7 @@
 package WIA1002;
 
+import javafx.scene.control.Alert;
+
 import java.util.ArrayList;
 
 public class Graph<T extends Comparable<T>, N extends Comparable<N>> {
@@ -268,12 +270,23 @@ public class Graph<T extends Comparable<T>, N extends Comparable<N>> {
         ArrayList<T> currentUserFriends = getNeighbours(currentUser);
         ArrayList<T> user1Friends = getNeighbours(user1);
 
-        for (T friend : currentUserFriends) {
-            if (user1Friends.contains(friend)) {
-                mutualFriends.add(friend);
+        if (currentUserFriends != null && user1Friends != null) {
+            for (T friend : currentUserFriends) {
+                if (user1Friends.contains(friend)) {
+                    mutualFriends.add(friend);
+                }
             }
+        } else {
+            displayAlert(Alert.AlertType.INFORMATION, "No Results", "No friends found in "+user1);
         }
 
         return mutualFriends;
+    }
+
+    private void displayAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
