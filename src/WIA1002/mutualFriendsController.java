@@ -1,10 +1,7 @@
 package WIA1002;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.sql.Connection;
@@ -80,16 +77,29 @@ public class mutualFriendsController {
 
 
             ArrayList<String> mutualFriends = mutualFriendsGraph.findMutualFriends(user.getUsername(), selectedUserName);
-            // Update UI components
-            mutualFriendsListView.getItems().clear();
-            mutualFriendsListView.getItems().addAll(mutualFriends);
-            resultLabel.setText("Found " + mutualFriends.size() + " mutual friends.");
 
-        }
-        catch (SQLException e) {
+            if (mutualFriends.isEmpty()) {
+                displayAlert(Alert.AlertType.INFORMATION, "No Results", "No mutual friends found between "+user.getUsername()+" and "+ selectedUserName);
+
+            }
+            else {
+                // Update UI components
+                mutualFriendsListView.getItems().clear();
+                mutualFriendsListView.getItems().addAll(mutualFriends);
+                resultLabel.setText("Found " + mutualFriends.size() + " mutual friends.");
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+    private void displayAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
 
     @FXML
     private void cancelButtonOnAction() {
