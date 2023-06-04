@@ -240,6 +240,21 @@ public class tempDatabase {
                 updateStatement.setInt(2, userId);
                 updateStatement.executeUpdate();
             }
+            
+            //use COALESCE so if num_of_friend is null, set to 1 and if it is not null, it increase the value by 1
+            //for currentUser
+            String incrementQueryUser = "UPDATE userdata SET num_of_friend = COALESCE(num_of_friend + 1, 1) WHERE user_id = ?";
+            try (PreparedStatement incrementStatement = connection.prepareStatement(incrementQueryUser)) {
+                incrementStatement.setInt(1, userId);
+                incrementStatement.executeUpdate();
+            }
+
+            //for the sender user
+            String incrementQueryFriendId = "UPDATE userdata SET num_of_friend = COALESCE(num_of_friend + 1, 1) WHERE user_id = ?";
+            try (PreparedStatement incrementStatement = connection.prepareStatement(incrementQueryFriendId)) {
+                incrementStatement.setInt(1, getUserIdByUsername(friendUsername));
+                incrementStatement.executeUpdate();
+            }
 
             /* Add the friends to the friends table
             //String insertQuery = "INSERT INTO friends (user_id, friend_id) VALUES (?, ?), (?, ?)";
