@@ -1,10 +1,15 @@
 package WIA1002;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.ByteArrayInputStream;
 import java.sql.Connection;
@@ -51,6 +56,9 @@ public class searchUserController {
     private regularUser user;
     @FXML
     private AnchorPane detailsPane;
+
+    @FXML
+    private  Button showMutualFriendsButton;
 
     public void setUser(regularUser user){
         this.user = user;
@@ -271,6 +279,34 @@ public class searchUserController {
                     profilePictureImageView.setImage(new Image(new ByteArrayInputStream(profilePicData)));
                 }
             }
+        }
+    }
+
+    @FXML
+    private void showMutualFriendsButtonClicked(){
+        String selectedUsername = searchResultsListView.getSelectionModel().getSelectedItem();
+        try {
+            // Load the FXML file for the Edit Account screen
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("mutualFriends.fxml"));
+            Parent root = loader.load();
+
+            // Get the controller instance
+            mutualFriendsController showMutualFriends  = loader.getController();
+
+            // Pass the user object and the selected user to the mutual friends controller
+            showMutualFriends .setUser(user,selectedUsername);
+
+            // Create a new Stage for the Edit Account screen
+            Stage editAccountStage = new Stage();
+            editAccountStage.initStyle(StageStyle.UNDECORATED);
+            editAccountStage.setScene(new Scene(root));
+
+            // Show the Edit Account screen
+            editAccountStage.showAndWait();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle error loading the Edit Account screen
         }
     }
 }
