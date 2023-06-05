@@ -28,7 +28,7 @@
                     <Font name="Berlin Sans FB" size="13.0" />
                 </font>
             </Button>
-            <Button layoutX="285.0" layoutY="372.0" mnemonicParsing="false" style="-fx-background-color: #ADD8E6;" text="Show mutual friends" textFill="WHITE">
+            <Button fx:id="showMutualFriendsButton" layoutX="285.0" layoutY="372.0" mnemonicParsing="false" onAction="#showMutualFriendsButtonClicked" style="-fx-background-color: #ADD8E6;" text="Show mutual friends" textFill="WHITE">
                 <font>
                     <Font name="Berlin Sans FB" size="13.0" />
                 </font>
