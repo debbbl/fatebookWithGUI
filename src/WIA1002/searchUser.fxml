@@ -10,25 +10,25 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="423.0" prefWidth="715.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.searchUserController">
+<AnchorPane prefHeight="478.0" prefWidth="680.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.searchUserController">
     <children>
-        <Button fx:id="viewProfileButton" layoutX="20.0" layoutY="377.0" onAction="#viewProfileButtonClicked" text="View Profile" />
+        <Button fx:id="viewProfileButton" layoutX="18.0" layoutY="438.0" onAction="#viewProfileButtonClicked" text="View Profile" />
 
-        <ListView fx:id="searchResultsListView" layoutX="18.0" layoutY="55.0" prefHeight="311.0" prefWidth="245.0" />
+        <ListView fx:id="searchResultsListView" layoutX="18.0" layoutY="55.0" prefHeight="379.0" prefWidth="245.0" />
 
-        <AnchorPane fx:id="detailsPane" layoutX="280.0" prefHeight="423.0" prefWidth="435.0" style="-fx-background-color: #F4F4F4;">
+        <AnchorPane fx:id="detailsPane" layoutX="272.0" prefHeight="478.0" prefWidth="407.0" style="-fx-background-color: #F4F4F4;">
             <Label layoutX="19.0" layoutY="39.0" text="User Details" textFill="LIGHTBLUE">
                 <font>
                     <Font name="Arial Black" size="20.0" />
                 </font>
             </Label>
             <ImageView fx:id="profilePictureImageView" fitHeight="110.0" fitWidth="130.0" layoutX="230.0" layoutY="24.0" preserveRatio="true" />
-            <Button fx:id="sendFriendRequestButton" layoutX="135.0" layoutY="372.0" mnemonicParsing="false" onAction="#sendFriendRequestButtonClicked" style="-fx-background-color: #ADD8E6;" text="Send Friend Request" textFill="WHITE">
+            <Button fx:id="sendFriendRequestButton" layoutX="111.0" layoutY="434.0" mnemonicParsing="false" onAction="#sendFriendRequestButtonClicked" style="-fx-background-color: #ADD8E6;" text="Send Friend Request" textFill="WHITE">
                 <font>
                     <Font name="Berlin Sans FB" size="13.0" />
                 </font>
             </Button>
-            <Button fx:id="showMutualFriendsButton" layoutX="285.0" layoutY="372.0" mnemonicParsing="false" onAction="#showMutualFriendsButtonClicked" style="-fx-background-color: #ADD8E6;" text="Show mutual friends" textFill="WHITE">
+            <Button fx:id="showMutualFriendsButton" layoutX="253.0" layoutY="434.0" mnemonicParsing="false" onAction="#showMutualFriendsButtonClicked" style="-fx-background-color: #ADD8E6;" text="Show mutual friends" textFill="WHITE">
                 <font>
                     <Font name="Berlin Sans FB" size="13.0" />
                 </font>
@@ -137,7 +137,7 @@
                     </HBox>
                 </children>
             </VBox>
-            <HBox layoutX="239.0" layoutY="155.0" prefHeight="23.0" prefWidth="196.0" spacing="20.0">
+            <HBox layoutX="239.0" layoutY="155.0" prefHeight="99.0" prefWidth="156.0" spacing="20.0">
                 <children>
                     <Label prefHeight="17.0" prefWidth="53.0" text="Address:">
                         <font>
@@ -148,12 +148,12 @@
             </HBox>
             <Label fx:id="addressLabel" layoutX="239.0" layoutY="178.0" prefHeight="57.0" prefWidth="135.0" />
         </AnchorPane>
-        <TextField fx:id="searchTextField" layoutX="75.0" layoutY="18.0" prefHeight="25.0" prefWidth="126.0" />
+        <TextField fx:id="searchTextField" layoutX="75.0" layoutY="18.0" prefHeight="25.0" prefWidth="128.0" />
         <Label layoutX="19.0" layoutY="21.0" text="Search:">
             <font>
                 <Font name="Berlin Sans FB" size="16.0" />
             </font>
         </Label>
-        <Button fx:id="searchButton" layoutX="215.0" layoutY="18.0" onAction="#searchButtonClicked" text="Search" />
+        <Button fx:id="searchButton" layoutX="211.0" layoutY="18.0" onAction="#searchButtonClicked" text="Search" />
     </children>
 </AnchorPane>

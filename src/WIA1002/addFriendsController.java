@@ -2,12 +2,8 @@ package WIA1002;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -23,9 +19,21 @@ public class addFriendsController {
 
     @FXML
     private void suggestButtonOnAction() {
-        // Implement the logic for suggesting friends to add
-        // This method will be called when the "Suggest Friends to Add" button is clicked
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("suggestFriendsToAdd.fxml"));
+            Pane suggestMutualFriendPane = loader.load();
+
+            // Set up the controller for the suggestFriendsToAdd.fxml if needed
+            suggestFriendsToAddController suggestController = loader.getController();
+            suggestController.setUser(user);
+
+            // Set the suggestMutualFriendPane as the content of the contentPane
+            contentPane.getChildren().setAll(suggestMutualFriendPane);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     @FXML
     private void showRequestButtonOnAction() {

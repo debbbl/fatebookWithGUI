@@ -75,10 +75,11 @@ public class tempFriendRequestController implements Initializable {
         if (selectedRequest != null) {
             // Accept the selected friend request
             int userId = database.getUserIdByUsername(user.getUsername());
-            database.acceptFriendRequest(userId, selectedRequest.getUsername());
-
             // Remove the accepted request from the ListView
             friendRequestListView.getItems().remove(selectedRequest);
+            // Update the num_of_fren field for both sender and receiver
+            int receiverId = database.getUserIdByUsername(selectedRequest.getUsername());
+            database.acceptFriendRequest(userId,receiverId);
 
             // Show success message
             showInfoAlert("Friend Request Accepted", "You have accepted the friend request from " + selectedRequest.getUsername());

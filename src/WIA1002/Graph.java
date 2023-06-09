@@ -2,7 +2,7 @@ package WIA1002;
 
 import javafx.scene.control.Alert;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class Graph<T extends Comparable<T>, N extends Comparable<N>> {
 
@@ -33,8 +33,8 @@ public class Graph<T extends Comparable<T>, N extends Comparable<N>> {
             nextVertex = next;
             firstEdge = null;
         }
-    }
 
+    }
 
     Vertex<T, N> head;
     int size;

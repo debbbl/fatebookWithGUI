@@ -1,5 +1,7 @@
 package WIA1002;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -49,7 +51,7 @@ public class regularUserDashboardController implements Initializable {
         homeButton.setOnAction(event -> loadHomePage());
         searchUserButton.setOnAction(event -> loadSearchUserPage());
         addFriendsButton.setOnAction((event -> loadAddFriendsPage()));
-        createPostButton.setOnAction(event -> loadCreatePostPage());
+        createPostButton.setOnAction(event -> loadFriendListPage());
         settingsButton.setOnAction(event -> loadSettingsPage());
     }
 
@@ -106,20 +108,33 @@ public class regularUserDashboardController implements Initializable {
         }
     }
     @FXML
-    public void loadCreatePostPage() {
+    public void loadFriendListPage() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("createPost.fxml"));
-            mainPane.setCenter(loader.load());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("friendList.fxml"));
+            Parent friendListPage = loader.load();
 
-            // Pass the controller instance if needed
-            if (loader.getController() instanceof SettingsController) {
-                SettingsController settingsController = loader.getController();
-                settingsController.setDashboardController(this);
+            tempDatabase db = new tempDatabase();
+            // Retrieve the friend list from the database
+            List<regularUser> friendList = db.getUserFriendList1(user.getUsername());
+
+            // Pass the friend list to the controller
+            if (loader.getController() instanceof FriendListController) {
+                FriendListController friendListController = loader.getController();
+                friendListController.setUser(user);
+                ObservableList<regularUser> observableFriendList = FXCollections.observableArrayList(friendList);
+                friendListController.setFriendList(observableFriendList);
             }
+
+            ChatController chatController = new ChatController();
+            chatController.setUser(user);
+
+            mainPane.setCenter(friendListPage);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
 
     @FXML
     public void loadSettingsPage() {

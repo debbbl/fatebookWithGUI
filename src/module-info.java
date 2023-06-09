@@ -4,6 +4,7 @@ module Facebook {
     requires javafx.controls;
     requires java.sql;
     requires mysql.connector.j;
+    requires java.desktop;
 
     opens WIA1002;
 }

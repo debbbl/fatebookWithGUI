@@ -90,9 +90,9 @@ public class searchUserController {
     @FXML
     private void sendFriendRequestButtonClicked() throws SQLException {
         String selectedUsername = searchResultsListView.getSelectionModel().getSelectedItem();
-
+        tempDatabase db = new tempDatabase();
         if (selectedUsername != null) {
-            boolean requestSent = sendFriendRequest(user.getUserId(), user.getUsername(),selectedUsername);
+            boolean requestSent = db.sendFriendRequest(user.getUserId(), user.getUsername(),selectedUsername);
 
             if (requestSent) {
                 displayAlert(Alert.AlertType.INFORMATION, "Friend Request Sent", "Friend request sent to " + selectedUsername);
@@ -103,77 +103,19 @@ public class searchUserController {
         }
     }
 
-    private boolean sendFriendRequest(int senderId, String senderUsername, String receiverUsername) throws SQLException {
-        tempDatabase db = new tempDatabase();
-        Connection connection = db.getConnection();
-
-        try {
-            // Retrieve the user IDs based on the provided usernames
-            int senderUserId = getUserId(senderUsername);
-            int receiverUserId = getUserId(receiverUsername);
-
-            // Check if the friend request has already been sent or if the users are already friends
-            String checkSentQuery = "SELECT * FROM friendrequest WHERE sender_id = ? AND receiver_id = ? AND status IN ('Pending', 'Accepted', 'Rejected')";
-            PreparedStatement checkSentStatement = connection.prepareStatement(checkSentQuery);
-            checkSentStatement.setInt(1, senderUserId);
-            checkSentStatement.setInt(2, receiverUserId);
-            ResultSet checkSentResult = checkSentStatement.executeQuery();
-
-            if (checkSentResult.next()) {
-                // Friend request already sent or users are already friends
-                return false;
-            } else {
-                // Insert the new friend request into the database
-                String insertQuery = "INSERT INTO friendrequest (sender_id, receiver_id, status) VALUES (?, ?, 'Pending')";
-                PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
-                insertStatement.setInt(1, senderUserId);
-                insertStatement.setInt(2, receiverUserId);
-                insertStatement.executeUpdate();
-                return true;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            e.getCause();
-            return false;
-        } finally {
-            connection.close();
-        }
-    }
-
-    private int getUserId(String username) {
-        tempDatabase db = new tempDatabase();
-        Connection connection = db.getConnection();
-
-        try {
-            String query = "SELECT user_id FROM userdata WHERE username = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, username);
-            ResultSet result = statement.executeQuery();
-
-            if (result.next()) {
-                return result.getInt("user_id");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return -1;
-    }
-
     private List<String> performSearch(String query) {
         List<String> searchResults = new ArrayList<>();
         tempDatabase db = new tempDatabase();
         // Perform the database query to retrieve matching usernames
-        String searchQuery = "SELECT username FROM userdata WHERE username LIKE ?";
+        String searchQuery = "SELECT username FROM userdata WHERE username LIKE ? OR name LIKE ? OR user_id LIKE ? OR email_address LIKE ? OR contact_number LIKE ?";
         try (Connection connection = db.getConnection();
              PreparedStatement statement = connection.prepareStatement(searchQuery)) {
-            statement.setString(1, query + "%");
+            String likeQuery = "%" + query + "%";
+            statement.setString(1, likeQuery);
+            statement.setString(2, likeQuery);
+            statement.setString(3, likeQuery);
+            statement.setString(4, likeQuery);
+            statement.setString(5, likeQuery);
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {

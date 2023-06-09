@@ -7,12 +7,14 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.util.List;
+
 public class Main extends Application{
     @Override
     public void start(Stage primaryStage) throws Exception{
         //create mock data
-        MockDataCreation mockDataCreation = new MockDataCreation();
-        mockDataCreation.createMockData();
+        //MockDataCreation mockDataCreation = new MockDataCreation();
+        //mockDataCreation.createMockData();
 
         Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
         primaryStage.initStyle(StageStyle.UNDECORATED);
@@ -21,6 +23,8 @@ public class Main extends Application{
     }
 
     public static void main(String[] args){
+        tempDatabase database = new tempDatabase();
+        database.insertChatMessage(34, 33, "I am fine");
         launch(args);
     }
 }

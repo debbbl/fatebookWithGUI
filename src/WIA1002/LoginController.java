@@ -117,6 +117,7 @@ public class LoginController implements Initializable {
         }
     }
 
+    @FXML
     public void createAccountButtonOnAction(ActionEvent event) {
         createAccountForm();
     }
@@ -191,6 +192,9 @@ public class LoginController implements Initializable {
                     byte[] profilePicData = queryResult.getBytes("profile_pic");
                     userBuilder.profilePic(profilePicData);
 
+                    int user_id = queryResult.getInt("user_id");
+                    userBuilder.userId(user_id);
+
                     String relationshipStatus = queryResult.getString("relationship_status");
                     userBuilder.relationshipStatus(relationshipStatus != null ? relationshipStatus : "N/A");
 
@@ -223,6 +227,9 @@ public class LoginController implements Initializable {
             registerStage.initStyle(StageStyle.UNDECORATED);
             registerStage.setScene(new Scene(root, 520, 400));
             registerStage.show();
+
+            Stage stage = (Stage) cancelButton.getScene().getWindow();
+            stage.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

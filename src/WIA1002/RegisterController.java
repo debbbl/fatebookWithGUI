@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import javafx.application.Platform;
 import javafx.fxml.*;
@@ -17,10 +18,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 import java.security.NoSuchAlgorithmException;
 
@@ -51,6 +54,9 @@ public class RegisterController implements Initializable {
     @FXML
     private Label usernameLabel;
 
+    private FXMLLoader loginLoader;
+    private Parent loginRoot;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
         File fateFile = new File("images/fateLogo2.png"); //file for the fatelogo
@@ -67,6 +73,14 @@ public class RegisterController implements Initializable {
                 }
             }
         });
+
+        loginLoader = new FXMLLoader(getClass().getResource("login.fxml"));
+        try {
+            loginRoot = loginLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            e.getCause();
+        }
     }
 
     public boolean checkUsernameAvailability(String username) {
@@ -88,10 +102,18 @@ public class RegisterController implements Initializable {
 
 
     @FXML
-    public void closeButtonOnAction(ActionEvent event){
-        Stage stage = (Stage)closeButton.getScene().getWindow();
+    public void closeButtonOnAction(ActionEvent event) {
+        Stage stage = (Stage) closeButton.getScene().getWindow();
         stage.close();
-        //Platform.exit();
+
+        // Load the login.fxml and set it as the scene
+        if (loginRoot != null) {
+            Scene loginScene = new Scene(loginRoot);
+            Stage loginStage = new Stage();
+            loginStage.initStyle(StageStyle.UNDECORATED);
+            loginStage.setScene(loginScene);
+            loginStage.show();
+        }
     }
 
     @FXML
@@ -123,8 +145,8 @@ public class RegisterController implements Initializable {
         tempDatabase connectNow = new tempDatabase();
         Connection connectDB = connectNow.getConnection();
 
-        String insertFields = "INSERT INTO userdata( username, email_address, contact_number, password) VALUES(";
-        String insertValues = "'" + newUser.getUsername() + "','" + newUser.getEmail() + "','" + newUser.getContactNumber() + "','" + newUser.getPassword() + "')";
+        String insertFields = "INSERT INTO userdata( username, email_address, contact_number, password,time_stamp) VALUES(";
+        String insertValues = "'" + newUser.getUsername() + "','" + newUser.getEmail() + "','" + newUser.getContactNumber() + "','" + newUser.getPassword() + "','" + LocalDateTime.now() + "')";
         String insertToRegister = insertFields + insertValues;
 
         try {

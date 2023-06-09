@@ -1,5 +1,6 @@
 package WIA1002;
 
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.time.*;
 import java.util.Stack;
@@ -16,6 +17,8 @@ public class regularUser extends user {
     private byte[] profilePic;
     private List<String> friendList;
     private LinkedList<String> actionHistory;
+    private LinkedList<ChatMessage> chatHistory;
+    private int mutualConnectionsCount;
 
     public regularUser(RegularUserBuilder regularUserBuilder,LocalDateTime timestamp) {
         super(regularUserBuilder);
@@ -32,15 +35,42 @@ public class regularUser extends user {
         this.relationshipStatus = regularUserBuilder.relationshipStatus;
         this.friendList = regularUserBuilder.friendList;
         this.actionHistory = new LinkedList<>();
+        this.chatHistory = new LinkedList<>();
     }
 
     public void addActionToHistory(String action, LocalDateTime timestamp) {
-        String actionWithTimestamp = action + " at " + timestamp;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd | HH.mm a");
+        String formattedtimestamp = timestamp.format(formatter);
+        String actionWithTimestamp = action + " at " + formattedtimestamp;
         actionHistory.add(actionWithTimestamp);
+    }
+
+    public int getMutualConnectionsCount() {
+        return mutualConnectionsCount;
+    }
+
+    public void setMutualConnectionsCount(int mutualConnectionsCount) {
+        this.mutualConnectionsCount = mutualConnectionsCount;
     }
 
     public LinkedList<String> getActivityHistory() {
         return actionHistory;
+    }
+
+    public LinkedList<ChatMessage> getChatHistory() {
+        return chatHistory;
+    }
+
+    public void setChatHistory(LinkedList<ChatMessage> chatHistory) {
+        this.chatHistory = chatHistory;
+    }
+
+    public List<String> getFriendList() {
+        return friendList;
+    }
+
+    public void setFriendList(List<String> friendList) {
+        this.friendList = friendList;
     }
     public String getEmailAddress(){
         return getEmail();
