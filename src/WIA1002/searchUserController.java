@@ -223,7 +223,6 @@ public class searchUserController {
             }
         }
     }
-
     @FXML
     private void showMutualFriendsButtonClicked(){
         String selectedUsername = searchResultsListView.getSelectionModel().getSelectedItem();

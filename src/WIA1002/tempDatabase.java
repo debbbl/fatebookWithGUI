@@ -192,7 +192,7 @@ public class tempDatabase {
     }
 
     public List<String> getFriendRequestsReceived(int userId) {
-        List<String> friendRequests = new ArrayList<>();
+        Stack<String> friendRequests = new Stack<>();
         String query = "SELECT sender_id FROM friendrequest WHERE receiver_id = ? AND status = 'pending'";
 
         try (Connection connection = getConnection();
@@ -203,14 +203,17 @@ public class tempDatabase {
             while (resultSet.next()) {
                 int senderId = resultSet.getInt("sender_id");
                 String senderUsername = getUsernameByUserId(senderId);
-                friendRequests.add(senderUsername);
+                friendRequests.push(senderUsername);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return friendRequests;
+        List<String> sortedFriendRequests = new ArrayList<>(friendRequests);
+
+        return sortedFriendRequests;
     }
+
 
     private String getUsernameByUserId(int userId) {
         String query = "SELECT username FROM userdata WHERE user_id = ?";
@@ -454,8 +457,8 @@ public class tempDatabase {
         allConnections.addAll(secondDegreeConnections);
         allConnections.addAll(thirdDegreeConnections);
 
-        // Sort the connections based on the number of mutuals in descending order
-        Collections.sort(allConnections, new Comparator<regularUser>() {
+        // Create a priority queue for friend suggestions, with custom comparator
+        PriorityQueue<regularUser> friendSuggestions = new PriorityQueue<>(new Comparator<regularUser>() {
             @Override
             public int compare(regularUser user1, regularUser user2) {
                 int mutualCount1 = getMutualConnectionsCount(username, user1.getUsername());
@@ -477,14 +480,17 @@ public class tempDatabase {
             }
         });
 
-        // Add the suggested friends to the friendList, excluding direct friends and existing friends
+        // Add the suggested friends to the friendSuggestions priority queue, excluding direct friends and existing friends
         Set<String> addedUsernames = new HashSet<>();
         for (regularUser user : allConnections) {
             if (!directFriends.contains(user) && !user.getUsername().equals(username) && !addedUsernames.contains(user.getUsername()) && !isFriendOfUser(username, user.getUsername())) {
-                friendList.add(user);
+                friendSuggestions.offer(user);
                 addedUsernames.add(user.getUsername());
             }
         }
+
+        // Convert the friendSuggestions priority queue back to an ArrayList for return
+        friendList.addAll(friendSuggestions);
 
         return friendList;
     }

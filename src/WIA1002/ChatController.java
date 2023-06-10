@@ -7,6 +7,8 @@ import java.awt.Desktop;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
@@ -16,6 +18,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.input.MouseEvent;
 
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -38,7 +41,7 @@ public class ChatController implements Initializable {
     private tempDatabase database = new tempDatabase();
     private FriendListController friendListController;
     @FXML
-    private Button chooseFileButton;
+    private ImageView profileImageView;
 
     public ChatController() {
     }
@@ -57,6 +60,18 @@ public class ChatController implements Initializable {
         } else {
             friendname.setText("");
         }
+
+            if (selectedFriend.getProfilePic() != null) {
+            profileImageView.setImage(new Image(new ByteArrayInputStream(selectedFriend.getProfilePic())));
+        } else {
+            // Retrieve profile picture from the database
+            byte[] profilePicData = database.getProfilePicture(selectedFriend.getUsername());
+            if (profilePicData != null) {
+                selectedFriend.setProfilePic(profilePicData);
+                profileImageView.setImage(new Image(new ByteArrayInputStream(profilePicData)));
+            }
+        }
+
     }
 
     public void setFriendListController(FriendListController friendListController) {
@@ -83,10 +98,8 @@ public class ChatController implements Initializable {
     @FXML
     private void loadChatMessages() {
         if (user == null || selectedFriend == null) {
-            System.out.println("User or selected friend is null.");
             return;
         }
-
         List<ChatMessage> messages = database.getChatMessages(user.getUserId(), selectedFriend.getUserId());
 
         // Clear previous chat messages

@@ -5,26 +5,159 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="423.0" prefWidth="670.0" spacing="10" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.tempFriendRequestController">
+<VBox alignment="CENTER" prefHeight="415.0" prefWidth="688.0" spacing="10" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.tempFriendRequestController">
    <AnchorPane prefHeight="423.0" prefWidth="670.0" style="-fx-background-color: #ffffff;">
       <children>
-           <Button fx:id="rejectButton" layoutX="87.0" layoutY="389.0" onAction="#rejectButtonOnAction" prefHeight="25.0" prefWidth="59.0" style="-fx-background-color: #ADD8E6;" text="Reject" textFill="WHITE">
+           <Button fx:id="rejectButton" layoutX="193.0" layoutY="373.0" onAction="#rejectButtonOnAction" prefHeight="25.0" prefWidth="59.0" style="-fx-background-color: #ADD8E6;" text="Reject" textFill="WHITE">
             <font>
                <Font name="Berlin Sans FB" size="14.0" />
             </font>
          </Button>
-            <Label fx:id="usernameLabel" layoutX="319.0" layoutY="197.0" prefHeight="17.0" prefWidth="76.0" />
-            <ImageView fx:id="profileImageView" fitHeight="164.0" fitWidth="154.0" layoutX="298.0" layoutY="50.0" preserveRatio="true" />
-           <ListView fx:id="friendRequestListView" layoutX="19.0" layoutY="50.0" prefHeight="334.0" prefWidth="250" />
+           <ListView fx:id="friendRequestListView" layoutX="20.0" layoutY="42.0" prefHeight="322.0" prefWidth="250" />
           <Label layoutX="20.0" layoutY="14.0" text="FRIEND REQUESTS" textFill="LIGHTBLUE">
             <font>
-               <Font name="Berlin Sans FB Bold" size="22.0" />
+               <Font name="Berlin Sans FB Demi Bold" size="21.0" />
             </font>
          </Label>
-           <Button fx:id="acceptButton" layoutX="20.0" layoutY="389.0" onAction="#acceptButtonOnAction" prefHeight="17.0" prefWidth="59.0" style="-fx-background-color: #ADD8E6;" text="Accept" textFill="WHITE">
+           <Button fx:id="acceptButton" layoutX="125.0" layoutY="373.0" onAction="#acceptButtonOnAction" prefHeight="17.0" prefWidth="59.0" style="-fx-background-color: #ADD8E6;" text="Accept" textFill="WHITE">
+            <font>
+               <Font name="Berlin Sans FB" size="14.0" />
+            </font>
+         </Button>
+         <AnchorPane fx:id="detailsPane" layoutX="288.0" prefHeight="415.0" prefWidth="403.0" style="-fx-background-color: #F4F4F4;">
+            <children>
+               <Label layoutX="19.0" layoutY="39.0" text="User Details" textFill="LIGHTBLUE">
+                  <font>
+                     <Font name="Arial Black" size="20.0" />
+                  </font>
+               </Label>
+               <ImageView fx:id="profilePictureImageView" fitHeight="110.0" fitWidth="130.0" layoutX="230.0" layoutY="24.0" preserveRatio="true" />
+               <Button fx:id="showMutualFriendsButton" layoutX="226.0" layoutY="376.0" mnemonicParsing="false" onAction="#showMutualFriendsButtonClicked" style="-fx-background-color: #ADD8E6;" text="Show mutual friends" textFill="WHITE">
+                  <font>
+                     <Font name="Berlin Sans FB" size="14.0" />
+                  </font>
+               </Button>
+               <VBox layoutX="19.0" layoutY="80.0" prefHeight="244.0" prefWidth="231.0">
+                  <children>
+                     <HBox prefHeight="23.0" prefWidth="201.0" spacing="20.0">
+                        <children>
+                           <Label prefHeight="17.0" prefWidth="41.0" text="Name:">
+                              <font>
+                                 <Font name="Berlin Sans FB" size="14.0" />
+                              </font>
+                           </Label>
+                           <Label fx:id="nameLabel" prefHeight="17.0" prefWidth="171.0" />
+                        </children>
+                     </HBox>
+                     <HBox prefHeight="23.0" prefWidth="196.0" spacing="20.0">
+                        <children>
+                           <Label prefHeight="17.0" prefWidth="39.0" text="Email:">
+                              <font>
+                                 <Font name="Berlin Sans FB" size="14.0" />
+                              </font>
+                           </Label>
+                           <Label fx:id="emailLabel" prefHeight="17.0" prefWidth="135.0" />
+                        </children>
+                     </HBox>
+                     <HBox prefHeight="23.0" prefWidth="196.0" spacing="20.0">
+                        <children>
+                           <Label prefHeight="17.0" prefWidth="64.0" text="Username:">
+                              <font>
+                                 <Font name="Berlin Sans FB" size="14.0" />
+                              </font>
+                           </Label>
+                           <Label fx:id="usernameLabel" prefHeight="17.0" prefWidth="143.0" />
+                        </children>
+                     </HBox>
+                     <HBox prefHeight="23.0" prefWidth="196.0" spacing="20.0">
+                        <children>
+                           <Label prefHeight="17.0" prefWidth="111.0" text="Contact Number:">
+                              <font>
+                                 <Font name="Berlin Sans FB" size="14.0" />
+                              </font>
+                           </Label>
+                           <Label fx:id="contactNumberLabel" prefHeight="17.0" prefWidth="109.0" />
+                        </children>
+                     </HBox>
+                     <HBox prefHeight="23.0" prefWidth="231.0" spacing="20.0">
+                        <children>
+                           <Label prefHeight="17.0" prefWidth="56.0" text="Birthday:">
+                              <font>
+                                 <Font name="Berlin Sans FB" size="14.0" />
+                              </font>
+                           </Label>
+                           <Label fx:id="birthdayLabel" prefHeight="17.0" prefWidth="156.0" />
+                        </children>
+                     </HBox>
+                     <HBox prefHeight="23.0" prefWidth="196.0" spacing="20.0">
+                        <children>
+                           <Label prefHeight="17.0" prefWidth="30.0" text="Age:">
+                              <font>
+                                 <Font name="Berlin Sans FB" size="14.0" />
+                              </font>
+                           </Label>
+                           <Label fx:id="ageLabel" prefHeight="17.0" prefWidth="135.0" />
+                        </children>
+                     </HBox>
+                     <HBox prefHeight="23.0" prefWidth="196.0" spacing="20.0">
+                        <children>
+                           <Label prefHeight="17.0" prefWidth="51.0" text="Gender:">
+                              <font>
+                                 <Font name="Berlin Sans FB" size="14.0" />
+                              </font>
+                           </Label>
+                           <Label fx:id="genderLabel" prefHeight="17.0" prefWidth="146.0" />
+                        </children>
+                     </HBox>
+                     <HBox prefHeight="23.0" prefWidth="196.0" spacing="20.0">
+                        <children>
+                           <Label prefHeight="17.0" prefWidth="25.0" text="Job:">
+                              <font>
+                                 <Font name="Berlin Sans FB" size="14.0" />
+                              </font>
+                           </Label>
+                           <Label fx:id="jobLabel" prefHeight="17.0" prefWidth="181.0" />
+                        </children>
+                     </HBox>
+                     <HBox prefHeight="23.0" prefWidth="196.0" spacing="20.0">
+                        <children>
+                           <Label prefHeight="17.0" prefWidth="53.0" text="Hobbies:">
+                              <font>
+                                 <Font name="Berlin Sans FB" size="14.0" />
+                              </font>
+                           </Label>
+                           <Label fx:id="hobbiesLabel" prefHeight="17.0" prefWidth="135.0" />
+                        </children>
+                     </HBox>
+                     <HBox prefHeight="23.0" prefWidth="196.0" spacing="20.0">
+                        <children>
+                           <Label prefHeight="17.0" prefWidth="135.0" text="Relationship Status:">
+                              <font>
+                                 <Font name="Berlin Sans FB" size="14.0" />
+                              </font>
+                           </Label>
+                           <Label fx:id="relationshipStatusLabel" prefHeight="17.0" prefWidth="118.0" />
+                        </children>
+                     </HBox>
+                  </children>
+               </VBox>
+               <HBox layoutX="239.0" layoutY="155.0" prefHeight="99.0" prefWidth="135.0" spacing="20.0">
+                  <children>
+                     <Label prefHeight="17.0" prefWidth="53.0" text="Address:">
+                        <font>
+                           <Font name="Berlin Sans FB" size="14.0" />
+                        </font>
+                     </Label>
+                  </children>
+               </HBox>
+               <Label fx:id="addressLabel" layoutX="239.0" layoutY="178.0" prefHeight="57.0" prefWidth="135.0" />
+            </children>
+         </AnchorPane>
+         <Button fx:id="viewProfileButton" layoutX="20.0" layoutY="373.0" onAction="#viewProfileButtonClicked" prefHeight="23.0" prefWidth="97.0" style="-fx-background-color: #ADD8E6;" text="View Profile" textFill="WHITE">
             <font>
                <Font name="Berlin Sans FB" size="14.0" />
             </font>
