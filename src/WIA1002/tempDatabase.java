@@ -193,7 +193,7 @@ public class tempDatabase {
 
     public List<String> getFriendRequestsReceived(int userId) {
         Stack<String> friendRequests = new Stack<>();
-        String query = "SELECT sender_id FROM friendrequest WHERE receiver_id = ? AND status = 'pending'";
+        String query = "SELECT sender_id FROM friendrequest WHERE receiver_id = ? AND status = 'pending' ORDER BY timestamp DESC";
 
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -213,6 +213,7 @@ public class tempDatabase {
 
         return sortedFriendRequests;
     }
+
 
 
     private String getUsernameByUserId(int userId) {
@@ -254,10 +255,11 @@ public class tempDatabase {
                 return false;
             } else {
                 // Insert the new friend request into the database
-                String insertQuery = "INSERT INTO friendrequest (sender_id, receiver_id, status) VALUES (?, ?, 'Pending')";
+                String insertQuery = "INSERT INTO friendrequest (sender_id, receiver_id, status,timestamp) VALUES (?, ?, 'Pending',?)";
                 PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
                 insertStatement.setInt(1, senderUserId);
                 insertStatement.setInt(2, receiverUserId);
+                insertStatement.setString(3,String.valueOf(LocalDateTime.now()));
                 insertStatement.executeUpdate();
                 return true;
             }
