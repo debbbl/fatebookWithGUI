@@ -345,7 +345,7 @@ public class tempDatabase {
 
     public List<ChatMessage> getChatMessages(int senderId, int receiverId) {
         List<ChatMessage> chatMessages = new ArrayList<>();
-        String query = "SELECT sender_id, receiver_id, message, timestamp, file_type, file_name, file_data FROM chats WHERE " +
+        String query = "SELECT sender_id, receiver_id, message, timestamp FROM chats WHERE " +
                 "(sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?) ORDER BY timestamp";
 
         try (Connection connection = getConnection();
@@ -458,6 +458,7 @@ public class tempDatabase {
         List<regularUser> allConnections = new ArrayList<>();
         allConnections.addAll(secondDegreeConnections);
         allConnections.addAll(thirdDegreeConnections);
+
 
         // Create a priority queue for friend suggestions, with custom comparator
         PriorityQueue<regularUser> friendSuggestions = new PriorityQueue<>(new Comparator<regularUser>() {
