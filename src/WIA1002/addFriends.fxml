@@ -6,14 +6,16 @@
 
 <AnchorPane prefHeight="478.0" prefWidth="670.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.addFriendsController">
     <children>
-        <Button fx:id="suggestButton" layoutX="350.0" layoutY="438.0" mnemonicParsing="false" onAction="#suggestButtonOnAction" style="-fx-background-color: #ADD8E6;" text="Suggest Friends to Add" textFill="WHITE">
+        <AnchorPane fx:id="contentPane" layoutY="46.0" prefHeight="433.0" prefWidth="670.0" style="-fx-background-color: #ffffff;" />
+        <Button fx:id="showRequestButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#showRequestButtonOnAction" prefHeight="25.0" prefWidth="140.0" style="-fx-background-color: #ADD8E6;" text="show friend request" textFill="WHITE">
          <font>
             <Font name="Berlin Sans FB" size="14.0" />
-         </font></Button>
-        <Button fx:id="showRequestButton" layoutX="195.0" layoutY="437.0" mnemonicParsing="false" onAction="#showRequestButtonOnAction" prefHeight="25.0" prefWidth="140.0" style="-fx-background-color: #ADD8E6;" text="show friend request" textFill="WHITE">
+         </font>
+      </Button>
+        <Button fx:id="suggestButton" layoutX="173.0" layoutY="14.0" mnemonicParsing="false" onAction="#suggestButtonOnAction" style="-fx-background-color: #ADD8E6;" text="Suggest Friends to Add" textFill="WHITE">
          <font>
             <Font name="Berlin Sans FB" size="14.0" />
-         </font></Button>
-        <AnchorPane fx:id="contentPane" prefHeight="423.0" prefWidth="670.0" style="-fx-background-color: #ffffff;" />
+         </font>
+      </Button>
     </children>
 </AnchorPane>
