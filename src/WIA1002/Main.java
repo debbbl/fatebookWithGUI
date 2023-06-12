@@ -13,8 +13,8 @@ public class Main extends Application{
     @Override
     public void start(Stage primaryStage) throws Exception{
         //create mock data
-        //MockDataCreation mockDataCreation = new MockDataCreation();
-        //mockDataCreation.createMockData();
+        MockDataCreation mockDataCreation = new MockDataCreation();
+        mockDataCreation.createMockData();
 
         Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
         primaryStage.initStyle(StageStyle.UNDECORATED);

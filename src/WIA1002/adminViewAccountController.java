@@ -85,44 +85,10 @@ public class adminViewAccountController implements Initializable {
         });
     }
     private void loadRegularUsers() {
-        regularUsersList.clear();
-
-        try (Connection connection = database.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT time_stamp, user_id, email_address, name, username, contact_number, isAdmin FROM userdata")) {
-
-            while (resultSet.next()) {
-                int isAdmin = resultSet.getInt("isAdmin");
-
-                // Check if isAdmin is equal to 1, and skip the row if true
-                if (isAdmin == 1) {
-                    continue;
-                }
-                LocalDateTime timeStamp = resultSet.getObject("time_stamp", LocalDateTime.class);
-                int userId = resultSet.getInt("user_id");
-                String emailAddress = resultSet.getString("email_address");
-                String name = resultSet.getString("name");
-                String username = resultSet.getString("username");
-                String contactNumber = resultSet.getString("contact_number");
-
-                regularUser.RegularUserBuilder userBuilder = (regularUser.RegularUserBuilder) new regularUser.RegularUserBuilder()
-                        .userId(userId)
-                        .email(emailAddress)
-                        .name(name)
-                        .username(username)
-                        .contactNumber(contactNumber)
-                        .timeStamp(timeStamp);
-
-
-                regularUser user = userBuilder.build();
-                regularUsersList.add(user);
-            }
-
-            tableView.setItems(regularUsersList);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        regularUsersList = database.loadRegularUsers();
+        tableView.setItems(regularUsersList);
     }
+
     @FXML
     private void viewProfileButtonClicked() {
         regularUser selectedUser = tableView.getSelectionModel().getSelectedItem();
