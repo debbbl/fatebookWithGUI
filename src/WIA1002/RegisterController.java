@@ -56,6 +56,7 @@ public class RegisterController implements Initializable {
 
     private FXMLLoader loginLoader;
     private Parent loginRoot;
+    private final Database database = new Database();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
@@ -84,22 +85,8 @@ public class RegisterController implements Initializable {
     }
 
     public boolean checkUsernameAvailability(String username) {
-        tempDatabase connectNow = new tempDatabase();
-        Connection connectDB = connectNow.getConnection();
-
-        try {
-            Statement statement = connectDB.createStatement();
-            String query = "SELECT * FROM userdata WHERE username = '" + username + "'";
-            ResultSet resultSet = statement.executeQuery(query);
-
-            return !resultSet.next(); // Returns true if the resultSet is empty (username is available)
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        return database.checkUsernameAvailability(username);
     }
-
 
     @FXML
     public void closeButtonOnAction(ActionEvent event) {
@@ -134,32 +121,10 @@ public class RegisterController implements Initializable {
         String phone = phoneNumberTextField.getText();
         String password = encryptor.encryptString(passwordTextField.getText());
 
-        regularUser.RegularUserBuilder userBuilder = (regularUser.RegularUserBuilder) new regularUser.RegularUserBuilder()
-                .username(username)
-                .email(email)
-                .contactNumber(phone)
-                .password(password);
+        database.registerUser(username, email, phone, password);
 
-        regularUser newUser = userBuilder.build();
-
-        tempDatabase connectNow = new tempDatabase();
-        Connection connectDB = connectNow.getConnection();
-
-        String insertFields = "INSERT INTO userdata( username, email_address, contact_number, password,time_stamp) VALUES(";
-        String insertValues = "'" + newUser.getUsername() + "','" + newUser.getEmail() + "','" + newUser.getContactNumber() + "','" + newUser.getPassword() + "','" + LocalDateTime.now() + "')";
-        String insertToRegister = insertFields + insertValues;
-
-        try {
-            Statement statement = connectDB.createStatement();
-            statement.executeUpdate(insertToRegister);
-
-            registrationMessageLabel.setText("Registered successfully!");
-            navigateToLoginPage();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            e.getCause();
-        }
+        registrationMessageLabel.setText("Registered successfully!");
+        navigateToLoginPage();
     }
 
     public void navigateToLoginPage() {

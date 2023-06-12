@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="433.0" prefWidth="688.0" spacing="10" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.tempFriendRequestController">
+<VBox alignment="CENTER" prefHeight="433.0" prefWidth="688.0" spacing="10" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.FriendRequestController">
    <AnchorPane prefHeight="423.0" prefWidth="670.0" style="-fx-background-color: #ffffff;">
       <children>
            <Button fx:id="rejectButton" layoutX="193.0" layoutY="373.0" onAction="#rejectButtonOnAction" prefHeight="25.0" prefWidth="59.0" style="-fx-background-color: #ADD8E6;" text="Reject" textFill="WHITE">

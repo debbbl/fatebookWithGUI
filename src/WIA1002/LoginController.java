@@ -42,7 +42,7 @@ public class LoginController implements Initializable {
     private TextField usernameTextField;
     @FXML
     private CheckBox isAdminCheckBox;
-
+    private final Database database = new Database();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -58,7 +58,7 @@ public class LoginController implements Initializable {
     @FXML
     public void loginButtonOnAction(ActionEvent event) throws NoSuchAlgorithmException {
         if (!usernameTextField.getText().isBlank() && !passwordTextField.getText().isBlank()) {
-            Object user = validateLogin();
+            Object user = database.validateLogin(usernameTextField.getText(), passwordTextField.getText());
             if (user != null) {
                 if (user instanceof Admin) {
                     openAdminDashboard();
@@ -72,6 +72,7 @@ public class LoginController implements Initializable {
             loginMessageLabel.setText("Please enter your username and password.");
         }
     }
+
 
     private void openAdminDashboard() {
         try {
@@ -123,7 +124,7 @@ public class LoginController implements Initializable {
     }
 
     public Object validateLogin() throws NoSuchAlgorithmException {
-        tempDatabase connectNow = new tempDatabase();
+        Database connectNow = new Database();
         Connection connectDB = connectNow.getConnection();
 
         String verifyLogin = "SELECT * FROM userdata WHERE " +

@@ -17,17 +17,14 @@ import javafx.util.Callback;
 
 import java.io.ByteArrayInputStream;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class tempFriendRequestController implements Initializable {
+public class FriendRequestController implements Initializable {
     @FXML
     private ListView<regularUser> friendRequestListView;
     @FXML
@@ -62,7 +59,7 @@ public class tempFriendRequestController implements Initializable {
     private Button rejectButton;
 
     private regularUser user;
-    private tempDatabase database;
+    private Database database = new Database();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -76,7 +73,6 @@ public class tempFriendRequestController implements Initializable {
 
     public void setUser(regularUser user) {
         this.user = user;
-        this.database = new tempDatabase();
 
         // Load friend requests when the controller is initialized
         loadFriendRequests();
@@ -161,60 +157,12 @@ public class tempFriendRequestController implements Initializable {
         regularUser selectedUsername = friendRequestListView.getSelectionModel().getSelectedItem();
 
         if (selectedUsername != null) {
-            regularUser user = getUserDetails(selectedUsername.getUsername());
+            regularUser user = database.getUserDetails(selectedUsername.getUsername());
             displayUserDetails(user);
             user.addActionToHistory("viewed "+selectedUsername+"'s profile", LocalDateTime.now());
         }
     }
 
-    private regularUser getUserDetails(String username) {
-        regularUser user = null;
-        tempDatabase db = new tempDatabase();
-        // Retrieve the user details from the database based on the username
-        String userDetailsQuery = "SELECT * FROM userdata WHERE username = ?";
-        try (Connection connection = db.getConnection();
-             PreparedStatement statement = connection.prepareStatement(userDetailsQuery)) {
-            statement.setString(1, username);
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                regularUser.RegularUserBuilder userBuilder = new regularUser.RegularUserBuilder();
-                userBuilder.username(resultSet.getString("username"))
-                        .email(resultSet.getString("email_address"))
-                        .contactNumber(resultSet.getString("contact_number"))
-                        .name(resultSet.getString("name"))
-                        .birthday(resultSet.getObject("birthday", LocalDate.class))
-                        .gender(resultSet.getString("gender"))
-                        .address(resultSet.getString("address"))
-                        .relationshipStatus(resultSet.getString("relationship_status"));
-
-
-                // Similarly, handle other properties
-                String job = resultSet.getString("job");
-                Stack<String> jobs = new Stack<>();
-                jobs.push(job != null ? job : "N/A");
-                userBuilder.jobs(jobs);
-
-                // Handle hobbies (assuming it's a comma-separated string)
-                String hobbiesString = resultSet.getString("hobbies");
-                List<String> hobbies = (hobbiesString != null && hobbiesString.length() > 0)
-                        ? Arrays.asList(hobbiesString.split(","))
-                        : Collections.emptyList();
-                userBuilder.hobbies(hobbies);
-
-
-                // Handle profile picture
-                byte[] profilePicData = resultSet.getBytes("profile_pic");
-                userBuilder.profilePic(profilePicData);
-
-                user = userBuilder.build();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return user;
-    }
     private int calculateAge(LocalDate birthday) {
         LocalDate currentDate = LocalDate.now();
         return Period.between(birthday, currentDate).getYears();
@@ -242,14 +190,13 @@ public class tempFriendRequestController implements Initializable {
             addressLabel.setText(user.getAddress() != null ? user.getAddress() : "N/A");
             relationshipStatusLabel.setText(user.getRelationshipStatus() != null ? user.getRelationshipStatus() : "N/A");
 
-            tempDatabase db = new tempDatabase();
             // db.updateJob(user.getUsername(), latestJobExperience);
 
             if (user.getProfilePic() != null) {
                 profilePictureImageView.setImage(new Image(new ByteArrayInputStream(user.getProfilePic())));
             } else {
                 // Retrieve profile picture from the database
-                byte[] profilePicData = db.getProfilePicture(user.getUsername());
+                byte[] profilePicData = database.getProfilePicture(user.getUsername());
                 if (profilePicData != null) {
                     user.setProfilePic(profilePicData);
                     profilePictureImageView.setImage(new Image(new ByteArrayInputStream(profilePicData)));
@@ -284,7 +231,6 @@ public class tempFriendRequestController implements Initializable {
             // Handle error loading the Edit Account screen
         }
     }
-
 
     private class FriendRequestCell extends ListCell<regularUser> {
         @Override

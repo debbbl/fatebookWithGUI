@@ -56,11 +56,11 @@ public class adminViewAccountController implements Initializable {
     private Button adminLogOutButton;
 
     private ObservableList<regularUser> regularUsersList;
-    private tempDatabase database;
+    private Database database;
     private regularUser user;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        database = new tempDatabase();
+        database = new Database();
         regularUsersList = FXCollections.observableArrayList();
         setupTableView();
         loadRegularUsers();

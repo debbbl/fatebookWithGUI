@@ -3,13 +3,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.ByteArrayInputStream;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class tempDatabase {
+public class Database {
     public Connection databaseLink;
     String databaseName = "facebook";
     String databaseUser = "root";
@@ -48,7 +49,7 @@ public class tempDatabase {
                 String username = resultSet.getString("username");
                 String contactNumber = resultSet.getString("contact_number");
 
-                regularUser.RegularUserBuilder userBuilder = (regularUser.RegularUserBuilder) new regularUser.RegularUserBuilder()
+                regularUser.RegularUserBuilder userBuilder = new regularUser.RegularUserBuilder()
                         .userId(userId)
                         .email(emailAddress)
                         .name(name)
@@ -259,8 +260,6 @@ public class tempDatabase {
         return sortedFriendRequests;
     }
 
-
-
     private String getUsernameByUserId(int userId) {
         String query = "SELECT username FROM userdata WHERE user_id = ?";
 
@@ -355,7 +354,6 @@ public class tempDatabase {
             e.printStackTrace();
         }
     }
-
     public void rejectFriendRequest(int userId, String friendUsername) {
         try (Connection connection = getConnection()) {
             // Update the status of the friend request to "rejected"
@@ -369,7 +367,6 @@ public class tempDatabase {
             e.printStackTrace();
         }
     }
-
     public void insertChatMessage(int senderId, int receiverId, String message) {
         String insertQuery = "INSERT INTO chats (sender_id, receiver_id, message, timestamp) VALUES (?, ?, ?, ?)";
 
@@ -424,7 +421,6 @@ public class tempDatabase {
 
         return chatMessages;
     }
-
     public List<regularUser> getUserFriendList1(String username) {
         List<regularUser> friendList = new ArrayList<>();
         String query = "SELECT * FROM userdata " +
@@ -564,7 +560,6 @@ public class tempDatabase {
         return false;
     }
 
-
     public List<regularUser> getSecondDegreeConnections(String username) {
         List<regularUser> secondDegreeConnections = new ArrayList<>();
         String query = "SELECT * FROM userdata WHERE user_id IN " +
@@ -658,41 +653,245 @@ public class tempDatabase {
         return mutualConnectionsCount;
     }
 
-    public int getMutualFriendsCount(String user1Username, String user2Username) {
-        int user1Id = getUserIdByUsername(user1Username);
-        int user2Id = getUserIdByUsername(user2Username);
-
-        String query = "SELECT COUNT(*) AS mutual_friends_count " +
-                "FROM friendship f1 " +
-                "JOIN friendship f2 ON f1.friend_id = f2.friend_id " +
-                "WHERE f1.user_id = ? AND f2.user_id = ?";
-
+    public regularUser getUserDetails(String username) {
+        regularUser user = null;
+        // Retrieve the user details from the database based on the username
+        String userDetailsQuery = "SELECT * FROM userdata WHERE username = ?";
         try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, user1Id);
-            statement.setInt(2, user2Id);
-
+             PreparedStatement statement = connection.prepareStatement(userDetailsQuery)) {
+            statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
+
             if (resultSet.next()) {
-                return resultSet.getInt("mutual_friends_count");
+                regularUser.RegularUserBuilder userBuilder = new regularUser.RegularUserBuilder();
+                userBuilder.username(resultSet.getString("username"))
+                        .email(resultSet.getString("email_address"))
+                        .contactNumber(resultSet.getString("contact_number"))
+                        .name(resultSet.getString("name"))
+                        .birthday(resultSet.getObject("birthday", LocalDate.class))
+                        .gender(resultSet.getString("gender"))
+                        .address(resultSet.getString("address"))
+                        .relationshipStatus(resultSet.getString("relationship_status"));
+
+                // Similarly, handle other properties
+                String job = resultSet.getString("job");
+                Stack<String> jobs = new Stack<>();
+                jobs.push(job != null ? job : "N/A");
+                userBuilder.jobs(jobs);
+
+                // Handle hobbies (assuming it's a comma-separated string)
+                String hobbiesString = resultSet.getString("hobbies");
+                List<String> hobbies = (hobbiesString != null && hobbiesString.length() > 0)
+                        ? Arrays.asList(hobbiesString.split(","))
+                        : Collections.emptyList();
+                userBuilder.hobbies(hobbies);
+
+
+                // Handle profile picture
+                byte[] profilePicData = resultSet.getBytes("profile_pic");
+                userBuilder.profilePic(profilePicData);
+
+                user = userBuilder.build();
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            e.getMessage();
+            e.getCause();
         }
 
-        return 0; // Return 0 if there is an error or no mutual friends found
+        return user;
     }
-
-
-    public void updateNumOfFriends(int userId) {
-        String updateQuery = "UPDATE userdata SET num_of_friend = num_of_friend + 1 WHERE user_id = ?";
+    public List<String> performSearch(String query) {
+        List<String> searchResults = new ArrayList<>();
+        // Perform the database query to retrieve matching usernames
+        String searchQuery = "SELECT username FROM userdata WHERE username LIKE ? OR name LIKE ? OR user_id LIKE ? OR email_address LIKE ? OR contact_number LIKE ?";
         try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(updateQuery)) {
-            statement.setInt(1, userId);
-            statement.executeUpdate();
+             PreparedStatement statement = connection.prepareStatement(searchQuery)) {
+            String likeQuery = "%" + query + "%";
+            statement.setString(1, likeQuery);
+            statement.setString(2, likeQuery);
+            statement.setString(3, likeQuery);
+            statement.setString(4, likeQuery);
+            statement.setString(5, likeQuery);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                searchResults.add(resultSet.getString("username"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            e.getMessage();
+            e.getCause();
+        }
+
+        return searchResults;
+    }
+    public void registerUser(String username, String email, String phone, String password) throws NoSuchAlgorithmException {
+        regularUser.RegularUserBuilder userBuilder = (regularUser.RegularUserBuilder) new regularUser.RegularUserBuilder()
+                .username(username)
+                .email(email)
+                .contactNumber(phone)
+                .password(password);
+
+        regularUser newUser = userBuilder.build();
+
+        Connection connectDB = getConnection();
+
+        String insertFields = "INSERT INTO userdata( username, email_address, contact_number, password,time_stamp) VALUES(";
+        String insertValues = "'" + newUser.getUsername() + "','" + newUser.getEmail() + "','" + newUser.getContactNumber() + "','" + newUser.getPassword() + "','" + LocalDateTime.now() + "')";
+        String insertToRegister = insertFields + insertValues;
+
+        try {
+            Statement statement = connectDB.createStatement();
+            statement.executeUpdate(insertToRegister);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            e.getCause();
+            e.getMessage();
+        }
+    }
+    public boolean checkUsernameAvailability(String username) {
+        Connection connectDB = getConnection();
+
+        try {
+            Statement statement = connectDB.createStatement();
+            String query = "SELECT * FROM userdata WHERE username = '" + username + "'";
+            ResultSet resultSet = statement.executeQuery(query);
+
+            return !resultSet.next(); // Returns true if the resultSet is empty (username is available)
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            e.getCause();
+            e.getMessage();
+            return false;
+        }
+    }
+    public Object validateLogin(String username, String password) throws NoSuchAlgorithmException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = getConnection();
+
+            // Prepare the SQL statement
+            String verifyLogin = "SELECT * FROM userdata WHERE username = ? AND password = ?";
+            statement = connection.prepareStatement(verifyLogin);
+            statement.setString(1, username);
+            Encryptor encryptor = new Encryptor();
+            statement.setString(2, encryptor.encryptString(password));
+
+            // Execute the query
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                String retrievedUsername = resultSet.getString("username");
+                String retrievedPassword = resultSet.getString("password");
+                String email = resultSet.getString("email_address");
+                String contactNumber = resultSet.getString("contact_number");
+
+                // Check if the user is an admin
+                if (resultSet.getInt("isAdmin") == 1) {
+                    Admin.AdminBuilder adminBuilder = (Admin.AdminBuilder) new Admin.AdminBuilder()
+                            .username(retrievedUsername)
+                            .password(retrievedPassword)
+                            .email(email)
+                            .contactNumber(contactNumber);
+
+                    // Set other properties specific to admin if needed
+
+                    Admin admin = adminBuilder.build();
+                    return admin;
+                } else {
+                    regularUser.RegularUserBuilder userBuilder = (regularUser.RegularUserBuilder) new regularUser.RegularUserBuilder()
+                            .username(retrievedUsername)
+                            .password(retrievedPassword)
+                            .email(email)
+                            .contactNumber(contactNumber);
+
+                    // Check and set other properties
+                    String name = resultSet.getString("name");
+                    userBuilder.name(name != null ? name : "N/A");
+
+                    String birthday = resultSet.getString("birthday");
+                    LocalDate birthdate = (birthday != null) ? LocalDate.parse(birthday) : null;
+                    userBuilder.birthday(birthdate);
+
+                    String gender = resultSet.getString("gender");
+                    userBuilder.gender(gender != null ? gender : "N/A");
+
+                    // Similarly, handle other properties
+                    String job = resultSet.getString("job");
+                    Stack<String> jobs = new Stack<>();
+                    jobs.push(job != null ? job : "N/A");
+                    userBuilder.jobs(jobs);
+
+                    // Handle hobbies (assuming it's a comma-separated string)
+                    String hobbiesString = resultSet.getString("hobbies");
+                    List<String> hobbies = (hobbiesString != null && hobbiesString.length() > 0)
+                            ? Arrays.asList(hobbiesString.split(","))
+                            : Collections.emptyList();
+                    userBuilder.hobbies(hobbies);
+
+                    String address = resultSet.getString("address");
+                    userBuilder.address(address != null ? address : "N/A");
+
+                    // Handle profile picture
+                    byte[] profilePicData = resultSet.getBytes("profile_pic");
+                    userBuilder.profilePic(profilePicData);
+
+                    int userId = resultSet.getInt("user_id");
+                    userBuilder.userId(userId);
+
+                    String relationshipStatus = resultSet.getString("relationship_status");
+                    userBuilder.relationshipStatus(relationshipStatus != null ? relationshipStatus : "N/A");
+
+                    regularUser user = userBuilder.build();
+                    return user;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public List<String> findMutualFriends(regularUser user, String selectedUserName) {
+        List<String> mutualFriends = new ArrayList<>();
+
+        String sql = "SELECT sender_id, receiver_id FROM friendrequest WHERE status = 'accepted'";
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet rs = statement.executeQuery();
+
+            // Create a graph and add vertices
+            Graph<String, String> graph = new Graph<>();
+            while (rs.next()) {
+                int sender = rs.getInt("sender_id");
+                int receiver = rs.getInt("receiver_id");
+
+                // Add the vertex to the graph using username
+                graph.addVertex(getUsernameByUserID(sender));
+                graph.addVertex(getUsernameByUserID(receiver));
+
+                graph.addUndirectedEdge(getUsernameByUserID(sender), getUsernameByUserID(receiver), "Friend");
+            }
+
+            // To update the graph so that the graph contains the above vertices and edges
+            MutualFriendsGraph mutualFriendsGraph = new MutualFriendsGraph();
+            mutualFriendsGraph.setGraph(graph);
+
+            graph.printEdges();
+
+            mutualFriends = mutualFriendsGraph.findMutualFriends(user.getUsername(), selectedUserName);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return mutualFriends;
     }
 
 }

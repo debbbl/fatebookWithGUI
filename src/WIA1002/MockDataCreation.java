@@ -16,7 +16,7 @@ public class MockDataCreation {
     private static final int NUM_USERS = 30;
     
     public void createMockData() throws NoSuchAlgorithmException {
-        tempDatabase connectNow = new tempDatabase();
+        Database connectNow = new Database();
         Connection connectDB = connectNow.getConnection();
         LocalDateTime localDateTime = LocalDateTime.now();
         // Create and insert normal users

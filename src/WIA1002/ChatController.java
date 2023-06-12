@@ -1,28 +1,16 @@
 package WIA1002;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import java.awt.Desktop;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.input.MouseEvent;
-
-
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
+
 import java.net.URL;
-import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -38,14 +26,13 @@ public class ChatController implements Initializable {
     private ObservableList<String> chatMessages;
     private regularUser user;
     private regularUser selectedFriend;
-    private tempDatabase database = new tempDatabase();
-    private FriendListController friendListController;
+    private Database database = new Database();
+    private ChatDashboard chatDashboard;
     @FXML
     private ImageView profileImageView;
 
     public ChatController() {
     }
-
 
     public void setUser(regularUser user) {
         this.user = user;
@@ -74,8 +61,8 @@ public class ChatController implements Initializable {
 
     }
 
-    public void setFriendListController(FriendListController friendListController) {
-        this.friendListController = friendListController;
+    public void setFriendListController(ChatDashboard chatDashboard) {
+        this.chatDashboard = chatDashboard;
     }
 
     @Override

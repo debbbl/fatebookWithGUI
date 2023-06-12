@@ -45,11 +45,10 @@ public class HomeController implements Initializable, PageController {
     private Label addressLabel;
     @FXML
     private Label relationshipStatusLabel;
-    private static HomeController instance;
     @FXML
     private ImageView profilePictureImageView;
     private regularUser user;
-    private regularUserDashboardController dashboardController;
+    private final Database database = new Database();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -62,7 +61,6 @@ public class HomeController implements Initializable, PageController {
     }
     @Override
     public void setDashboardController(regularUserDashboardController dashboardController) {
-        this.dashboardController = dashboardController;
     }
 
     @FXML
@@ -81,8 +79,7 @@ public class HomeController implements Initializable, PageController {
                 Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
 
                 byte[] profilePicData = Files.readAllBytes(targetPath);
-                tempDatabase db = new tempDatabase();
-                db.updateProfilePicture(user.getUsername(), profilePicData);
+                database.updateProfilePicture(user.getUsername(), profilePicData);
 
                 user.setProfilePic(profilePicData);
                 updateUserInfo();
@@ -93,12 +90,6 @@ public class HomeController implements Initializable, PageController {
         }
     }
 
-    public static HomeController getInstance() {
-        if (instance == null) {
-            instance = new HomeController();
-        }
-        return instance;
-    }
     public void updateUserInfo() {
         if (user != null) {
             nameLabel.setText(user.getName() != null ? user.getName() : "N/A");
@@ -122,14 +113,11 @@ public class HomeController implements Initializable, PageController {
             addressLabel.setText(user.getAddress() != null ? user.getAddress() : "N/A");
             relationshipStatusLabel.setText(user.getRelationshipStatus() != null ? user.getRelationshipStatus() : "N/A");
 
-            tempDatabase db = new tempDatabase();
-            // db.updateJob(user.getUsername(), latestJobExperience);
-
             if (user.getProfilePic() != null) {
                 profilePictureImageView.setImage(new Image(new ByteArrayInputStream(user.getProfilePic())));
             } else {
                 // Retrieve profile picture from the database
-                byte[] profilePicData = db.getProfilePicture(user.getUsername());
+                byte[] profilePicData = database.getProfilePicture(user.getUsername());
                 if (profilePicData != null) {
                     user.setProfilePic(profilePicData);
                     profilePictureImageView.setImage(new Image(new ByteArrayInputStream(profilePicData)));

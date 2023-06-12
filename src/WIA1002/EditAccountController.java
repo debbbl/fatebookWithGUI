@@ -42,8 +42,8 @@ public class EditAccountController {
     private Button cancelButton;
     private regularUser user;
     private List<String> hobbiesList = new ArrayList<>();
-    private tempDatabase database;;
-    private List<String> relationshipStatusOptions = new ArrayList<>(Arrays.asList(
+    private final Database database = new Database();
+    private final List<String> relationshipStatusOptions = new ArrayList<>(Arrays.asList(
             "Single", "In a relationship", "Engaged", "Married", "In a civil union",
             "In a domestic partnership", "In an open relationship", "It's complicated",
             "Separated", "Divorced", "Widowed"
@@ -86,18 +86,14 @@ public class EditAccountController {
     @FXML
     private void initialize() {
         // Initialize the hobbies list
-        database = new tempDatabase();  // Instantiate the tempDatabase object
         hobbiesList = database.getHobbiesFromDatabase();
         hobbiesList.add("Reading");
 
-        hobbiesTextField.setOnMouseClicked(event -> showHobbiesDialog());;
+        hobbiesTextField.setOnMouseClicked(event -> showHobbiesDialog());
 
         File brandingFile = new File("images/vertical.png");
         Image brandingImage = new Image(brandingFile.toURI().toString());
         editAccountImageView.setImage(brandingImage);
-    }
-    public void setHobbiesList(List<String> hobbiesList) {
-        this.hobbiesList = hobbiesList;
     }
     @FXML
     private void showHobbiesDialog() {
@@ -132,13 +128,6 @@ public class EditAccountController {
             hobbiesTextField.setText(hobby);
         });
     }
-    private void addHobbyToDatabase(String hobby) {
-        // Store the new hobby in the "hobbies" table in the database
-        // Perform the necessary database operations to insert the hobby
-        tempDatabase database = new tempDatabase();
-        database.getConnection();
-        database.insertHobby(hobby);
-    }
     @FXML
     private void saveButtonOnAction() {
         try{
@@ -158,7 +147,6 @@ public class EditAccountController {
 
             // Save the updated user details to the database
             // Update the user details in the database
-            tempDatabase database = new tempDatabase();
             database.getConnection();
             database.updateRegularUser(user);
             database.updateJob(user.getUsername(), jobTextField.getText()); // Update the job in the database

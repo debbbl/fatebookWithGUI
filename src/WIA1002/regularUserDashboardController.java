@@ -113,16 +113,16 @@ public class regularUserDashboardController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("friendList.fxml"));
             Parent friendListPage = loader.load();
 
-            tempDatabase db = new tempDatabase();
+            Database db = new Database();
             // Retrieve the friend list from the database
             List<regularUser> friendList = db.getUserFriendList1(user.getUsername());
 
             // Pass the friend list to the controller
-            if (loader.getController() instanceof FriendListController) {
-                FriendListController friendListController = loader.getController();
-                friendListController.setUser(user);
+            if (loader.getController() instanceof ChatDashboard) {
+                ChatDashboard chatDashboard = loader.getController();
+                chatDashboard.setUser(user);
                 ObservableList<regularUser> observableFriendList = FXCollections.observableArrayList(friendList);
-                friendListController.setFriendList(observableFriendList);
+                chatDashboard.setFriendList(observableFriendList);
             }
 
             ChatController chatController = new ChatController();

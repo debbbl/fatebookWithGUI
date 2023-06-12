@@ -34,14 +34,13 @@ public class addFriendsController {
         }
     }
 
-
     @FXML
     private void showRequestButtonOnAction() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("friendRequest.fxml"));
             Pane friendRequestPane = loader.load();
 
-            tempFriendRequestController friendRequestController = loader.getController();
+            FriendRequestController friendRequestController = loader.getController();
             friendRequestController.setUser(user);
 
             // Set the friendRequestPane as the content of the contentPane

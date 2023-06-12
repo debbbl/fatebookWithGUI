@@ -30,6 +30,7 @@ public class mutualFriendsController {
     private String selectedUserName;
 
     private MutualFriendsGraph mutualFriendsGraph;
+    private Database database = new Database();
 
     public mutualFriendsController() {
         mutualFriendsGraph = new MutualFriendsGraph();
@@ -47,49 +48,15 @@ public class mutualFriendsController {
 
     @FXML
     private void findMutualFriendsOnAction() {
-        tempDatabase db = new tempDatabase();
-        String sql = "SELECT sender_id, receiver_id FROM friendrequest WHERE status= 'accepted' ";
+        List<String> mutualFriends = database.findMutualFriends(user, selectedUserName);
 
-
-        try (Connection connection = db.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            // Retrieve friend requests from the database
-            ResultSet rs = statement.executeQuery(sql);
-
-            // Create a graph and add vertices
-            Graph<String, String> graph = new Graph<>();
-            while (rs.next()) {
-                int sender = rs.getInt("sender_id");
-                int receiver = rs.getInt("receiver_id");
-
-                //add the vertex to the graph using usernamae
-                graph.addVertex(db.getUsernameByUserID(sender));
-                graph.addVertex(db.getUsernameByUserID(receiver));
-
-                graph.addUndirectedEdge(db.getUsernameByUserID(sender), db.getUsernameByUserID(receiver), "Friend");
-
-            }
-
-            // To update the graph so that the graph contain the above vertex and edges
-            mutualFriendsGraph.setGraph(graph);
-
-            graph.printEdges();
-
-
-            ArrayList<String> mutualFriends = mutualFriendsGraph.findMutualFriends(user.getUsername(), selectedUserName);
-
-            if (mutualFriends.isEmpty()) {
-                displayAlert(Alert.AlertType.INFORMATION, "No Results", "No mutual friends found between "+user.getUsername()+" and "+ selectedUserName);
-
-            }
-            else {
-                // Update UI components
-                mutualFriendsListView.getItems().clear();
-                mutualFriendsListView.getItems().addAll(mutualFriends);
-                resultLabel.setText("Found " + mutualFriends.size() + " mutual friends.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (mutualFriends.isEmpty()) {
+            displayAlert(Alert.AlertType.INFORMATION, "No Results", "No mutual friends found between " + user.getUsername() + " and " + selectedUserName);
+        } else {
+            // Update UI components
+            mutualFriendsListView.getItems().clear();
+            mutualFriendsListView.getItems().addAll(mutualFriends);
+            resultLabel.setText("Found " + mutualFriends.size() + " mutual friends.");
         }
     }
 
@@ -99,7 +66,6 @@ public class mutualFriendsController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
 
     @FXML
     private void cancelButtonOnAction() {

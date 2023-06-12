@@ -16,16 +16,12 @@ import javafx.util.Callback;
 
 import java.io.ByteArrayInputStream;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class suggestFriendsToAddController implements Initializable {
     @FXML
@@ -64,7 +60,7 @@ public class suggestFriendsToAddController implements Initializable {
     private ObservableList<regularUser> suggestedFriends;
 
     private regularUser user;
-    private tempDatabase db = new tempDatabase();
+    private final Database database = new Database();
 
     public void setUser(regularUser user){
         this.user = user;
@@ -79,10 +75,10 @@ public class suggestFriendsToAddController implements Initializable {
         friendListView.setItems(suggestedFriends);
 
         // Set the cell factory to display the username
-        friendListView.setCellFactory(new Callback<ListView<regularUser>, ListCell<regularUser>>() {
+        friendListView.setCellFactory(new Callback<>() {
             @Override
             public ListCell<regularUser> call(ListView<regularUser> listView) {
-                return new ListCell<regularUser>() {
+                return new ListCell<>() {
                     @Override
                     protected void updateItem(regularUser friend, boolean empty) {
                         super.updateItem(friend, empty);
@@ -115,21 +111,20 @@ public class suggestFriendsToAddController implements Initializable {
         suggestedFriends.clear();
 
         // Get suggested friend list
-        List<regularUser> suggestedFriendsList = db.getSuggestedFriendList(user.getUsername());
+        List<regularUser> suggestedFriendsList = database.getSuggestedFriendList(user.getUsername());
 
         // Filter out duplicates and existing friends
         Set<regularUser> filteredSuggestions = new HashSet<>();
         for (regularUser friend : suggestedFriendsList) {
             if (!friend.getUsername().equals(user.getUsername()) &&
-                    !db.getUserFriendList1(user.getUsername()).contains(friend) &&
-                    !filteredSuggestions.contains(friend)) {
+                    !database.getUserFriendList1(user.getUsername()).contains(friend)) {
                 filteredSuggestions.add(friend);
             }
         }
 
         // Calculate and set the mutual connections count for each friend
         for (regularUser friend : filteredSuggestions) {
-            int mutualConnectionsCount = db.getMutualConnectionsCount(user.getUsername(), friend.getUsername());
+            int mutualConnectionsCount = database.getMutualConnectionsCount(user.getUsername(), friend.getUsername());
             friend.setMutualConnectionsCount(mutualConnectionsCount);
         }
 
@@ -139,78 +134,17 @@ public class suggestFriendsToAddController implements Initializable {
         // Sort suggested friends based on mutual connections count
         suggestedFriends.sort(Comparator.comparingInt(regularUser::getMutualConnectionsCount).reversed());
     }
-
-    public int calculateMutualFriendsCount(regularUser userA, regularUser userB) {
-        List<regularUser> userAFriends = db.getUserFriendList1(userA.getUsername());
-        List<regularUser> userBFriends = db.getUserFriendList1(userB.getUsername());
-
-        // Find the intersection of userA's and userB's friend lists
-        List<regularUser> mutualFriends = userAFriends.stream()
-                .filter(userBFriends::contains)
-                .collect(Collectors.toList());
-
-        return mutualFriends.size();
-    }
-
     @FXML
     private void viewProfileButtonClicked() {
         regularUser selectedUsername = friendListView.getSelectionModel().getSelectedItem();
 
         if (selectedUsername != null) {
-            regularUser user = getUserDetails(selectedUsername.getUsername());
+            regularUser user = database.getUserDetails(selectedUsername.getUsername());
             displayUserDetails(user);
             user.addActionToHistory("viewed "+selectedUsername+"'s profile",LocalDateTime.now());
         }
     }
 
-    private regularUser getUserDetails(String username) {
-        regularUser user = null;
-        tempDatabase db = new tempDatabase();
-        // Retrieve the user details from the database based on the username
-        String userDetailsQuery = "SELECT * FROM userdata WHERE username = ?";
-        try (Connection connection = db.getConnection();
-             PreparedStatement statement = connection.prepareStatement(userDetailsQuery)) {
-            statement.setString(1, username);
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                regularUser.RegularUserBuilder userBuilder = new regularUser.RegularUserBuilder();
-                userBuilder.username(resultSet.getString("username"))
-                        .email(resultSet.getString("email_address"))
-                        .contactNumber(resultSet.getString("contact_number"))
-                        .name(resultSet.getString("name"))
-                        .birthday(resultSet.getObject("birthday", LocalDate.class))
-                        .gender(resultSet.getString("gender"))
-                        .address(resultSet.getString("address"))
-                        .relationshipStatus(resultSet.getString("relationship_status"));
-
-
-                // Similarly, handle other properties
-                String job = resultSet.getString("job");
-                Stack<String> jobs = new Stack<>();
-                jobs.push(job != null ? job : "N/A");
-                userBuilder.jobs(jobs);
-
-                // Handle hobbies (assuming it's a comma-separated string)
-                String hobbiesString = resultSet.getString("hobbies");
-                List<String> hobbies = (hobbiesString != null && hobbiesString.length() > 0)
-                        ? Arrays.asList(hobbiesString.split(","))
-                        : Collections.emptyList();
-                userBuilder.hobbies(hobbies);
-
-
-                // Handle profile picture
-                byte[] profilePicData = resultSet.getBytes("profile_pic");
-                userBuilder.profilePic(profilePicData);
-
-                user = userBuilder.build();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return user;
-    }
     private int calculateAge(LocalDate birthday) {
         LocalDate currentDate = LocalDate.now();
         return Period.between(birthday, currentDate).getYears();
@@ -238,14 +172,12 @@ public class suggestFriendsToAddController implements Initializable {
             addressLabel.setText(user.getAddress() != null ? user.getAddress() : "N/A");
             relationshipStatusLabel.setText(user.getRelationshipStatus() != null ? user.getRelationshipStatus() : "N/A");
 
-            tempDatabase db = new tempDatabase();
-            // db.updateJob(user.getUsername(), latestJobExperience);
 
             if (user.getProfilePic() != null) {
                 profilePictureImageView.setImage(new Image(new ByteArrayInputStream(user.getProfilePic())));
             } else {
                 // Retrieve profile picture from the database
-                byte[] profilePicData = db.getProfilePicture(user.getUsername());
+                byte[] profilePicData = database.getProfilePicture(user.getUsername());
                 if (profilePicData != null) {
                     user.setProfilePic(profilePicData);
                     profilePictureImageView.setImage(new Image(new ByteArrayInputStream(profilePicData)));
@@ -284,13 +216,12 @@ public class suggestFriendsToAddController implements Initializable {
     @FXML
     private void sendFriendRequestButtonClicked() throws SQLException {
         regularUser selectedUsername = friendListView.getSelectionModel().getSelectedItem();
-        tempDatabase db = new tempDatabase();
         if (selectedUsername != null) {
-            boolean requestSent = db.sendFriendRequest(user.getUserId(), user.getUsername(),selectedUsername.getUsername());
+            boolean requestSent = database.sendFriendRequest(user.getUserId(), user.getUsername(),selectedUsername.getUsername());
 
             if (requestSent) {
                 displayAlert(Alert.AlertType.INFORMATION, "Friend Request Sent", "Friend request sent to " + selectedUsername.getUsername());
-                user.addActionToHistory("sent friend requets to "+selectedUsername, LocalDateTime.now());
+                user.addActionToHistory("sent friend request to "+selectedUsername, LocalDateTime.now());
             } else {
                 displayAlert(Alert.AlertType.WARNING, "Request Failed", "Friend request to " + selectedUsername.getUsername() + " already sent or the user is already your friend.");
             }
