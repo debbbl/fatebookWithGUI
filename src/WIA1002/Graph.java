@@ -85,7 +85,7 @@ public class Graph<T extends Comparable<T>, N extends Comparable<N>> {
     }
 
     public boolean addVertex(T v) {
-        if (hasVertex(v) == false) {
+        if (!hasVertex(v)) {
             Vertex<T, N> temp = head;
             Vertex<T, N> newVertex = new Vertex<>(v, null);
             if (head == null) head = newVertex;
@@ -253,13 +253,13 @@ public class Graph<T extends Comparable<T>, N extends Comparable<N>> {
     public void printEdges() {
         Vertex<T, N> temp = head;
         while (temp != null) {
-            System.out.print("# " + temp.vertexInfo + " : ");
+            //System.out.print("# " + temp.vertexInfo + " : ");
             Edge<T, N> currentEdge = temp.firstEdge;
             while (currentEdge != null) {
-                System.out.print("[" + temp.vertexInfo + "," + currentEdge.toVertex.vertexInfo + "] ");
+                //System.out.print("[" + temp.vertexInfo + "," + currentEdge.toVertex.vertexInfo + "] ");
                 currentEdge = currentEdge.nextEdge;
             }
-            System.out.println();
+            //System.out.println();
             temp = temp.nextVertex;
         }
     }
