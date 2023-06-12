@@ -883,8 +883,6 @@ public class Database {
             MutualFriendsGraph mutualFriendsGraph = new MutualFriendsGraph();
             mutualFriendsGraph.setGraph(graph);
 
-            graph.printEdges();
-
             mutualFriends = mutualFriendsGraph.findMutualFriends(user.getUsername(), selectedUserName);
 
         } catch (SQLException e) {
