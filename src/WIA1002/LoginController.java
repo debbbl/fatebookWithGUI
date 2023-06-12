@@ -16,6 +16,7 @@ import javafx.stage.StageStyle;
 import java.io.File;
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class LoginController implements Initializable {
@@ -53,6 +54,7 @@ public class LoginController implements Initializable {
                     openAdminDashboard();
                 } else if (user instanceof regularUser) {
                     openRegularUserDashboard((regularUser) user);
+                    ((regularUser) user).addActionToHistory("Logged in", LocalDateTime.now());
                 }
             } else {
                 loginMessageLabel.setText("Invalid login. Please try again.");

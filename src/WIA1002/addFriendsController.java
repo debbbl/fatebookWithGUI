@@ -6,6 +6,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 public class addFriendsController {
     @FXML
@@ -29,6 +30,7 @@ public class addFriendsController {
 
             // Set the suggestMutualFriendPane as the content of the contentPane
             contentPane.getChildren().setAll(suggestMutualFriendPane);
+            user.addActionToHistory("Viewed friend suggestions", LocalDateTime.now());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -45,6 +47,7 @@ public class addFriendsController {
 
             // Set the friendRequestPane as the content of the contentPane
             contentPane.getChildren().setAll(friendRequestPane);
+            user.addActionToHistory("Viewed friend requests", LocalDateTime.now());
         } catch (IOException e) {
             e.printStackTrace();
         }

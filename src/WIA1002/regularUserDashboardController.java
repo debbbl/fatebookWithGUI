@@ -28,7 +28,7 @@ public class regularUserDashboardController implements Initializable {
     @FXML
     private Button addFriendsButton;
     @FXML
-    private Button createPostButton;
+    private Button chatButton;
     @FXML
     private Button settingsButton;
     @FXML
@@ -48,7 +48,7 @@ public class regularUserDashboardController implements Initializable {
         homeButton.setOnAction(event -> loadHomePage());
         searchUserButton.setOnAction(event -> loadSearchUserPage());
         addFriendsButton.setOnAction((event -> loadAddFriendsPage()));
-        createPostButton.setOnAction(event -> loadFriendListPage());
+        chatButton.setOnAction(event -> loadChatPage());
         settingsButton.setOnAction(event -> loadSettingsPage());
     }
 
@@ -105,9 +105,9 @@ public class regularUserDashboardController implements Initializable {
         }
     }
     @FXML
-    public void loadFriendListPage() {
+    public void loadChatPage() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("friendList.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("chatDashboard.fxml"));
             Parent friendListPage = loader.load();
 
             Database db = new Database();

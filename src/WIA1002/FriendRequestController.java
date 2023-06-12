@@ -108,6 +108,7 @@ public class FriendRequestController implements Initializable {
             // Update the num_of_fren field for both sender and receiver
             int receiverId = database.getUserIdByUsername(selectedRequest.getUsername());
             database.acceptFriendRequest(userId,receiverId);
+            user.addActionToHistory("accepted "+selectedRequest.getUsername()+"'s friend request",LocalDateTime.now());
 
             // Show success message
             showInfoAlert("Friend Request Accepted", "You have accepted the friend request from " + selectedRequest.getUsername());
@@ -128,6 +129,7 @@ public class FriendRequestController implements Initializable {
 
             // Remove the rejected request from the ListView
             friendRequestListView.getItems().remove(selectedRequest);
+            user.addActionToHistory("rejected "+selectedRequest.getUsername()+"'s friend request",LocalDateTime.now());
 
             // Show success message
             showInfoAlert("Friend Request Rejected", "You have rejected the friend request from " + selectedRequest.getUsername());

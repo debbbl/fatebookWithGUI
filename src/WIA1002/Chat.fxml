@@ -11,7 +11,7 @@
 
 <AnchorPane prefHeight="478.0" prefWidth="435.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.ChatController">
     <children>
-      <Label fx:id="friendname" layoutX="102.0" layoutY="31.0" prefHeight="25.0" prefWidth="63.0" text="Label" textFill="LIGHTBLUE">
+      <Label fx:id="friendname" layoutX="102.0" layoutY="31.0" prefHeight="26.0" prefWidth="309.0" text="Label" textFill="LIGHTBLUE">
          <font>
             <Font name="Berlin Sans FB" size="23.0" />
          </font>

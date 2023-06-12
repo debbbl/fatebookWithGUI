@@ -41,7 +41,7 @@ public class regularUser extends user {
     public void addActionToHistory(String action, LocalDateTime timestamp) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd | HH.mm a");
         String formattedtimestamp = timestamp.format(formatter);
-        String actionWithTimestamp = action + " at " + formattedtimestamp;
+        String actionWithTimestamp = "[ "+formattedtimestamp+" ] "+action;
         actionHistory.add(actionWithTimestamp);
     }
 
