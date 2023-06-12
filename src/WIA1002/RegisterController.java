@@ -16,14 +16,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 import java.security.NoSuchAlgorithmException;
 
@@ -35,8 +30,6 @@ public class RegisterController implements Initializable {
     private ImageView fateImageView;
     @FXML
     private Button closeButton;
-    @FXML
-    private Button registerButton;
     @FXML
     private TextField usernameTextField;
     @FXML
@@ -53,8 +46,6 @@ public class RegisterController implements Initializable {
     private Label passwordMessageLabel;
     @FXML
     private Label usernameLabel;
-
-    private FXMLLoader loginLoader;
     private Parent loginRoot;
     private final Database database = new Database();
 
@@ -75,7 +66,7 @@ public class RegisterController implements Initializable {
             }
         });
 
-        loginLoader = new FXMLLoader(getClass().getResource("login.fxml"));
+        FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("login.fxml"));
         try {
             loginRoot = loginLoader.load();
         } catch (IOException e) {

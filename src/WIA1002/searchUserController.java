@@ -7,14 +7,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.ByteArrayInputStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -51,15 +47,9 @@ public class searchUserController {
     private Label relationshipStatusLabel;
     @FXML
     private Label addressLabel;
-    @FXML
-    private Button addFriendButton;
     private regularUser user;
-    @FXML
-    private AnchorPane detailsPane;
 
-    @FXML
-    private  Button showMutualFriendsButton;
-    private Database database = new Database();
+    private final Database database = new Database();
 
     public void setUser(regularUser user){
         this.user = user;

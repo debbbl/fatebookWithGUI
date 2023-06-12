@@ -3,7 +3,6 @@ package WIA1002;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 
 import java.net.URL;
@@ -14,7 +13,6 @@ public class SettingsController implements Initializable, PageController {
     @FXML
     private TextArea activityHistoryTextArea;
     private regularUser user;
-    private regularUserDashboardController dashboardController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -26,7 +24,6 @@ public class SettingsController implements Initializable, PageController {
 
     @Override
     public void setDashboardController(regularUserDashboardController dashboardController) {
-        this.dashboardController = dashboardController;
     }
 
     @FXML

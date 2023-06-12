@@ -806,8 +806,8 @@ public class Database {
                     return admin;
                 } else {
                     regularUser.RegularUserBuilder userBuilder = (regularUser.RegularUserBuilder) new regularUser.RegularUserBuilder()
-                            .username(retrievedUsername)
-                            .password(retrievedPassword)
+                            .username(username)
+                            .password(password)
                             .email(email)
                             .contactNumber(contactNumber);
 
@@ -842,8 +842,8 @@ public class Database {
                     byte[] profilePicData = resultSet.getBytes("profile_pic");
                     userBuilder.profilePic(profilePicData);
 
-                    int userId = resultSet.getInt("user_id");
-                    userBuilder.userId(userId);
+                    int user_id = resultSet.getInt("user_id");
+                    userBuilder.userId(user_id);
 
                     String relationshipStatus = resultSet.getString("relationship_status");
                     userBuilder.relationshipStatus(relationshipStatus != null ? relationshipStatus : "N/A");

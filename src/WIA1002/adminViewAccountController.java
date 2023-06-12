@@ -11,20 +11,20 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class adminViewAccountController implements Initializable {
@@ -43,11 +43,7 @@ public class adminViewAccountController implements Initializable {
     @FXML
     private TableColumn<regularUser, String> contactNumberColumn;
     @FXML
-    private Button viewProfileButton;
-    @FXML
     private TextField searchTextField;
-    @FXML
-    private Button searchButton;
     @FXML
     private DatePicker startDatePicker;
     @FXML
@@ -57,7 +53,6 @@ public class adminViewAccountController implements Initializable {
 
     private ObservableList<regularUser> regularUsersList;
     private Database database;
-    private regularUser user;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         database = new Database();

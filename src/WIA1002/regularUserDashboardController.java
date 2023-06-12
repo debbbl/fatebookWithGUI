@@ -33,10 +33,7 @@ public class regularUserDashboardController implements Initializable {
     private Button settingsButton;
     @FXML
     private Button logoutButton;
-    @FXML
-    private Button findMutualFriendsButton;
     private regularUser user;
-    private List<String> hobbiesList;
 
     public void setUser(regularUser user) {
         this.user = user;

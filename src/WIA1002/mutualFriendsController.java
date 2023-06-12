@@ -3,18 +3,9 @@ package WIA1002;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class mutualFriendsController {
-
-    @FXML
-    private Button findMutualFriendsButton;
 
     @FXML
     private ListView<String> mutualFriendsListView;
@@ -29,11 +20,10 @@ public class mutualFriendsController {
 
     private String selectedUserName;
 
-    private MutualFriendsGraph mutualFriendsGraph;
-    private Database database = new Database();
+    private final Database database = new Database();
 
     public mutualFriendsController() {
-        mutualFriendsGraph = new MutualFriendsGraph();
+        MutualFriendsGraph mutualFriendsGraph = new MutualFriendsGraph();
     }
 
     public void setUser(regularUser user,String selectedUserName) {
