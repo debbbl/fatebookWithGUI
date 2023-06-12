@@ -199,13 +199,15 @@ public class suggestFriendsToAddController implements Initializable {
             // Pass the user object and the selected user to the mutual friends controller
             showMutualFriends.setUser(user,selectedUsername.getUsername());
 
-            // Create a new Stage for the Edit Account screen
-            Stage editAccountStage = new Stage();
-            editAccountStage.initStyle(StageStyle.UNDECORATED);
-            editAccountStage.setScene(new Scene(root));
+            if (showMutualFriends.findMutualFriendsOnAction()) {
+                // Create a new Stage for the mutualFriends screen
+                Stage mutualFriendsStage = new Stage();
+                mutualFriendsStage.initStyle(StageStyle.UNDECORATED);
+                mutualFriendsStage.setScene(new Scene(root));
 
-            // Show the Edit Account screen
-            editAccountStage.showAndWait();
+                // Show the mutualFriends screen
+                mutualFriendsStage.showAndWait();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

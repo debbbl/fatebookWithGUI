@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
@@ -83,6 +84,7 @@ public class HomeController implements Initializable, PageController {
 
                 user.setProfilePic(profilePicData);
                 updateUserInfo();
+                user.addActionToHistory("updated profile picture", LocalDateTime.now());
             } catch (Exception e) {
                 e.printStackTrace();
                 e.getCause();

@@ -12,6 +12,7 @@ import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -97,6 +98,7 @@ public class ChatDashboard implements Initializable {
                     chatController.setUser(user); // Pass both user and selectedFriend
                     chatController.setSelectedFriend(selectedFriend);// Set the ChatController in the FriendListController
                     chatController.setFriendListController(this); // Added this line
+                    user.addActionToHistory("Chatted with "+user.getUsername(), LocalDateTime.now());
 
 
                     chatPane.getChildren().clear(); // Clear any existing content in the chatPane

@@ -3,6 +3,8 @@ package WIA1002;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class mutualFriendsController {
@@ -29,7 +31,7 @@ public class mutualFriendsController {
     public void setUser(regularUser user,String selectedUserName) {
         this.user = user;
         this.selectedUserName = selectedUserName;
-        findMutualFriendsOnAction();
+        user.addActionToHistory("Viewed mutual friends with "+selectedUserName, LocalDateTime.now());
     }
 
     @FXML
@@ -37,16 +39,18 @@ public class mutualFriendsController {
     }
 
     @FXML
-    private void findMutualFriendsOnAction() {
+    public boolean findMutualFriendsOnAction() {
         List<String> mutualFriends = database.findMutualFriends(user, selectedUserName);
 
         if (mutualFriends.isEmpty()) {
-            displayAlert(Alert.AlertType.INFORMATION, "No Results", "No mutual friends found between " + user.getUsername() + " and " + selectedUserName);
+            displayAlert(Alert.AlertType.INFORMATION, "No Results", "No mutual friends found between u and " + selectedUserName);
+            return false;
         } else {
             // Update UI components
             mutualFriendsListView.getItems().clear();
             mutualFriendsListView.getItems().addAll(mutualFriends);
             resultLabel.setText("Found " + mutualFriends.size() + " mutual friends.");
+            return true;
         }
     }
 

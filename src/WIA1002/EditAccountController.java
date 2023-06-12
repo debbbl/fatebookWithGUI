@@ -151,7 +151,7 @@ public class EditAccountController {
             database.updateRegularUser(user);
             database.updateJob(user.getUsername(), jobTextField.getText()); // Update the job in the database
             LocalDateTime timestamp = LocalDateTime.now();
-            user.addActionToHistory("Edit own account",timestamp);
+            user.addActionToHistory("Edited own account",timestamp);
             // Close the Edit Account screen
             Stage stage = (Stage) saveButton.getScene().getWindow();
             stage.close();

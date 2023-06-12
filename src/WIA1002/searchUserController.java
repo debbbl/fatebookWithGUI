@@ -74,7 +74,7 @@ public class searchUserController {
         if (selectedUsername != null) {
             regularUser user = database.getUserDetails(selectedUsername);
             displayUserDetails(user);
-            user.addActionToHistory("viewed " + selectedUsername + "'s profile", LocalDateTime.now());
+            user.addActionToHistory("Viewed " + selectedUsername + "'s profile", LocalDateTime.now());
         }
     }
 
@@ -87,7 +87,7 @@ public class searchUserController {
 
             if (requestSent) {
                 displayAlert(Alert.AlertType.INFORMATION, "Friend Request Sent", "Friend request sent to " + selectedUsername);
-                user.addActionToHistory("sent friend requets to "+selectedUsername,LocalDateTime.now());
+                user.addActionToHistory("Sent friend request to "+selectedUsername,LocalDateTime.now());
             } else {
                 displayAlert(Alert.AlertType.WARNING, "Request Failed", "Friend request to " + selectedUsername + " already sent or the user is already your friend.");
             }
@@ -152,18 +152,18 @@ public class searchUserController {
 
             // Get the controller instance
             mutualFriendsController showMutualFriends  = loader.getController();
-
-            // Pass the user object and the selected user to the mutual friends controller
             showMutualFriends .setUser(user,selectedUsername);
 
-            // Create a new Stage for the Edit Account screen
-            Stage editAccountStage = new Stage();
-            editAccountStage.initStyle(StageStyle.UNDECORATED);
-            editAccountStage.setScene(new Scene(root));
+            // Check if mutual friends are found
+            if (showMutualFriends.findMutualFriendsOnAction()) {
+                // Create a new Stage for the mutualFriends screen
+                Stage mutualFriendsStage = new Stage();
+                mutualFriendsStage.initStyle(StageStyle.UNDECORATED);
+                mutualFriendsStage.setScene(new Scene(root));
 
-            // Show the Edit Account screen
-            editAccountStage.showAndWait();
-
+                // Show the mutualFriends screen
+                mutualFriendsStage.showAndWait();
+            }
         } catch (Exception e) {
             e.printStackTrace();
             // Handle error loading the Edit Account screen
