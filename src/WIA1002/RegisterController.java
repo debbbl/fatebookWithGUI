@@ -27,7 +27,7 @@ public class RegisterController implements Initializable {
     Encryptor encryptor = new Encryptor();
     
     @FXML
-    private ImageView fateImageView;
+    private ImageView registerUI;
     @FXML
     private Button closeButton;
     @FXML
@@ -51,9 +51,9 @@ public class RegisterController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
-        File fateFile = new File("images/fateLogo2.png"); //file for the fatelogo
-        Image fateImage = new Image(fateFile.toURI().toString());
-        fateImageView.setImage(fateImage);
+        File registerFile = new File("images/regiserUI.png");
+        Image registerImage = new Image(registerFile.toURI().toString());
+        registerUI.setImage(registerImage);
 
         usernameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.isEmpty()) {

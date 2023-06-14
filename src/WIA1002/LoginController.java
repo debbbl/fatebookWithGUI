@@ -25,9 +25,7 @@ public class LoginController implements Initializable {
     @FXML
     private Label loginMessageLabel;
     @FXML
-    private ImageView brandingImageView;
-    @FXML
-    private ImageView lockImageView;
+    private ImageView loginImageView;
     @FXML
     private TextField passwordTextField;
     @FXML
@@ -36,13 +34,9 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        File brandingFile = new File("images/vertical.png"); //file for the meta logo
-        Image brandingImage = new Image(brandingFile.toURI().toString());
-        brandingImageView.setImage(brandingImage);
-
-        File lockFile = new File("images/Picture1.png"); //file for the lock
-        Image lockImage = new Image(lockFile.toURI().toString());
-        lockImageView.setImage(lockImage);
+        File loginFile = new File("images/loginUI.png"); //file for the meta logo
+        Image loginImage = new Image(loginFile.toURI().toString());
+        loginImageView.setImage(loginImage);
     }
 
     @FXML
@@ -120,7 +114,7 @@ public class LoginController implements Initializable {
             Parent root = FXMLLoader.load(getClass().getResource("Register.fxml"));
             Stage registerStage = new Stage();
             registerStage.initStyle(StageStyle.UNDECORATED);
-            registerStage.setScene(new Scene(root, 520, 400));
+            registerStage.setScene(new Scene(root, 1275, 670));
             registerStage.show();
 
             Stage stage = (Stage) cancelButton.getScene().getWindow();
