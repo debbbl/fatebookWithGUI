@@ -9,10 +9,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -34,6 +37,16 @@ public class regularUserDashboardController implements Initializable {
     @FXML
     private Button logoutButton;
     private regularUser user;
+    @FXML
+    private ImageView homeIconImageView;
+    @FXML
+    private ImageView searchIconImageView;
+    @FXML
+    private ImageView friendsIconImageView;
+    @FXML
+    private ImageView chatIconImageView;
+    @FXML
+    private ImageView settingsIconImageView;
 
     public void setUser(regularUser user) {
         this.user = user;
@@ -41,6 +54,25 @@ public class regularUserDashboardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        File homeIconFile = new File("images/home-icon.png"); //file for the lock
+        Image homeIcon = new Image(homeIconFile.toURI().toString());
+        homeIconImageView.setImage(homeIcon);
+
+        File searchIconFile = new File("images/search-icon.png"); //file for the lock
+        Image searchIcon = new Image(searchIconFile.toURI().toString());
+        searchIconImageView.setImage(searchIcon);
+
+        File friendsIconFile = new File("images/add-friends.png"); //file for the lock
+        Image friendsIcon = new Image(friendsIconFile.toURI().toString());
+        friendsIconImageView.setImage(friendsIcon);
+
+        File chatIconFile = new File("images/chat-icon.png"); //file for the lock
+        Image chatIcon = new Image(chatIconFile.toURI().toString());
+        chatIconImageView.setImage(chatIcon);
+
+        File settingsIconFile = new File("images/settings.png"); //file for the lock
+        Image settingsIcon = new Image(settingsIconFile.toURI().toString());
+        settingsIconImageView.setImage(settingsIcon);
         // Set the initial page
         loadHomePage();
 
