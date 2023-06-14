@@ -15,9 +15,9 @@
     <center>
         <BorderPane fx:id="mainPane" prefHeight="445.0" prefWidth="813.0">
             <left>
-                <AnchorPane prefHeight="478.0" prefWidth="159.0" style="-fx-background-color: #ADD8E6;" BorderPane.alignment="CENTER">
+                <AnchorPane prefHeight="478.0" prefWidth="155.0" style="-fx-background-color: #ADD8E6;" BorderPane.alignment="CENTER">
                     <children>
-                        <VBox prefHeight="313.0" prefWidth="164.0">
+                        <VBox prefHeight="313.0" prefWidth="156.0">
                             <children>
                         <HBox prefHeight="45.0" prefWidth="144.0" style="-fx-border-color: #ffffff; -fx-border-width: 0 0 2 0;">
                            <children>

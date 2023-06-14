@@ -81,7 +81,11 @@ public class Database {
             statement.setString(1, user.getEmail());
             statement.setString(2, user.getName());
             statement.setString(3, user.getContactNumber());
-            statement.setDate(4, Date.valueOf(user.getBirthday()));
+            if(user.getBirthday() != null) {
+                statement.setDate(4, Date.valueOf(user.getBirthday()));
+            }else{
+                statement.setDate(4,null);
+            }
             statement.setString(5, String.valueOf(user.getGender()));
             statement.setString(6, String.join(", ", user.getJobExperience()));
             statement.setString(7, String.join(", ", user.getHobbies()));
@@ -404,9 +408,6 @@ public class Database {
                 int dbReceiverId = resultSet.getInt("receiver_id");
                 String message = resultSet.getString("message");
                 LocalDateTime timestamp = resultSet.getTimestamp("timestamp").toLocalDateTime();
-                String fileType = resultSet.getString("file_type");
-                String fileName = resultSet.getString("file_name");
-                byte[] fileData = resultSet.getBytes("file_data");
 
                 String dbSender = getUsernameByUserID(dbSenderId);
                 String dbReceiver = getUsernameByUserID(dbReceiverId);

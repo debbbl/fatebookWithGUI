@@ -137,8 +137,10 @@ public class EditAccountController {
             user.setUsername(usernameTextField.getText());
             user.setContactNumber(contactNumberTextField.getText());
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-            LocalDate birthday = birthdayTextField.getValue();
-            user.setBirthday(birthday);
+            if(birthdayTextField.getValue() != null) {
+                LocalDate birthday = birthdayTextField.getValue();
+                user.setBirthday(birthday);
+            }
             user.setGender(genderTextField.getText());
             user.addJobExperience(jobTextField.getText());
             user.setHobbies(Arrays.asList(hobbiesTextField.getText().split(", ")));
