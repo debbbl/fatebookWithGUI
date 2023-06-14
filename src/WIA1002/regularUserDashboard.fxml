@@ -1,131 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="478.0" prefWidth="821.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.regularUserDashboardController">
-    <center>
-        <BorderPane fx:id="mainPane" prefHeight="445.0" prefWidth="813.0">
-            <left>
-                <AnchorPane prefHeight="478.0" prefWidth="155.0" style="-fx-background-color: #ADD8E6;" BorderPane.alignment="CENTER">
-                    <children>
-                        <VBox prefHeight="313.0" prefWidth="156.0">
-                            <children>
-                        <HBox prefHeight="45.0" prefWidth="144.0" style="-fx-border-color: #ffffff; -fx-border-width: 0 0 2 0;">
-                           <children>
-                              <Separator orientation="VERTICAL" prefHeight="48.0" prefWidth="2.0" style="visibility: hidden;" />
-                              <ImageView fx:id="homeIconImageView" fitHeight="49.0" fitWidth="52.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../images/home-icon.png" />
-                                 </image>
-                              </ImageView>
-                              <Separator orientation="VERTICAL" prefHeight="48.0" prefWidth="2.0" style="visibility: hidden;" />
-                                      <Button fx:id="homeButton" alignment="BASELINE_LEFT" contentDisplay="TEXT_ONLY" graphicTextGap="1.0" onAction="#loadHomePage" prefHeight="48.0" prefWidth="71.0" style="-fx-background-color: transparent;" text="Home" textFill="WHITE">
-                                          <font>
-                                              <Font name="Book Antiqua" size="21.0" />
-                                          </font>
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                                 <padding>
-                                    <Insets left="0" />
-                                 </padding>
-                                      </Button>
-                           </children>
-                        </HBox>
-                        <HBox prefHeight="45.0" prefWidth="144.0" style="-fx-border-color: #ffffff; -fx-border-width: 0 0 2 0;">
-                           <children>
-                              <Separator orientation="VERTICAL" prefHeight="200.0" style="visibility: hidden;" />
-                              <ImageView fx:id="searchIconImageView" fitHeight="49.0" fitWidth="52.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../images/search-icon.png" />
-                                 </image>
-                              </ImageView>
-                              <Separator orientation="VERTICAL" prefHeight="47.0" prefWidth="9.0" style="visibility: hidden;" />
-                              <Button fx:id="searchUserButton" alignment="BASELINE_LEFT" contentDisplay="TEXT_ONLY" graphicTextGap="1.0" onAction="#loadSearchUserPage" prefHeight="47.0" prefWidth="75.0" style="-fx-background-color: transparent;" text="Search" textFill="WHITE">
-                                 <font>
-                                    <Font name="Book Antiqua" size="21.0" />
-                                 </font>
-                                 <padding>
-                                    <Insets left="0" />
-                                 </padding>
-                              </Button>
-                           </children>
-                        </HBox>
-                        <HBox prefHeight="45.0" prefWidth="144.0" style="-fx-border-color: #ffffff; -fx-border-width: 0 0 2 0;">
-                           <children>
-                              <Separator orientation="VERTICAL" prefHeight="200.0" style="visibility: hidden;" />
-                              <ImageView fx:id="friendsIconImageView" fitHeight="43.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../images/add-friends.png" />
-                                 </image>
-                              </ImageView>
-                              <Separator orientation="VERTICAL" prefHeight="43.0" prefWidth="16.0" style="visibility: hidden;" />
-                              <Button fx:id="addFriendsButton" alignment="BASELINE_LEFT" contentDisplay="TEXT_ONLY" graphicTextGap="1.0" onAction="#loadAddFriendsPage" prefHeight="47.0" prefWidth="75.0" style="-fx-background-color: transparent;" text="Friends" textFill="WHITE">
-                                 <font>
-                                    <Font name="Book Antiqua" size="21.0" />
-                                 </font>
-                                 <padding>
-                                    <Insets left="0" />
-                                 </padding>
-                              </Button>
-                           </children>
-                        </HBox>
-                        <HBox prefHeight="45.0" prefWidth="144.0" style="-fx-border-color: #ffffff; -fx-border-width: 0 0 2 0;">
-                           <children>
-                              <Separator orientation="VERTICAL" prefHeight="200.0" style="visibility: hidden;" />
-                              <ImageView fx:id="chatIconImageView" fitHeight="43.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../images/chat-icon.png" />
-                                 </image>
-                              </ImageView>
-                              <Separator orientation="VERTICAL" prefHeight="43.0" prefWidth="15.0" style="visibility: hidden;" />
-                              <Button fx:id="chatButton" alignment="BASELINE_LEFT" contentDisplay="TEXT_ONLY" graphicTextGap="1.0" onAction="#loadChatPage" prefHeight="47.0" prefWidth="75.0" style="-fx-background-color: transparent;" text="Chat" textFill="WHITE">
-                                 <font>
-                                    <Font name="Book Antiqua" size="21.0" />
-                                 </font>
-                                 <padding>
-                                    <Insets left="0" />
-                                 </padding>
-                              </Button>
-                           </children>
-                        </HBox>
-                        <HBox prefHeight="45.0" prefWidth="144.0" style="-fx-border-color: #ffffff; -fx-border-width: 0 0 2 0;">
-                           <children>
-                              <Separator orientation="VERTICAL" prefHeight="43.0" prefWidth="7.0" style="-fx-background-color: transparent; visibility: hidden;" />
-                              <ImageView fx:id="settingsIconImageView" fitHeight="43.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../images/settings.png" />
-                                 </image>
-                              </ImageView>
-                              <Separator orientation="VERTICAL" prefHeight="43.0" prefWidth="15.0" style="visibility: hidden;" />
-                              <Button fx:id="settingsButton" alignment="BASELINE_LEFT" contentDisplay="TEXT_ONLY" graphicTextGap="1.0" onAction="#loadSettingsPage" prefHeight="47.0" prefWidth="75.0" style="-fx-background-color: transparent;" text="Settings" textFill="WHITE">
-                                 <font>
-                                    <Font name="Book Antiqua" size="21.0" />
-                                 </font>
-                                 <padding>
-                                    <Insets left="0" />
-                                 </padding>
-                              </Button>
-                           </children>
-                        </HBox>
-                            </children>
-                        </VBox>
-                        <Button fx:id="logoutButton" layoutX="32.0" layoutY="426.0" mnemonicParsing="false" onAction="#logoutButtonOnAction" prefHeight="30.0" prefWidth="94.0" style="-fx-background-color: #ffffff;" text="Log Out" textFill="LIGHTBLUE">
-                            <font>
-                                <Font name="Bauhaus 93" size="16.0" />
-                            </font>
-                        </Button>
-                    </children>
-                </AnchorPane>
-            </left></BorderPane>
-    </center>
-</BorderPane>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="670.0" prefWidth="1275.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.regularUserDashboardController">
+   <children>
+      <ImageView fx:id="regularUser" fitHeight="670.0" fitWidth="1275.0">
+         <image>
+            <Image url="@../../images/regularUser.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="homeButton" layoutX="102.0" layoutY="181.0" mnemonicParsing="false" onAction="#loadHomePage" opacity="0.0" prefHeight="43.0" prefWidth="133.0" />
+      <Button fx:id="searchUserButton" layoutX="75.0" layoutY="238.0" mnemonicParsing="false" onAction="#loadSearchUserPage" opacity="0.0" prefHeight="50.0" prefWidth="160.0" />
+      <Button fx:id="addFriendsButton" layoutX="67.0" layoutY="297.0" mnemonicParsing="false" onAction="#loadAddFriendsPage" opacity="0.0" prefHeight="50.0" prefWidth="160.0" />
+      <Button fx:id="chatButton" layoutX="102.0" layoutY="357.0" mnemonicParsing="false" onAction="#loadChatPage" opacity="0.0" prefHeight="50.0" prefWidth="133.0" />
+      <Button fx:id="settingsButton" layoutX="35.0" layoutY="413.0" mnemonicParsing="false" onAction="#loadSettingsPage" opacity="0.0" prefHeight="50.0" prefWidth="202.0" />
+      <Button fx:id="logoutButton" layoutX="54.0" layoutY="570.0" mnemonicParsing="false" onAction="#logoutButtonOnAction" opacity="0.0" prefHeight="50.0" prefWidth="177.0" />
+      <BorderPane fx:id="mainPane" layoutX="293.0" layoutY="138.0" prefHeight="495.0" prefWidth="928.0" />
+   </children>
+</AnchorPane>
