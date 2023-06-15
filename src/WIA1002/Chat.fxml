@@ -9,22 +9,21 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="478.0" prefWidth="435.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.ChatController">
+<AnchorPane prefHeight="496.0" prefWidth="552.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.ChatController">
     <children>
-      <Label fx:id="friendname" layoutX="102.0" layoutY="31.0" prefHeight="26.0" prefWidth="309.0" text="Label" textFill="LIGHTBLUE">
+      <Label fx:id="friendname" layoutX="120.0" layoutY="37.0" prefHeight="26.0" prefWidth="309.0" text="Label">
          <font>
-            <Font name="Berlin Sans FB" size="23.0" />
+            <Font name="Arial Bold" size="33.0" />
          </font>
       </Label>
-         <HBox layoutX="15.0" layoutY="438.0" prefHeight="28.0" prefWidth="399.0" spacing="10.0">
-             <TextField fx:id="messageTextArea" prefHeight="28.0" prefWidth="339.0" />
-             <Button fx:id="sendButton" mnemonicParsing="false" onAction="#sendMessage" style="-fx-background-color: #ADD8E6;" text="Send" textFill="WHITE">
-            <font>
-               <Font name="Berlin Sans FB" size="15.0" />
-            </font>
-         </Button>
-         </HBox>
-      <ListView fx:id="chatListView" layoutX="15.0" layoutY="77.0" prefHeight="348.0" prefWidth="399.0" />
-      <ImageView fx:id="profileImageView" fitHeight="58.0" fitWidth="71.0" layoutX="15.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true" />
+         <HBox layoutX="15.0" layoutY="438.0" prefHeight="28.0" prefWidth="399.0" spacing="10.0" />
+      <ListView fx:id="chatListView" layoutX="15.0" layoutY="106.0" prefHeight="331.0" prefWidth="519.0" />
+      <ImageView fx:id="profileImageView" fitHeight="81.0" fitWidth="100.0" layoutX="15.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true" />
+          <TextField fx:id="messageTextArea" layoutX="15.0" layoutY="452.0" prefHeight="28.0" prefWidth="435.0" />
+          <Button fx:id="sendButton" layoutX="462.0" layoutY="449.0" mnemonicParsing="false" onAction="#sendMessage" style="-fx-background-color: #000000;" text="Send" textFill="WHITE">
+         <font>
+            <Font name="Arial Bold" size="19.0" />
+         </font>
+      </Button>
     </children>
 </AnchorPane>

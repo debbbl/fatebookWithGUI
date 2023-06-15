@@ -4,17 +4,17 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="478.0" prefWidth="670.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.addFriendsController">
+<AnchorPane prefHeight="495.0" prefWidth="928.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.addFriendsController">
     <children>
-        <AnchorPane fx:id="contentPane" layoutY="46.0" prefHeight="433.0" prefWidth="670.0" style="-fx-background-color: #ffffff;" />
-        <Button fx:id="showRequestButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#showRequestButtonOnAction" prefHeight="25.0" prefWidth="140.0" style="-fx-background-color: #ADD8E6;" text="show friend request" textFill="WHITE">
+        <AnchorPane fx:id="contentPane" layoutX="14.0" layoutY="61.0" prefHeight="420.0" prefWidth="915.0" style="-fx-background-color: #ffffff;" />
+        <Button fx:id="showRequestButton" layoutX="14.0" layoutY="16.0" mnemonicParsing="false" onAction="#showRequestButtonOnAction" prefHeight="33.0" prefWidth="269.0" style="-fx-background-color: #000000;" text="SHOW FRIEND REQUEST" textFill="WHITE">
          <font>
-            <Font name="Berlin Sans FB" size="14.0" />
+            <Font name="Arial Bold" size="18.0" />
          </font>
       </Button>
-        <Button fx:id="suggestButton" layoutX="173.0" layoutY="14.0" mnemonicParsing="false" onAction="#suggestButtonOnAction" style="-fx-background-color: #ADD8E6;" text="Suggest Friends to Add" textFill="WHITE">
+        <Button fx:id="suggestButton" layoutX="298.0" layoutY="16.0" mnemonicParsing="false" onAction="#suggestButtonOnAction" prefHeight="31.0" prefWidth="220.0" style="-fx-background-color: #000000;" text="FRIEND SUGGESTION" textFill="WHITE">
          <font>
-            <Font name="Berlin Sans FB" size="14.0" />
+            <Font name="Arial Bold" size="18.0" />
          </font>
       </Button>
     </children>

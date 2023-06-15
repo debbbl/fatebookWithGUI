@@ -12,10 +12,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -53,17 +56,33 @@ public class adminViewAccountController implements Initializable {
 
     private ObservableList<regularUser> regularUsersList;
     private Database database;
+    @FXML
+    private ImageView adminImageView;
+    @FXML
+    private Button clearButton;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        File adminFile = new File("images/admin.png"); //file for the lock
+        Image adminImage = new Image(adminFile.toURI().toString());
+        adminImageView.setImage(adminImage);
         database = new Database();
         regularUsersList = FXCollections.observableArrayList();
         setupTableView();
         loadRegularUsers();
+        clearButton.disableProperty().bind(searchTextField.textProperty().isEmpty());
     }
     public TableView<regularUser> getTableView() {
         return tableView;
     }
 
+    @FXML
+    private void clearButtonClicked() {
+        searchTextField.clear();
+        startDatePicker.setValue(null);
+        endDatePicker.setValue(null);
+        loadRegularUsers();
+    }
     private void setupTableView() {
         userIdColumn.setCellValueFactory(new PropertyValueFactory<>("userId"));
         emailAddressColumn.setCellValueFactory(new PropertyValueFactory<>("emailAddress"));
@@ -80,7 +99,8 @@ public class adminViewAccountController implements Initializable {
         });
     }
     private void loadRegularUsers() {
-        regularUsersList = database.loadRegularUsers();
+        regularUsersList.clear();
+        regularUsersList.addAll(database.loadRegularUsers());
         tableView.setItems(regularUsersList);
     }
 

@@ -50,9 +50,14 @@ public class HomeController implements Initializable, PageController {
     private ImageView profilePictureImageView;
     private regularUser user;
     private final Database database = new Database();
+    @FXML
+    private ImageView home;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        File homeFile = new File("images/home.png"); //file for the lock
+        Image homeImage = new Image(homeFile.toURI().toString());
+        home.setImage(homeImage);
         // Initialize the home page
         updateUserInfo();
     }

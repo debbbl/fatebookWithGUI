@@ -5,15 +5,22 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="300" prefWidth="400" spacing="10" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.mutualFriendsController">
+<VBox alignment="CENTER" prefHeight="300" prefWidth="400" spacing="10" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.mutualFriendsController">
 
-    <Label style="-fx-font-size: 20px;" text="Find Mutual Friends" />
+    <Label text="Find Mutual Friends">
+      <font>
+         <Font name="Arial Bold" size="21.0" />
+      </font></Label>
 
-    <ListView fx:id="mutualFriendsListView" prefHeight="150" prefWidth="200" />
+    <ListView fx:id="mutualFriendsListView" prefHeight="147.0" prefWidth="380.0" />
 
     <Label fx:id="resultLabel" />
-    <Button fx:id="cancelButton" mnemonicParsing="false" text="Cancel" onAction="#cancelButtonOnAction" />
+    <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelButtonOnAction" style="-fx-background-color: #000000;" text="Cancel" textFill="WHITE">
+      <font>
+         <Font name="Arial Bold" size="19.0" />
+      </font></Button>
 
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />

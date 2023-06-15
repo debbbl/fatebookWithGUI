@@ -90,10 +90,6 @@ public class EditAccountController {
         hobbiesList.add("Reading");
 
         hobbiesTextField.setOnMouseClicked(event -> showHobbiesDialog());
-
-        File brandingFile = new File("images/vertical.png");
-        Image brandingImage = new Image(brandingFile.toURI().toString());
-        editAccountImageView.setImage(brandingImage);
     }
     @FXML
     private void showHobbiesDialog() {

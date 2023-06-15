@@ -19,8 +19,10 @@ import javafx.stage.StageStyle;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Stack;
 
 public class regularUserDashboardController implements Initializable {
     @FXML
@@ -40,6 +42,10 @@ public class regularUserDashboardController implements Initializable {
     private regularUser user;
     @FXML
     private ImageView regularUser;
+    @FXML
+    private Button backButton;
+    private LinkedList<Parent> pageHistory = new LinkedList<>();
+    private LinkedList<Parent> forwardHistory = new LinkedList<>();
 
     public void setUser(regularUser user) {
         this.user = user;
@@ -62,6 +68,36 @@ public class regularUserDashboardController implements Initializable {
         settingsButton.setOnAction(event -> loadSettingsPage());
     }
 
+    @FXML
+    private void backButtonOnAction() {
+        if (!pageHistory.isEmpty()) {
+            Parent previousPage = pageHistory.pop();
+            forwardHistory.push((Parent) mainPane.getCenter());
+            mainPane.setCenter(previousPage);
+
+            if (previousPage.getUserData() instanceof HomeController) {
+                HomeController homeController = (HomeController) previousPage.getUserData();
+                homeController.setUser(user);
+                homeController.updateUserInfo();
+            }
+        }
+    }
+
+    @FXML
+    private void forwardButtonOnAction() {
+        if (!forwardHistory.isEmpty()) {
+            Parent nextPage = forwardHistory.pop();
+            pageHistory.push((Parent) mainPane.getCenter());
+            mainPane.setCenter(nextPage);
+
+            if (nextPage.getUserData() instanceof HomeController) {
+                HomeController homeController = (HomeController) nextPage.getUserData();
+                homeController.setUser(user);
+                homeController.updateUserInfo();
+            }
+        }
+    }
+
     public void showDashboard(regularUser user) {
         this.user = user;
         loadHomePage();
@@ -79,6 +115,7 @@ public class regularUserDashboardController implements Initializable {
                 homeController.updateUserInfo();
             }
 
+            pageHistory.push(homePage);
             mainPane.setCenter(homePage);
         } catch (IOException e) {
             e.printStackTrace();
@@ -89,12 +126,15 @@ public class regularUserDashboardController implements Initializable {
     public void loadSearchUserPage() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("searchUser.fxml"));
-            mainPane.setCenter(loader.load());
+            Parent searchUserPage = loader.load();
+            mainPane.setCenter(searchUserPage);
 
             if (loader.getController() instanceof searchUserController) {
                 searchUserController searchUser = loader.getController();
                 searchUser.setUser(user);
             }
+
+            pageHistory.push(searchUserPage);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -103,7 +143,9 @@ public class regularUserDashboardController implements Initializable {
     public void loadAddFriendsPage() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("addFriends.fxml"));
-            mainPane.setCenter(loader.load());
+            Parent addFriendsPage = loader.load();
+            mainPane.setCenter(addFriendsPage);
+            pageHistory.push(addFriendsPage);
 
             // Pass the controller instance if needed
             if (loader.getController() instanceof addFriendsController) {
@@ -119,6 +161,7 @@ public class regularUserDashboardController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("chatDashboard.fxml"));
             Parent friendListPage = loader.load();
+            pageHistory.push(friendListPage);
 
             Database db = new Database();
             // Retrieve the friend list from the database
@@ -147,7 +190,9 @@ public class regularUserDashboardController implements Initializable {
     public void loadSettingsPage() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("settings.fxml"));
-            mainPane.setCenter(loader.load());
+            Parent settingsPage = loader.load();
+            pageHistory.push(settingsPage);
+            mainPane.setCenter(settingsPage);
 
             // Pass the controller instance if needed
             if (loader.getController() instanceof SettingsController) {
