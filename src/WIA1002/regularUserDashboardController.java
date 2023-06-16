@@ -115,8 +115,8 @@ public class regularUserDashboardController implements Initializable {
                 homeController.updateUserInfo();
             }
 
-            pageHistory.push(homePage);
             mainPane.setCenter(homePage);
+            pageHistory.push(homePage);
         } catch (IOException e) {
             e.printStackTrace();
         }
