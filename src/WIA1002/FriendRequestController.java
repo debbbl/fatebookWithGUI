@@ -217,13 +217,15 @@ public class FriendRequestController implements Initializable {
             // Pass the user object and the selected user to the mutual friends controller
             showMutualFriends.setUser(user,selectedUsername.getUsername());
 
-                // Create a new Stage for the Mutual friend screen
-            Stage editAccountStage = new Stage();
-            editAccountStage.initStyle(StageStyle.UNDECORATED);
-            editAccountStage.setScene(new Scene(root));
+            if (showMutualFriends.findMutualFriendsOnAction()) {
+                // Create a new Stage for the Edit Account screen
+                Stage editAccountStage = new Stage();
+                editAccountStage.initStyle(StageStyle.UNDECORATED);
+                editAccountStage.setScene(new Scene(root));
 
-            // Show the Mutual friend screen
-            editAccountStage.showAndWait();
+                // Show the Edit Account screen
+                editAccountStage.showAndWait();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
