@@ -82,7 +82,8 @@ public class searchUserController {
     @FXML
     private void sendFriendRequestButtonClicked() throws SQLException {
         String selectedUsername = searchResultsListView.getSelectionModel().getSelectedItem();
-        if (selectedUsername != null) {
+        if (selectedUsername != null && !selectedUsername.equals(user.getUsername())) {
+            System.out.println(user.getUsername());
             boolean requestSent = database.sendFriendRequest(user.getUserId(), user.getUsername(),selectedUsername);
 
             if (requestSent) {
@@ -91,6 +92,8 @@ public class searchUserController {
             } else {
                 displayAlert(Alert.AlertType.WARNING, "Request Failed", "Friend request to " + selectedUsername + " already sent or the user is already your friend.");
             }
+        }else{
+            displayAlert(Alert.AlertType.ERROR,"Failed to send","You cannot send friend request to yourself");
         }
     }
 
