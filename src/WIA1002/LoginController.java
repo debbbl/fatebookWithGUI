@@ -67,7 +67,6 @@ public class LoginController implements Initializable {
             dashboardStage.initStyle(StageStyle.UNDECORATED);
             dashboardStage.show();
 
-            // Close the current login stage
             Stage currentStage = (Stage) cancelButton.getScene().getWindow();
             currentStage.close();
         } catch (Exception e) {
@@ -95,7 +94,6 @@ public class LoginController implements Initializable {
             dashboardStage.initStyle(StageStyle.UNDECORATED);
             dashboardStage.show();
 
-            // Close the current login stage
             Stage currentStage = (Stage) cancelButton.getScene().getWindow();
             currentStage.close();
         } catch (Exception e) {
@@ -108,7 +106,6 @@ public class LoginController implements Initializable {
         createAccountForm();
     }
 
-    // Redirect user to register page
     public void createAccountForm() {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("Register.fxml"));

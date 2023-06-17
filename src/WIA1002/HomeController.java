@@ -55,10 +55,9 @@ public class HomeController implements Initializable, PageController {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        File homeFile = new File("images/home.png"); //file for the lock
+        File homeFile = new File("images/home.png");
         Image homeImage = new Image(homeFile.toURI().toString());
         home.setImage(homeImage);
-        // Initialize the home page
         updateUserInfo();
     }
     public void setUser(regularUser user){
@@ -123,7 +122,6 @@ public class HomeController implements Initializable, PageController {
             if (user.getProfilePic() != null) {
                 profilePictureImageView.setImage(new Image(new ByteArrayInputStream(user.getProfilePic())));
             } else {
-                // Retrieve profile picture from the database
                 byte[] profilePicData = database.getProfilePicture(user.getUsername());
                 if (profilePicData != null) {
                     user.setProfilePic(profilePicData);
@@ -140,29 +138,22 @@ public class HomeController implements Initializable, PageController {
     @FXML
     private void editAccountButtonOnAction() {
         try {
-            // Load the FXML file for the Edit Account screen
             FXMLLoader loader = new FXMLLoader(getClass().getResource("editAccount.fxml"));
             Parent root = loader.load();
 
-            // Get the controller instance
             EditAccountController editAccountController = loader.getController();
 
-            // Pass the user object to the Edit Account controller
             editAccountController.setUser(user);
 
-            // Create a new Stage for the Edit Account screen
             Stage editAccountStage = new Stage();
             editAccountStage.initStyle(StageStyle.UNDECORATED);
             editAccountStage.setScene(new Scene(root));
 
-            // Show the Edit Account screen
             editAccountStage.showAndWait();
 
-            // Update the user info after editing
             updateUserInfo();
         } catch (Exception e) {
             e.printStackTrace();
-            // Handle error loading the Edit Account screen
         }
     }
 }

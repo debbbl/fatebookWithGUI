@@ -29,14 +29,12 @@ public class SettingsController implements Initializable, PageController {
     @FXML
     public void viewHistoryButtonOnAction(ActionEvent actionEvent) {
         if (user != null) {
-            // Access the activity history of the user and display it
             LinkedList<String> activityHistory = user.getActivityHistory();
             displayActivityHistory(activityHistory);
         }
     }
 
     private void displayActivityHistory(LinkedList<String> activityHistory) {
-        // Display the activity history in the TextArea
         StringBuilder history = new StringBuilder();
         for (String activity : activityHistory) {
             history.append(activity).append("\n");

@@ -8,7 +8,6 @@ import java.util.Scanner;
 public class Encryptor {
     public String encryptString(String input) throws NoSuchAlgorithmException {
 
-        //MessageDigest works with MD5
         MessageDigest md = MessageDigest.getInstance("MD5");
 
         byte[] messageDigest = md.digest(input.getBytes());

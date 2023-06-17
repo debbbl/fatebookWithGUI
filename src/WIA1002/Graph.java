@@ -146,11 +146,9 @@ public class Graph<T extends Comparable<T>, N extends Comparable<N>> {
         Vertex<T, N> sourceVertex = head;
         while (sourceVertex != null) {
             if (sourceVertex.vertexInfo.compareTo(source) == 0) {
-                // Reached source vertex, look for destination now
                 Vertex<T, N> destinationVertex = head;
                 while (destinationVertex != null) {
                     if (destinationVertex.vertexInfo.compareTo(destination) == 0) {
-                        // Reached destination vertex, add edge here
                         Edge<T, N> currentEdge = sourceVertex.firstEdge;
                         Edge<T, N> newEdge = new Edge<>(destinationVertex, w, currentEdge);
                         sourceVertex.firstEdge = newEdge;
@@ -177,10 +175,8 @@ public class Graph<T extends Comparable<T>, N extends Comparable<N>> {
         Vertex<T, N> sourceVertex = head;
         while (sourceVertex != null) {
             if (sourceVertex.vertexInfo.compareTo(source) == 0) {
-                // Reached source vertex, look for destination now
                 Edge<T, N> currentEdge = sourceVertex.firstEdge;
                 while (currentEdge != null) {
-                    // destination vertex found
                     if (currentEdge.toVertex.vertexInfo.compareTo(destination) == 0) return true;
                     currentEdge = currentEdge.nextEdge;
                 }
@@ -197,10 +193,8 @@ public class Graph<T extends Comparable<T>, N extends Comparable<N>> {
         Vertex<T, N> sourceVertex = head;
         while (sourceVertex != null) {
             if (sourceVertex.vertexInfo.compareTo(source) == 0) {
-                // Reached source vertex, look for destination now
                 Edge<T, N> currentEdge = sourceVertex.firstEdge;
                 while (currentEdge != null) {
-                    // destination vertex found
                     if (currentEdge.toVertex.vertexInfo.compareTo(destination) == 0) return currentEdge.weight;
                     currentEdge = currentEdge.nextEdge;
                 }
@@ -216,10 +210,8 @@ public class Graph<T extends Comparable<T>, N extends Comparable<N>> {
         Vertex<T, N> sourceVertex = head;
         while (sourceVertex != null) {
             if (sourceVertex.vertexInfo.compareTo(source) == 0) {
-                // Reached source vertex, look for destination now
                 Edge<T, N> currentEdge = sourceVertex.firstEdge;
                 while (currentEdge != null) {
-                    // destination vertex found
                     if (currentEdge.nextEdge.toVertex.vertexInfo.compareTo(destination) == 0) {
                         currentEdge.nextEdge = currentEdge.nextEdge.nextEdge;
                         return true;
@@ -238,7 +230,6 @@ public class Graph<T extends Comparable<T>, N extends Comparable<N>> {
         Vertex<T, N> temp = head;
         while (temp != null) {
             if (temp.vertexInfo.compareTo(v) == 0) {
-                // Reached vertex, look for destination now
                 Edge<T, N> currentEdge = temp.firstEdge;
                 while (currentEdge != null) {
                     list.add(currentEdge.toVertex.vertexInfo);

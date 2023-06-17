@@ -52,7 +52,6 @@ public class ProfileWindowController {
     private void deleteButtonClicked() {
         regularUser selectedUser = tableView.getSelectionModel().getSelectedItem();
         if (selectedUser != null) {
-            // Display a confirmation dialog to confirm the deletion
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Confirm Deletion");
             alert.setHeaderText(null);
@@ -60,10 +59,8 @@ public class ProfileWindowController {
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                // Perform the delete operation on the user in the database
                 database.deleteUser(selectedUser.getUsername());
 
-                // Remove the deleted user from the table view
                 tableView.getItems().remove(selectedUser);
 
                 Alert confirmationAlert = new Alert(Alert.AlertType.INFORMATION);
@@ -112,7 +109,6 @@ public class ProfileWindowController {
             if (user.getProfilePic() != null) {
                 profilePictureImageView.setImage(new Image(new ByteArrayInputStream(user.getProfilePic())));
             } else {
-                // Retrieve profile picture from the database
                 byte[] profilePicData = database.getProfilePicture(user.getUsername());
                 if (profilePicData != null) {
                     user.setProfilePic(profilePicData);

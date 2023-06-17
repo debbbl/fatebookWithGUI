@@ -46,7 +46,6 @@ public class mutualFriendsController {
             displayAlert(Alert.AlertType.INFORMATION, "No Results", "No mutual friends found between u and " + selectedUserName);
             return false;
         } else {
-            // Update UI components
             mutualFriendsListView.getItems().clear();
             mutualFriendsListView.getItems().addAll(mutualFriends);
             resultLabel.setText("Found " + mutualFriends.size() + " mutual friends.");
@@ -63,7 +62,6 @@ public class mutualFriendsController {
 
     @FXML
     private void cancelButtonOnAction() {
-        // Close the show mutual friend screen
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
     }

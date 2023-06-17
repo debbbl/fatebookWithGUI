@@ -38,7 +38,6 @@ public class Database {
             while (resultSet.next()) {
                 int isAdmin = resultSet.getInt("isAdmin");
 
-                // Check if isAdmin is equal to 1, and skip the row if true
                 if (isAdmin == 1) {
                     continue;
                 }
@@ -242,7 +241,6 @@ public class Database {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the database update error
         }
     }
 
@@ -334,11 +332,9 @@ public class Database {
     public boolean sendFriendRequest(int senderId, String senderUsername, String receiverUsername) throws SQLException {
 
         try {Connection connection = getConnection();
-            // Retrieve the user IDs based on the provided usernames
             int senderUserId = getUserIdByUsername(senderUsername);
             int receiverUserId = getUserIdByUsername(receiverUsername);
 
-            // Check if the friend request has already been sent or if the users are already friends
             String checkSentQuery = "SELECT * FROM friendrequest WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?) AND status IN ('Pending', 'Accepted', 'Rejected')";
             PreparedStatement checkSentStatement = connection.prepareStatement(checkSentQuery);
             checkSentStatement.setInt(1, senderUserId);
@@ -348,10 +344,8 @@ public class Database {
             ResultSet checkSentResult = checkSentStatement.executeQuery();
 
             if (checkSentResult.next()) {
-                // Friend request already sent or users are already friends
                 return false;
             } else {
-                // Insert the new friend request into the database
                 String insertQuery = "INSERT INTO friendrequest (sender_id, receiver_id, status,timestamp) VALUES (?, ?, 'Pending',?)";
                 PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
                 insertStatement.setInt(1, senderUserId);
@@ -368,21 +362,18 @@ public class Database {
     }
     public void acceptFriendRequest(int userId, int friendId) {
         try (Connection connection = getConnection()) {
-            // Insert the first row representing the friendship from the user's perspective
             String insertQuery1 = "INSERT INTO friendship (user_id, friend_id) VALUES (?, ?)";
             PreparedStatement statement1 = connection.prepareStatement(insertQuery1);
             statement1.setInt(1, userId);
             statement1.setInt(2, friendId);
             statement1.executeUpdate();
 
-            // Insert the second row representing the friendship from the friend's perspective
             String insertQuery2 = "INSERT INTO friendship (user_id, friend_id) VALUES (?, ?)";
             PreparedStatement statement2 = connection.prepareStatement(insertQuery2);
             statement2.setInt(1, friendId);
             statement2.setInt(2, userId);
             statement2.executeUpdate();
 
-            // Update the status of the friend request to "accepted"
             String updateQuery = "UPDATE friendrequest SET status = 'accepted' WHERE sender_id = ? AND receiver_id = ?";
             try (PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
                 updateStatement.setInt(1, friendId);
@@ -390,14 +381,12 @@ public class Database {
                 updateStatement.executeUpdate();
             }
 
-            // Use COALESCE so if num_of_friend is null, set to 1, and if it is not null, increase the value by 1 for currentUser
             String incrementQueryUser = "UPDATE userdata SET num_of_friend = COALESCE(num_of_friend + 1, 1) WHERE user_id = ?";
             try (PreparedStatement incrementStatement = connection.prepareStatement(incrementQueryUser)) {
                 incrementStatement.setInt(1, userId);
                 incrementStatement.executeUpdate();
             }
 
-            // For the sender user
             String incrementQueryFriendId = "UPDATE userdata SET num_of_friend = COALESCE(num_of_friend + 1, 1) WHERE user_id = ?";
             try (PreparedStatement incrementStatement = connection.prepareStatement(incrementQueryFriendId)) {
                 incrementStatement.setInt(1, friendId);
@@ -409,7 +398,6 @@ public class Database {
     }
     public void rejectFriendRequest(int userId, String friendUsername) {
         try (Connection connection = getConnection()) {
-            // Update the status of the friend request to "rejected"
             String updateQuery = "UPDATE friendrequest SET status = 'rejected' WHERE sender_id = ? AND receiver_id = ?";
             try (PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
                 updateStatement.setInt(1, getUserIdByUsername(friendUsername));
@@ -539,19 +527,14 @@ public class Database {
 
         List<regularUser> directFriends = getUserFriendList1(username);
 
-        // Retrieve the user's 2nd-degree connections
         List<regularUser> secondDegreeConnections = getSecondDegreeConnections(username);
 
-        // Retrieve the user's 3rd-degree connections
         List<regularUser> thirdDegreeConnections = getThirdDegreeConnections(username);
 
-        // Combine the second-degree and third-degree connections
         List<regularUser> allConnections = new ArrayList<>();
         allConnections.addAll(secondDegreeConnections);
         allConnections.addAll(thirdDegreeConnections);
 
-
-        // Create a priority queue for friend suggestions, with custom comparator
         PriorityQueue<regularUser> friendSuggestions = new PriorityQueue<>(new Comparator<regularUser>() {
             @Override
             public int compare(regularUser user1, regularUser user2) {
@@ -559,22 +542,17 @@ public class Database {
                 int mutualCount2 = getMutualConnectionsCount(username, user2.getUsername());
 
                 if (secondDegreeConnections.contains(user1) && secondDegreeConnections.contains(user2)) {
-                    // Both users are second-degree connections, sort by mutual count
                     return Integer.compare(mutualCount2, mutualCount1);
                 } else if (secondDegreeConnections.contains(user1)) {
-                    // User1 is a second-degree connection, prioritize over user2
                     return -1;
                 } else if (secondDegreeConnections.contains(user2)) {
-                    // User2 is a second-degree connection, prioritize over user1
                     return 1;
                 } else {
-                    // Both users are third-degree connections, sort by mutual count
                     return Integer.compare(mutualCount2, mutualCount1);
                 }
             }
         });
 
-        // Add the suggested friends to the friendSuggestions priority queue, excluding direct friends and existing friends
         Set<String> addedUsernames = new HashSet<>();
         for (regularUser user : allConnections) {
             if (!directFriends.contains(user) && !user.getUsername().equals(username) && !addedUsernames.contains(user.getUsername()) && !isFriendOfUser(username, user.getUsername())) {
@@ -583,7 +561,6 @@ public class Database {
             }
         }
 
-        // Convert the friendSuggestions priority queue back to an ArrayList for return
         friendList.addAll(friendSuggestions);
 
         return friendList;
@@ -602,7 +579,7 @@ public class Database {
             statement.setInt(4, userId);
             ResultSet resultSet = statement.executeQuery();
 
-            return resultSet.next(); // Returns true if a row is found, indicating that the users are friends
+            return resultSet.next();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -632,7 +609,6 @@ public class Database {
                         .contactNumber(resultSet.getString("contact_number"))
                         .userId(resultSet.getInt("user_id"));
 
-                // Add the user's 2nd-degree connections
                 regularUser secondUser = userBuilder.build();
                 secondDegreeConnections.add(secondUser);
             }
@@ -673,7 +649,6 @@ public class Database {
                         .contactNumber(resultSet.getString("contact_number"))
                         .userId(resultSet.getInt("user_id"));
 
-                // Add the user's 3rd-degree connections
                 regularUser thirdUser = userBuilder.build();
                 thirdDegreeConnections.add(thirdUser);
             }
@@ -705,7 +680,6 @@ public class Database {
 
     public regularUser getUserDetails(String username) {
         regularUser user = null;
-        // Retrieve the user details from the database based on the username
         String userDetailsQuery = "SELECT * FROM userdata WHERE username = ?";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(userDetailsQuery)) {
@@ -727,21 +701,17 @@ public class Database {
                         .timeStamp(timeStamp)
                         .userId(resultSet.getInt("user_id"));
 
-                // Similarly, handle other properties
                 String job = resultSet.getString("job");
                 Stack<String> jobs = new Stack<>();
                 jobs.push(job != null ? job : "N/A");
                 userBuilder.jobs(jobs);
 
-                // Handle hobbies (assuming it's a comma-separated string)
                 String hobbiesString = resultSet.getString("hobbies");
                 List<String> hobbies = (hobbiesString != null && hobbiesString.length() > 0)
                         ? Arrays.asList(hobbiesString.split(","))
                         : Collections.emptyList();
                 userBuilder.hobbies(hobbies);
 
-
-                // Handle profile picture
                 byte[] profilePicData = resultSet.getBytes("profile_pic");
                 userBuilder.profilePic(profilePicData);
 
@@ -757,7 +727,7 @@ public class Database {
     }
     public List<String> performSearch(String query) {
         List<String> searchResults = new ArrayList<>();
-        // Perform the database query to retrieve matching usernames
+
         String searchQuery = "SELECT username FROM userdata WHERE username LIKE ? OR name LIKE ? OR user_id LIKE ? OR email_address LIKE ? OR contact_number LIKE ?";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(searchQuery)) {
@@ -813,7 +783,7 @@ public class Database {
             String query = "SELECT * FROM userdata WHERE username = '" + username + "'";
             ResultSet resultSet = statement.executeQuery(query);
 
-            return !resultSet.next(); // Returns true if the resultSet is empty (username is available)
+            return !resultSet.next();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -830,14 +800,12 @@ public class Database {
         try {
             connection = getConnection();
 
-            // Prepare the SQL statement
             String verifyLogin = "SELECT * FROM userdata WHERE username = ? AND password = ?";
             statement = connection.prepareStatement(verifyLogin);
             statement.setString(1, username);
             Encryptor encryptor = new Encryptor();
             statement.setString(2, encryptor.encryptString(password));
 
-            // Execute the query
             resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
@@ -846,7 +814,6 @@ public class Database {
                 String email = resultSet.getString("email_address");
                 String contactNumber = resultSet.getString("contact_number");
 
-                // Check if the user is an admin
                 if (resultSet.getInt("isAdmin") == 1) {
                     Admin.AdminBuilder adminBuilder = (Admin.AdminBuilder) new Admin.AdminBuilder()
                             .username(retrievedUsername)
@@ -854,7 +821,6 @@ public class Database {
                             .email(email)
                             .contactNumber(contactNumber);
 
-                    // Set other properties specific to admin if needed
 
                     Admin admin = adminBuilder.build();
                     return admin;
@@ -865,7 +831,6 @@ public class Database {
                             .email(email)
                             .contactNumber(contactNumber);
 
-                    // Check and set other properties
                     String name = resultSet.getString("name");
                     userBuilder.name(name != null ? name : "N/A");
 
@@ -876,13 +841,11 @@ public class Database {
                     String gender = resultSet.getString("gender");
                     userBuilder.gender(gender != null ? gender : "N/A");
 
-                    // Similarly, handle other properties
                     String job = resultSet.getString("job");
                     Stack<String> jobs = new Stack<>();
                     jobs.push(job != null ? job : "N/A");
                     userBuilder.jobs(jobs);
 
-                    // Handle hobbies (assuming it's a comma-separated string)
                     String hobbiesString = resultSet.getString("hobbies");
                     List<String> hobbies = (hobbiesString != null && hobbiesString.length() > 0)
                             ? Arrays.asList(hobbiesString.split(","))
@@ -892,7 +855,6 @@ public class Database {
                     String address = resultSet.getString("address");
                     userBuilder.address(address != null ? address : "N/A");
 
-                    // Handle profile picture
                     byte[] profilePicData = resultSet.getBytes("profile_pic");
                     userBuilder.profilePic(profilePicData);
 
@@ -920,20 +882,17 @@ public class Database {
              PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
 
-            // Create a graph and add vertices
             Graph<String, String> graph = new Graph<>();
             while (rs.next()) {
                 int sender = rs.getInt("sender_id");
                 int receiver = rs.getInt("receiver_id");
 
-                // Add the vertex to the graph using username
                 graph.addVertex(getUsernameByUserID(sender));
                 graph.addVertex(getUsernameByUserID(receiver));
 
                 graph.addUndirectedEdge(getUsernameByUserID(sender), getUsernameByUserID(receiver), "Friend");
             }
 
-            // To update the graph so that the graph contains the above vertices and edges
             MutualFriendsGraph mutualFriendsGraph = new MutualFriendsGraph();
             mutualFriendsGraph.setGraph(graph);
 

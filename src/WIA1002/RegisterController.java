@@ -123,22 +123,17 @@ public class RegisterController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
             Parent root = loader.load();
 
-            // Assuming you have a LoginController class for the login page
             LoginController loginController = loader.getController();
 
-            // Code to retrieve the Stage and set the new scene
             Stage stage = (Stage) closeButton.getScene().getWindow();
 
-            // Show the registration message label and password message label
             registrationMessageLabel.setVisible(true);
             passwordMessageLabel.setVisible(true);
 
-            // Update the labels on the JavaFX Application Thread
             Platform.runLater(() -> {
                 registrationMessageLabel.setText("Registered successfully!");
                 passwordMessageLabel.setText("Password matched");
 
-                // Show the login page after a delay of 2 seconds
                 Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {

@@ -44,8 +44,8 @@ public class regularUserDashboardController implements Initializable {
     private ImageView regularUser;
     @FXML
     private Button backButton;
-    private LinkedList<Parent> pageHistory = new LinkedList<>();
-    private LinkedList<Parent> forwardHistory = new LinkedList<>();
+    private final LinkedList<Parent> pageHistory = new LinkedList<>();
+    private final LinkedList<Parent> forwardHistory = new LinkedList<>();
 
     public void setUser(regularUser user) {
         this.user = user;
@@ -70,12 +70,6 @@ public class regularUserDashboardController implements Initializable {
             Parent previousPage = pageHistory.pop();
             forwardHistory.push((Parent) mainPane.getCenter());
             mainPane.setCenter(previousPage);
-
-            if (previousPage.getUserData() instanceof HomeController) {
-                HomeController homeController = (HomeController) previousPage.getUserData();
-                homeController.setUser(user);
-                homeController.updateUserInfo();
-            }
         }
     }
 
@@ -85,12 +79,6 @@ public class regularUserDashboardController implements Initializable {
             Parent nextPage = forwardHistory.pop();
             pageHistory.push((Parent) mainPane.getCenter());
             mainPane.setCenter(nextPage);
-
-            if (nextPage.getUserData() instanceof HomeController) {
-                HomeController homeController = (HomeController) nextPage.getUserData();
-                homeController.setUser(user);
-                homeController.updateUserInfo();
-            }
         }
     }
 
@@ -104,7 +92,6 @@ public class regularUserDashboardController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("home.fxml"));
             Parent homePage = loader.load();
 
-            // Pass the user to the controller if needed
             if (loader.getController() instanceof HomeController) {
                 HomeController homeController = loader.getController();
                 homeController.setUser(user);
@@ -143,7 +130,6 @@ public class regularUserDashboardController implements Initializable {
             mainPane.setCenter(addFriendsPage);
             pageHistory.push(addFriendsPage);
 
-            // Pass the controller instance if needed
             if (loader.getController() instanceof addFriendsController) {
                 addFriendsController addfriendcontroller = loader.getController();
                 addfriendcontroller.setUser(user);
@@ -160,10 +146,8 @@ public class regularUserDashboardController implements Initializable {
             pageHistory.push(friendListPage);
 
             Database db = new Database();
-            // Retrieve the friend list from the database
             List<regularUser> friendList = db.getUserFriendList1(user.getUsername());
 
-            // Pass the friend list to the controller
             if (loader.getController() instanceof ChatDashboard) {
                 ChatDashboard chatDashboard = loader.getController();
                 chatDashboard.setUser(user);
@@ -190,7 +174,6 @@ public class regularUserDashboardController implements Initializable {
             pageHistory.push(settingsPage);
             mainPane.setCenter(settingsPage);
 
-            // Pass the controller instance if needed
             if (loader.getController() instanceof SettingsController) {
                 SettingsController settingsController = loader.getController();
                 settingsController.setDashboardController(this);
@@ -202,9 +185,6 @@ public class regularUserDashboardController implements Initializable {
     }
     @FXML
     public void logoutButtonOnAction(ActionEvent event) {
-        // Perform logout operations here
-
-        // Show the login window
         try {
             Parent loginParent = FXMLLoader.load(getClass().getResource("login.fxml"));
             Scene loginScene = new Scene(loginParent);
@@ -213,7 +193,6 @@ public class regularUserDashboardController implements Initializable {
             loginStage.setScene(loginScene);
             loginStage.show();
 
-            // Close the dashboard window
             Stage dashboardStage = (Stage) logoutButton.getScene().getWindow();
             dashboardStage.close();
         } catch (IOException e) {

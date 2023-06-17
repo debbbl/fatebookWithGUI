@@ -73,8 +73,6 @@ public class FriendRequestController implements Initializable {
 
     public void setUser(regularUser user) {
         this.user = user;
-
-        // Load friend requests when the controller is initialized
         loadFriendRequests();
     }
 
@@ -98,19 +96,14 @@ public class FriendRequestController implements Initializable {
         regularUser selectedRequest = friendRequestListView.getSelectionModel().getSelectedItem();
 
         if (selectedRequest != null) {
-            // Accept the selected friend request
             int userId = database.getUserIdByUsername(user.getUsername());
-            // Remove the accepted request from the ListView
             friendRequestListView.getItems().remove(selectedRequest);
-            // Update the num_of_fren field for both sender and receiver
             int receiverId = database.getUserIdByUsername(selectedRequest.getUsername());
             database.acceptFriendRequest(userId,receiverId);
             user.addActionToHistory("accepted "+selectedRequest.getUsername()+"'s friend request",LocalDateTime.now());
 
-            // Show success message
             showInfoAlert("Friend Request Accepted", "You have accepted the friend request from " + selectedRequest.getUsername());
         } else {
-            // No friend request selected
             showErrorAlert("Error", "Please select a friend request to accept.");
         }
     }
@@ -120,18 +113,14 @@ public class FriendRequestController implements Initializable {
         regularUser selectedRequest = friendRequestListView.getSelectionModel().getSelectedItem();
 
         if (selectedRequest != null) {
-            // Reject the selected friend request
             int userId = database.getUserIdByUsername(user.getUsername());
             database.rejectFriendRequest(userId, selectedRequest.getUsername());
 
-            // Remove the rejected request from the ListView
             friendRequestListView.getItems().remove(selectedRequest);
             user.addActionToHistory("rejected "+selectedRequest.getUsername()+"'s friend request",LocalDateTime.now());
 
-            // Show success message
             showInfoAlert("Friend Request Rejected", "You have rejected the friend request from " + selectedRequest.getUsername());
         } else {
-            // No friend request selected
             showErrorAlert("Error", "Please select a friend request to reject.");
         }
     }
@@ -189,12 +178,9 @@ public class FriendRequestController implements Initializable {
             addressLabel.setText(user.getAddress() != null ? user.getAddress() : "N/A");
             relationshipStatusLabel.setText(user.getRelationshipStatus() != null ? user.getRelationshipStatus() : "N/A");
 
-            // db.updateJob(user.getUsername(), latestJobExperience);
-
             if (user.getProfilePic() != null) {
                 profilePictureImageView.setImage(new Image(new ByteArrayInputStream(user.getProfilePic())));
             } else {
-                // Retrieve profile picture from the database
                 byte[] profilePicData = database.getProfilePicture(user.getUsername());
                 if (profilePicData != null) {
                     user.setProfilePic(profilePicData);
@@ -207,29 +193,23 @@ public class FriendRequestController implements Initializable {
     private void showMutualFriendsButtonClicked(){
         regularUser selectedUsername = friendRequestListView.getSelectionModel().getSelectedItem();
         try {
-            // Load the FXML file for the Mutual friend screen
             FXMLLoader loader = new FXMLLoader(getClass().getResource("mutualFriends.fxml"));
             Parent root = loader.load();
 
-            // Get the controller instance
             mutualFriendsController showMutualFriends  = loader.getController();
 
-            // Pass the user object and the selected user to the mutual friends controller
             showMutualFriends.setUser(user,selectedUsername.getUsername());
 
             if (showMutualFriends.findMutualFriendsOnAction()) {
-                // Create a new Stage for the Edit Account screen
                 Stage editAccountStage = new Stage();
                 editAccountStage.initStyle(StageStyle.UNDECORATED);
                 editAccountStage.setScene(new Scene(root));
 
-                // Show the Edit Account screen
                 editAccountStage.showAndWait();
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            // Handle error loading the Mutual friend screen
         }
     }
 
@@ -245,7 +225,6 @@ public class FriendRequestController implements Initializable {
                 HBox hbox = new HBox();
                 hbox.setSpacing(10);
 
-                // Profile picture
                 ImageView profilePic = new ImageView();
                 profilePic.setFitWidth(50);
                 profilePic.setFitHeight(50);
@@ -256,7 +235,6 @@ public class FriendRequestController implements Initializable {
                 }
                 hbox.getChildren().add(profilePic);
 
-                // Name and username
                 VBox vbox = new VBox();
                 Text nameText = new Text(friendRequest.getName());
                 Text usernameText = new Text(friendRequest.getUsername());

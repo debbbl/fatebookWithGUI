@@ -85,7 +85,6 @@ public class EditAccountController {
 
     @FXML
     private void initialize() {
-        // Initialize the hobbies list
         hobbiesList = database.getHobbiesFromDatabase();
         hobbiesList.add("Reading");
 
@@ -127,7 +126,6 @@ public class EditAccountController {
     @FXML
     private void saveButtonOnAction() {
         try{
-            // Update the user details
             user.setEmail(emailTextField.getText());
             user.setName(nameTextField.getText());
             user.setUsername(usernameTextField.getText());
@@ -143,14 +141,11 @@ public class EditAccountController {
             user.setAddress(addressTextField.getText());
             user.setRelationshipStatus(relationshipStatusTextField.getText());
 
-            // Save the updated user details to the database
-            // Update the user details in the database
             database.getConnection();
             database.updateRegularUser(user);
             database.updateJob(user.getUsername(), jobTextField.getText()); // Update the job in the database
             LocalDateTime timestamp = LocalDateTime.now();
             user.addActionToHistory("Edited own account",timestamp);
-            // Close the Edit Account screen
             Stage stage = (Stage) saveButton.getScene().getWindow();
             stage.close();
         }catch(Exception e){
@@ -161,7 +156,6 @@ public class EditAccountController {
     }
     @FXML
     private void cancelButtonOnAction() {
-        // Close the Edit Account screen
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
     }

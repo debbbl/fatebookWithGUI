@@ -71,10 +71,8 @@ public class suggestFriendsToAddController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         suggestedFriends = FXCollections.observableArrayList();
 
-        // Set the suggested friends as the data source for the ListView
         friendListView.setItems(suggestedFriends);
 
-        // Set the cell factory to display the username
         friendListView.setCellFactory(new Callback<>() {
             @Override
             public ListCell<regularUser> call(ListView<regularUser> listView) {
@@ -83,7 +81,6 @@ public class suggestFriendsToAddController implements Initializable {
                     protected void updateItem(regularUser friend, boolean empty) {
                         super.updateItem(friend, empty);
                         if (friend != null) {
-                            // Set the username and number of mutual friends
                             setText(friend.getUsername() + " (" + friend.getMutualConnectionsCount() + " mutual friends)");
                         } else {
                             setText(null);
@@ -93,14 +90,11 @@ public class suggestFriendsToAddController implements Initializable {
             }
         });
 
-        // Set the event handler for selecting a friend
         friendListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                // Enable the buttons when a friend is selected
                 viewProfileButton.setDisable(false);
                 sendFriendRequestButton.setDisable(false);
             } else {
-                // Disable the buttons when no friend is selected
                 viewProfileButton.setDisable(true);
                 sendFriendRequestButton.setDisable(true);
             }
@@ -110,10 +104,8 @@ public class suggestFriendsToAddController implements Initializable {
     public void loadFriendSuggestions() {
         suggestedFriends.clear();
 
-        // Get suggested friend list
         List<regularUser> suggestedFriendsList = database.getSuggestedFriendList(user.getUsername());
 
-        // Filter out duplicates and existing friends
         Set<regularUser> filteredSuggestions = new HashSet<>();
         for (regularUser friend : suggestedFriendsList) {
             if (!friend.getUsername().equals(user.getUsername()) &&
@@ -122,16 +114,13 @@ public class suggestFriendsToAddController implements Initializable {
             }
         }
 
-        // Calculate and set the mutual connections count for each friend
         for (regularUser friend : filteredSuggestions) {
             int mutualConnectionsCount = database.getMutualConnectionsCount(user.getUsername(), friend.getUsername());
             friend.setMutualConnectionsCount(mutualConnectionsCount);
         }
 
-        // Add the filtered suggestions to the suggestion list
         suggestedFriends.addAll(filteredSuggestions);
 
-        // Sort suggested friends based on mutual connections count
         suggestedFriends.sort(Comparator.comparingInt(regularUser::getMutualConnectionsCount).reversed());
     }
     @FXML
@@ -189,29 +178,23 @@ public class suggestFriendsToAddController implements Initializable {
     private void showMutualFriendsButtonClicked(){
         regularUser selectedUsername = friendListView.getSelectionModel().getSelectedItem();
         try {
-            // Load the FXML file for the mutual friend screen
             FXMLLoader loader = new FXMLLoader(getClass().getResource("mutualFriends.fxml"));
             Parent root = loader.load();
 
-            // Get the controller instance
             mutualFriendsController showMutualFriends  = loader.getController();
 
-            // Pass the user object and the selected user to the mutual friends controller
             showMutualFriends.setUser(user,selectedUsername.getUsername());
 
             if (showMutualFriends.findMutualFriendsOnAction()) {
-                // Create a new Stage for the mutualFriends screen
                 Stage mutualFriendsStage = new Stage();
                 mutualFriendsStage.initStyle(StageStyle.UNDECORATED);
                 mutualFriendsStage.setScene(new Scene(root));
 
-                // Show the mutualFriends screen
                 mutualFriendsStage.showAndWait();
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            // Handle error loading the Edit Account screen
         }
     }
 

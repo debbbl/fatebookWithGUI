@@ -16,7 +16,7 @@ public class regularUser extends user {
     private String relationshipStatus;
     private byte[] profilePic;
     private List<String> friendList;
-    private LinkedList<String> actionHistory;
+    private final LinkedList<String> actionHistory;
     private LinkedList<ChatMessage> chatHistory;
     private int mutualConnectionsCount;
 
