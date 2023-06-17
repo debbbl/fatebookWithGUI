@@ -76,6 +76,7 @@ public class adminViewAccountController implements Initializable {
         endDatePicker.setValue(null);
         startDatePicker.getEditor().clear();
         startDatePicker.setValue(null);
+        searchTextField.clear();
         loadRegularUsers();
 
     }
