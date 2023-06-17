@@ -21,9 +21,6 @@ import javafx.util.Callback;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -58,8 +55,6 @@ public class adminViewAccountController implements Initializable {
     private Database database;
     @FXML
     private ImageView adminImageView;
-    @FXML
-    private Button clearButton;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

@@ -726,7 +726,8 @@ public class Database {
                         .gender(resultSet.getString("gender"))
                         .address(resultSet.getString("address"))
                         .relationshipStatus(resultSet.getString("relationship_status"))
-                        .timeStamp(timeStamp);
+                        .timeStamp(timeStamp)
+                        .userId(resultSet.getInt("user_id"));
 
                 // Similarly, handle other properties
                 String job = resultSet.getString("job");

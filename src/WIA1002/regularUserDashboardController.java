@@ -57,10 +57,6 @@ public class regularUserDashboardController implements Initializable {
         Image regularUserImage = new Image(regularUserFile.toURI().toString());
         regularUser.setImage(regularUserImage);
 
-        // Set the initial page
-        loadHomePage();
-
-        // Set event handlers for the navigation buttons
         homeButton.setOnAction(event -> loadHomePage());
         searchUserButton.setOnAction(event -> loadSearchUserPage());
         addFriendsButton.setOnAction((event -> loadAddFriendsPage()));

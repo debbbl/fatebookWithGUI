@@ -79,20 +79,17 @@ public class FriendRequestController implements Initializable {
     }
 
     private void loadFriendRequests() {
-        // Retrieve friend requests for the logged-in user
         int userId = database.getUserIdByUsername(user.getUsername());
         List<String> friendRequests = database.getFriendRequestsReceived(userId);
 
-        // Create a list of regularUser objects from the usernames
         List<regularUser> friendRequestUsers = new ArrayList<>();
         for (String username : friendRequests) {
             regularUser friendRequestUser = new regularUser.RegularUserBuilder()
-                    .username(username) // Set the username
-                    .build(); // Build the regularUser object
+                    .username(username)
+                    .build();
             friendRequestUsers.add(friendRequestUser);
         }
 
-        // Display friend requests in the ListView
         friendRequestListView.getItems().addAll(friendRequestUsers);
     }
 
