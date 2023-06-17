@@ -83,7 +83,6 @@ public class searchUserController {
     private void sendFriendRequestButtonClicked() throws SQLException {
         String selectedUsername = searchResultsListView.getSelectionModel().getSelectedItem();
         if (selectedUsername != null && !selectedUsername.equals(user.getUsername())) {
-            System.out.println(user.getUsername());
             boolean requestSent = database.sendFriendRequest(user.getUserId(), user.getUsername(),selectedUsername);
 
             if (requestSent) {
