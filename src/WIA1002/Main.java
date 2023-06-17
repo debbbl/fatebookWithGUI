@@ -23,8 +23,6 @@ public class Main extends Application{
     }
 
     public static void main(String[] args){
-        Database database = new Database();
-        database.insertChatMessage(34, 33, "I am fine");
         launch(args);
     }
 }
