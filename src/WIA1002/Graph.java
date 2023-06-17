@@ -253,13 +253,10 @@ public class Graph<T extends Comparable<T>, N extends Comparable<N>> {
     public void printEdges() {
         Vertex<T, N> temp = head;
         while (temp != null) {
-            //System.out.print("# " + temp.vertexInfo + " : ");
             Edge<T, N> currentEdge = temp.firstEdge;
             while (currentEdge != null) {
-                //System.out.print("[" + temp.vertexInfo + "," + currentEdge.toVertex.vertexInfo + "] ");
                 currentEdge = currentEdge.nextEdge;
             }
-            //System.out.println();
             temp = temp.nextVertex;
         }
     }
