@@ -10,18 +10,18 @@
 
 <AnchorPane fx:id="detailsPane" prefHeight="423.0" prefWidth="435.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WIA1002.ProfileWindowController">
    <children>
-      <Label layoutX="19.0" layoutY="24.0" text="User Details" textFill="LIGHTBLUE">
+      <Label layoutX="19.0" layoutY="24.0" text="User Details">
          <font>
             <Font name="Berlin Sans FB" size="36.0" />
          </font>
       </Label>
       <ImageView fx:id="profilePictureImageView" fitHeight="110.0" fitWidth="130.0" layoutX="230.0" layoutY="24.0" preserveRatio="true" />
-      <Button fx:id="deleteButton" layoutX="207.0" layoutY="372.0" mnemonicParsing="false" onAction="#deleteButtonClicked" prefHeight="31.0" prefWidth="130.0" style="-fx-background-color: #ADD8E6;" text="Delete user" textFill="WHITE">
+      <Button fx:id="deleteButton" layoutX="207.0" layoutY="372.0" mnemonicParsing="false" onAction="#deleteButtonClicked" prefHeight="31.0" prefWidth="130.0" style="-fx-background-color: #000000;" text="Delete user" textFill="WHITE">
          <font>
             <Font name="Berlin Sans FB" size="17.0" />
          </font>
       </Button>
-      <Button fx:id="backButton" layoutX="347.0" layoutY="372.0" mnemonicParsing="false" onAction="#backButtonClicked" style="-fx-background-color: #ADD8E6;" text="back" textFill="WHITE">
+      <Button fx:id="backButton" layoutX="347.0" layoutY="372.0" mnemonicParsing="false" onAction="#backButtonClicked" style="-fx-background-color: #000000;" text="back" textFill="WHITE">
          <font>
             <Font name="Berlin Sans FB" size="17.0" />
          </font>

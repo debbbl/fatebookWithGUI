@@ -87,6 +87,7 @@ public class ProfileWindowController {
     }
     public void displayUserDetails() {
         if (user != null) {
+            System.out.println(user.getHobbies());
             nameLabel.setText(user.getName() != null ? user.getName() : "N/A");
             emailLabel.setText(user.getEmail() != null ? user.getEmail() : "N/A");
             usernameLabel.setText(user.getUsername() != null ? user.getUsername() : "N/A");

@@ -78,11 +78,14 @@ public class adminViewAccountController implements Initializable {
 
     @FXML
     private void clearButtonClicked() {
-        searchTextField.clear();
+        startDatePicker.getEditor().clear();
         startDatePicker.setValue(null);
+        endDatePicker.getEditor().clear();
         endDatePicker.setValue(null);
+        searchTextField.clear();
         loadRegularUsers();
     }
+
     private void setupTableView() {
         userIdColumn.setCellValueFactory(new PropertyValueFactory<>("userId"));
         emailAddressColumn.setCellValueFactory(new PropertyValueFactory<>("emailAddress"));
@@ -109,24 +112,19 @@ public class adminViewAccountController implements Initializable {
         regularUser selectedUser = tableView.getSelectionModel().getSelectedItem();
         if (selectedUser != null) {
             try {
-                // Load the profile window FXML file
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("profileWindow.fxml"));
                 Parent root = loader.load();
 
-                // Get the controller for the profile window
                 ProfileWindowController profileController = loader.getController();
 
-                // Set the selected user and display their details
                 profileController.setSelectedUser(selectedUser);
                 profileController.setTableView(tableView);
                 profileController.displayUserDetails();
 
-                // Create a new window and set its properties
                 Stage profileStage = new Stage();
                 profileStage.setTitle("User Profile");
                 profileStage.setScene(new Scene(root));
 
-                // Show the profile window
                 profileStage.show();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -136,11 +134,10 @@ public class adminViewAccountController implements Initializable {
 
 
     @FXML
-    private void searchButtonClicked() {
+    private void searchButtonClicked() throws SQLException {
         String searchText = searchTextField.getText().trim();
 
         regularUsersList.clear();
-
         LocalDateTime startDate = null;
         LocalDateTime endDate = null;
         if (startDatePicker.getValue() != null && endDatePicker.getValue() != null) {
@@ -149,56 +146,19 @@ public class adminViewAccountController implements Initializable {
             startDate = start.atStartOfDay();
             endDate = end.atStartOfDay().plusDays(1);
         }
-
-        try (Connection connection = database.getConnection();
-             PreparedStatement statement = connection.prepareStatement("SELECT " +
-                     "time_stamp, user_id, email_address, name, username, contact_number " +
-                     "FROM userdata" +
-                     " WHERE ((time_stamp BETWEEN ? AND ?) OR ? IS NULL OR ? IS NULL) " +
-                     "AND (user_id LIKE ? OR username LIKE ?)")) {
-
-            statement.setObject(1, startDate);
-            statement.setObject(2, endDate);
-            statement.setObject(3, startDate);
-            statement.setObject(4, endDate);
-
-            String searchPattern = "%" + searchText + "%";
-            statement.setString(5, searchPattern);
-            statement.setString(6, searchPattern);
-
-            ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                LocalDateTime timeStamp = resultSet.getObject("time_stamp", LocalDateTime.class);
-                int userId = resultSet.getInt("user_id");
-                String emailAddress = resultSet.getString("email_address");
-                String name = resultSet.getString("name");
-                String username = resultSet.getString("username");
-                String contactNumber = resultSet.getString("contact_number");
-
-                regularUser.RegularUserBuilder userBuilder = (regularUser.RegularUserBuilder) new regularUser.RegularUserBuilder()
-                        .userId(userId)
-                        .email(emailAddress)
-                        .name(name)
-                        .username(username)
-                        .contactNumber(contactNumber)
-                        .timeStamp(timeStamp);
-
-                regularUser user = userBuilder.build();
-                regularUsersList.add(user);
-            }
-
+        try {
+            regularUsersList.addAll(database.searchRegularUsers(startDate, endDate, searchText));
             tableView.setItems(regularUsersList);
         } catch (SQLException e) {
             e.printStackTrace();
+            e.getCause();
         }
     }
 
+
+
     @FXML
     public void adminlogoutButtonOnAction(ActionEvent event) {
-        // Perform logout operations here
-
-        // Show the login window
         try {
             Parent loginParent = FXMLLoader.load(getClass().getResource("login.fxml"));
             Scene loginScene = new Scene(loginParent);
@@ -207,15 +167,12 @@ public class adminViewAccountController implements Initializable {
             loginStage.setScene(loginScene);
             loginStage.show();
 
-            // Close the dashboard window
             Stage dashboardStage = (Stage) adminLogOutButton.getScene().getWindow();
             dashboardStage.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-
 
 }
 

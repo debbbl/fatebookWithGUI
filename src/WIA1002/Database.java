@@ -59,7 +59,8 @@ public class Database {
 
 
                 regularUser user = userBuilder.build();
-                regularUsersList.add(user);
+                regularUser user1 = getUserDetails(user.getUsername());
+                regularUsersList.add(user1);
             }
 
         } catch (SQLException e) {
@@ -70,7 +71,57 @@ public class Database {
 
         return regularUsersList;
     }
+    public List<regularUser> searchRegularUsers(LocalDateTime startDate, LocalDateTime endDate, String searchText) throws SQLException {
+        List<regularUser> regularUsersList = new ArrayList<>();
 
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT " +
+                     "time_stamp, user_id, email_address, name, username, contact_number, birthday,gender,num_of_friend,job,hobbies,address,relationship_status, profile_pic,isAdmin " +
+                     "FROM userdata " +
+                     "WHERE ((time_stamp BETWEEN ? AND ?) OR ? IS NULL OR ? IS NULL) " +
+                     "AND (user_id LIKE ? OR username LIKE ?)")) {
+
+            statement.setObject(1, startDate);
+            statement.setObject(2, endDate);
+            statement.setObject(3, startDate);
+            statement.setObject(4, endDate);
+
+            String searchPattern = "%" + searchText + "%";
+            statement.setString(5, searchPattern);
+            statement.setString(6, searchPattern);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                LocalDateTime timeStamp = resultSet.getObject("time_stamp", LocalDateTime.class);
+                int userId = resultSet.getInt("user_id");
+                String emailAddress = resultSet.getString("email_address");
+                String name = resultSet.getString("name");
+                String username = resultSet.getString("username");
+                String contactNumber = resultSet.getString("contact_number");
+                int isAdmin = resultSet.getInt("isAdmin");
+
+                if (isAdmin == 1) {
+                    continue;
+                }
+
+                regularUser.RegularUserBuilder userBuilder = new regularUser.RegularUserBuilder()
+                        .userId(userId)
+                        .email(emailAddress)
+                        .name(name)
+                        .username(username)
+                        .contactNumber(contactNumber)
+                        .timeStamp(timeStamp);
+
+
+                regularUser user = userBuilder.build();
+                regularUser user1 = getUserDetails(user.getUsername());
+                regularUsersList.add(user1);
+            }
+        }
+
+        return regularUsersList;
+    }
     public void updateRegularUser(regularUser user) {
         String updateQuery = "UPDATE userdata SET email_address=?, name=?, " +
                 "contact_number=?, birthday=?, gender=?, job=?, hobbies=?, address=?,relationship_status = ? WHERE username=?";
@@ -664,6 +715,8 @@ public class Database {
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
+                LocalDateTime timeStamp = resultSet.getObject("time_stamp", LocalDateTime.class);
+
                 regularUser.RegularUserBuilder userBuilder = new regularUser.RegularUserBuilder();
                 userBuilder.username(resultSet.getString("username"))
                         .email(resultSet.getString("email_address"))
@@ -672,7 +725,8 @@ public class Database {
                         .birthday(resultSet.getObject("birthday", LocalDate.class))
                         .gender(resultSet.getString("gender"))
                         .address(resultSet.getString("address"))
-                        .relationshipStatus(resultSet.getString("relationship_status"));
+                        .relationshipStatus(resultSet.getString("relationship_status"))
+                        .timeStamp(timeStamp);
 
                 // Similarly, handle other properties
                 String job = resultSet.getString("job");

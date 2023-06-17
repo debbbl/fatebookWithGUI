@@ -24,11 +24,9 @@ public class addFriendsController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("suggestFriendsToAdd.fxml"));
             Pane suggestMutualFriendPane = loader.load();
 
-            // Set up the controller for the suggestFriendsToAdd.fxml if needed
             suggestFriendsToAddController suggestController = loader.getController();
             suggestController.setUser(user);
 
-            // Set the suggestMutualFriendPane as the content of the contentPane
             contentPane.getChildren().setAll(suggestMutualFriendPane);
             user.addActionToHistory("Viewed friend suggestions", LocalDateTime.now());
         } catch (IOException e) {
@@ -45,7 +43,6 @@ public class addFriendsController {
             FriendRequestController friendRequestController = loader.getController();
             friendRequestController.setUser(user);
 
-            // Set the friendRequestPane as the content of the contentPane
             contentPane.getChildren().setAll(friendRequestPane);
             user.addActionToHistory("Viewed friend requests", LocalDateTime.now());
         } catch (IOException e) {
