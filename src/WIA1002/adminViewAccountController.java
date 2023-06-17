@@ -70,7 +70,6 @@ public class adminViewAccountController implements Initializable {
         regularUsersList = FXCollections.observableArrayList();
         setupTableView();
         loadRegularUsers();
-        clearButton.disableProperty().bind(searchTextField.textProperty().isEmpty());
     }
     public TableView<regularUser> getTableView() {
         return tableView;
@@ -78,12 +77,12 @@ public class adminViewAccountController implements Initializable {
 
     @FXML
     private void clearButtonClicked() {
-        startDatePicker.getEditor().clear();
-        startDatePicker.setValue(null);
         endDatePicker.getEditor().clear();
         endDatePicker.setValue(null);
-        searchTextField.clear();
+        startDatePicker.getEditor().clear();
+        startDatePicker.setValue(null);
         loadRegularUsers();
+
     }
 
     private void setupTableView() {
