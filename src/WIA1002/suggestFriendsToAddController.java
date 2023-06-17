@@ -189,7 +189,7 @@ public class suggestFriendsToAddController implements Initializable {
     private void showMutualFriendsButtonClicked(){
         regularUser selectedUsername = friendListView.getSelectionModel().getSelectedItem();
         try {
-            // Load the FXML file for the Edit Account screen
+            // Load the FXML file for the mutual friend screen
             FXMLLoader loader = new FXMLLoader(getClass().getResource("mutualFriends.fxml"));
             Parent root = loader.load();
 
