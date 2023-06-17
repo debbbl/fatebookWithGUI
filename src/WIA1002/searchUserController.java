@@ -131,12 +131,10 @@ public class searchUserController {
             relationshipStatusLabel.setText(user.getRelationshipStatus() != null ? user.getRelationshipStatus() : "N/A");
 
             Database db = new Database();
-            // db.updateJob(user.getUsername(), latestJobExperience);
 
             if (user.getProfilePic() != null) {
                 profilePictureImageView.setImage(new Image(new ByteArrayInputStream(user.getProfilePic())));
             } else {
-                // Retrieve profile picture from the database
                 byte[] profilePicData = db.getProfilePicture(user.getUsername());
                 if (profilePicData != null) {
                     user.setProfilePic(profilePicData);
@@ -149,27 +147,22 @@ public class searchUserController {
     private void showMutualFriendsButtonClicked(){
         String selectedUsername = searchResultsListView.getSelectionModel().getSelectedItem();
         try {
-            // Load the FXML file for the Edit Account screen
             FXMLLoader loader = new FXMLLoader(getClass().getResource("mutualFriends.fxml"));
             Parent root = loader.load();
 
-            // Get the controller instance
             mutualFriendsController showMutualFriends  = loader.getController();
             showMutualFriends .setUser(user,selectedUsername);
 
-            // Check if mutual friends are found
             if (showMutualFriends.findMutualFriendsOnAction()) {
-                // Create a new Stage for the mutualFriends screen
+
                 Stage mutualFriendsStage = new Stage();
                 mutualFriendsStage.initStyle(StageStyle.UNDECORATED);
                 mutualFriendsStage.setScene(new Scene(root));
 
-                // Show the mutualFriends screen
                 mutualFriendsStage.showAndWait();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            // Handle error loading the Edit Account screen
         }
     }
 }

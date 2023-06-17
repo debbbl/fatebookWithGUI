@@ -51,7 +51,6 @@ public class ChatController implements Initializable {
             if (selectedFriend.getProfilePic() != null) {
             profileImageView.setImage(new Image(new ByteArrayInputStream(selectedFriend.getProfilePic())));
         } else {
-            // Retrieve profile picture from the database
             byte[] profilePicData = database.getProfilePicture(selectedFriend.getUsername());
             if (profilePicData != null) {
                 selectedFriend.setProfilePic(profilePicData);
@@ -67,17 +66,14 @@ public class ChatController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Set the event handler for sending a message when Enter key is pressed
         messageTextArea.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 sendMessage();
             }
         });
 
-        // Initialize the chat messages list
         chatMessages = FXCollections.observableArrayList();
 
-        // Set the chat messages list as the data source for the ListView
         chatListView.setItems(chatMessages);
 
     }
@@ -89,7 +85,6 @@ public class ChatController implements Initializable {
         }
         List<ChatMessage> messages = database.getChatMessages(user.getUserId(), selectedFriend.getUserId());
 
-        // Clear previous chat messages
         chatMessages.clear();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd | HH.mm a");
@@ -101,8 +96,6 @@ public class ChatController implements Initializable {
             String textMessage = "[" + formattedTimestamp + "] " + senderName + ": " + message.getMessage();
             chatMessages.add(textMessage);
 
-
-            // Scroll to the bottom of the chat
             chatListView.scrollTo(chatMessages.size() - 1);
         }
     }
@@ -111,23 +104,17 @@ public class ChatController implements Initializable {
     public void sendMessage() {
         String messageText = messageTextArea.getText().trim();
         if (!messageText.isEmpty()) {
-            // Insert the chat message into the database
             database.insertChatMessage(user.getUserId(), selectedFriend.getUserId(), messageText);
 
-            // Retrieve the timestamp of the inserted message
             LocalDateTime timestamp = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-MM-dd | HH.MM a");
             String formattedTimestamp = timestamp.format(formatter);
 
-            // Format the message with the formatted timestamp, sender, and message
             String formattedMessage = "[" + formattedTimestamp + "] " + user.getUsername() + ": " + messageText;
-            // Add the message to the chat messages list
             chatMessages.add(formattedMessage);
 
-            // Clear the message input area
             messageTextArea.clear();
 
-            // Scroll to the bottom of the chat
             chatListView.scrollTo(chatMessages.size() - 1);
         }
     }
