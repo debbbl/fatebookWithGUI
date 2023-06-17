@@ -210,7 +210,7 @@ public class FriendRequestController implements Initializable {
     private void showMutualFriendsButtonClicked(){
         regularUser selectedUsername = friendRequestListView.getSelectionModel().getSelectedItem();
         try {
-            // Load the FXML file for the Edit Account screen
+            // Load the FXML file for the Mutual friend screen
             FXMLLoader loader = new FXMLLoader(getClass().getResource("mutualFriends.fxml"));
             Parent root = loader.load();
 
@@ -220,17 +220,17 @@ public class FriendRequestController implements Initializable {
             // Pass the user object and the selected user to the mutual friends controller
             showMutualFriends.setUser(user,selectedUsername.getUsername());
 
-            // Create a new Stage for the Edit Account screen
+                // Create a new Stage for the Mutual friend screen
             Stage editAccountStage = new Stage();
             editAccountStage.initStyle(StageStyle.UNDECORATED);
             editAccountStage.setScene(new Scene(root));
 
-            // Show the Edit Account screen
+            // Show the Mutual friend screen
             editAccountStage.showAndWait();
 
         } catch (Exception e) {
             e.printStackTrace();
-            // Handle error loading the Edit Account screen
+            // Handle error loading the Mutual friend screen
         }
     }
 
