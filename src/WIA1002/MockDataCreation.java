@@ -19,15 +19,6 @@ public class MockDataCreation {
         Database connectNow = new Database();
         Connection connectDB = connectNow.getConnection();
         LocalDateTime localDateTime = LocalDateTime.now();
-        // Create and insert normal users
-        /*for (int i = 1; i <= NUM_USERS; i++) {
-            String username = "user" + i;
-            String email = "user" + i + "@example.com";
-            String contactNumber = generateContactNumber();
-            String password = encryptor.encryptString(generateRandomString(8));
-
-            insertUserData(connectDB, username, email, contactNumber, password,0,localDateTime);
-        }*/
 
         // Create and insert admin accounts
         String adminUsername1 = "admin1";
