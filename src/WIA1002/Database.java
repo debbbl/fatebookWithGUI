@@ -146,7 +146,6 @@ public class Database {
 
             statement.executeUpdate();
 
-            System.out.println("User details updated successfully!");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -241,7 +240,6 @@ public class Database {
             statement.setString(2, username);
             statement.executeUpdate();
 
-            System.out.println("Job updated successfully!");
         } catch (SQLException e) {
             e.printStackTrace();
             // Handle the database update error
