@@ -3,7 +3,6 @@ package WIA1002;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Scanner;
 
 public class Encryptor {
     public String encryptString(String input) throws NoSuchAlgorithmException {

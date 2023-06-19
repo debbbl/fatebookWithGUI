@@ -78,7 +78,7 @@ public class Database {
                      "time_stamp, user_id, email_address, name, username, contact_number, birthday,gender,num_of_friend,job,hobbies,address,relationship_status, profile_pic,isAdmin " +
                      "FROM userdata " +
                      "WHERE ((time_stamp BETWEEN ? AND ?) OR ? IS NULL OR ? IS NULL) " +
-                     "AND (user_id LIKE ? OR username LIKE ?)")) {
+                     "AND (user_id LIKE ? OR username LIKE ? OR user_id = ? OR username = ?)")) {
 
             statement.setObject(1, startDate);
             statement.setObject(2, endDate);
@@ -88,6 +88,8 @@ public class Database {
             String searchPattern = "%" + searchText + "%";
             statement.setString(5, searchPattern);
             statement.setString(6, searchPattern);
+            statement.setString(7, searchPattern);
+            statement.setString(8, searchPattern);
 
             ResultSet resultSet = statement.executeQuery();
 

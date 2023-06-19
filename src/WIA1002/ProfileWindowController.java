@@ -17,6 +17,8 @@ public class ProfileWindowController {
     @FXML
     private Button backButton;
     @FXML
+    private Button deleteButton;
+    @FXML
     private Label nameLabel;
     @FXML
     private Label emailLabel;
@@ -70,6 +72,8 @@ public class ProfileWindowController {
                 confirmationAlert.showAndWait();
             }
         }
+        Stage profileStage = (Stage) deleteButton.getScene().getWindow();
+        profileStage.close();
     }
 
     @FXML
